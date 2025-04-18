@@ -11,6 +11,7 @@ const {
 const {
   updateQuestion,
   fetchquestion,
+  getAllUserQuestions
 } = require("../controllers/Question.controller"); // Import updateQuestion
 const {
   updateuserprofile,
@@ -35,6 +36,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/questions_update", verifyToken, updateQuestion);
 router.get("/fetch_dashboard", verifyToken, fetchquestion);
+router.get("/solvedquestions" , verifyToken, getAllUserQuestions);
 router.get("/userprofile", verifyToken, fetchuserprofile);
 router.post("/user_update_profile", upload.single("profileImage"), verifyToken, updateuserprofile);
 router.get("/create_room", verifyToken, CreateRoom);

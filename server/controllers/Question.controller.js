@@ -15,12 +15,16 @@ const updateQuestion = async (req, res) => {
         if (questionIndex !== -1) {
             // Update specific field
             user.questions[questionIndex][field.toLowerCase()] = value === "Yes";
+            if(field === "important" && value === "Yes"){
+                user.questions[questionIndex].timestamp = new Date();
+            }
         } else {
             // Create new question entry with the correct field
             const newQuestion = {
                 questionId,
                 revision: field === "Revision" ? value === "Yes" : false,
                 important: field === "Important" ? value === "Yes" : false,
+                timestamp: field === "important" && value === "Yes" ? new Date() : null
             };
             user.questions.push(newQuestion);
         }
@@ -44,5 +48,19 @@ const fetchquestion = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: "An error occurred.", error });
     }
-}
-module.exports = { updateQuestion , fetchquestion};
+};
+
+const getAllUserQuestions = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        return res.status(200).json({ questions: user.questions });
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred.", error });
+    }
+};
+
+module.exports = { updateQuestion, fetchquestion, getAllUserQuestions };

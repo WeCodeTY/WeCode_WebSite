@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 require("dotenv").config(); // ✅ Load env vars properly
 
 
@@ -74,6 +74,10 @@ const userSchema = mongoose.Schema(
           important: {
             type: Boolean,
             default: false,
+          },
+          timestamps: {
+            type: Date,
+            default: Date.now,
           },
         }
       ],

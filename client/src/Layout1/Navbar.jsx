@@ -5,6 +5,7 @@ import { handleLogout } from "../utils/Logout";
 import { createroom, joinroom } from "../Rooms/room.jsx";
 import { io } from "socket.io-client";
 import axios from "axios";
+import solvedproblemslist from "../screens/solvedproblemslist";
 const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const linkStyle = {
@@ -30,7 +31,7 @@ const Navbar = () => {
   };
   const NavigateDashboard = () => {
     navigate("/dsadashboard");
-  }
+  };
 
   const NavigateFeed = () => {
     navigate("/Feed");
@@ -44,13 +45,13 @@ const Navbar = () => {
       navigate(`/room/${roomId}`, {
         state: {
           isReadOnly: true,
-          fromNavbar: true
-        }
+          fromNavbar: true,
+        },
       });
     } catch (error) {
       console.error("Failed to create room:", error);
     }
-  }
+  };
 
   const handleJoinRoom = async () => {
     if (!joinRoomId) {
@@ -65,8 +66,8 @@ const Navbar = () => {
       navigate(`/room/${roomId}`, {
         state: {
           isReadOnly: true,
-          fromNavbar: true
-        }
+          fromNavbar: true,
+        },
       });
     } catch (error) {
       console.error("❌ Failed to join room:", error);
@@ -76,6 +77,10 @@ const Navbar = () => {
 
   const handleNavigateToFollowDashboard = () => {
     navigate("/follow-dashboard");
+  };
+
+  const handleproblemsolved = () => {
+    navigate("/solvedproblemslist");
   };
 
   const handleNavigateToUploadPost = () => {
@@ -99,41 +104,59 @@ const Navbar = () => {
         color: "#fff",
         zIndex: 10,
         boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
-        backdropFilter: "blur(10px)"
-        
+        backdropFilter: "blur(10px)",
       }}
-      
     >
-      <div onClick={NavigateFeed} style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
-        <img src="/wecode logo.png" alt="WeCode Logo" style={{ height: "40px" }} />
-        <span style={{ fontSize: "2rem", fontWeight: "bold", color: "#fff" }}>WeCode</span>
+      <div
+        onClick={NavigateFeed}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          cursor: "pointer",
+        }}
+      >
+        <img
+          src="/wecode logo.png"
+          alt="WeCode Logo"
+          style={{ height: "40px" }}
+        />
+        <span style={{ fontSize: "2rem", fontWeight: "bold", color: "#fff" }}>
+          WeCode
+        </span>
       </div>
 
       <div style={{ display: "flex", gap: "25px", fontSize: "15px" }}>
-        <span style={linkStyle} onClick={NavigateFeed}>Home</span>
-        <a href="#courses" style={linkStyle}>Courses</a>
-        <a href="#about" style={linkStyle}>About</a>
-        <a href="#webdev" style={linkStyle}>Web Dev</a>
-        <a href="#dsa" style={linkStyle} onClick={NavigateDashboard}>DSA</a>
-        <a href="#devops" style={linkStyle}>DevOps</a>
+        <span style={linkStyle} onClick={NavigateFeed}>
+          Home
+        </span>
+        <a href="#courses" style={linkStyle}>
+          Courses
+        </a>
+        <a href="#about" style={linkStyle}>
+          About
+        </a>
+        <a href="#webdev" style={linkStyle}>
+          Web Dev
+        </a>
+        <a href="#dsa" style={linkStyle} onClick={NavigateDashboard}>
+          DSA
+        </a>
+        <a href="#devops" style={linkStyle}>
+          DevOps
+        </a>
       </div>
       {isDsaDashboard && (
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginRight: "10px" }}>
-          <button onClick={handleCreateRoom} style={{
-            padding: "8px 14px",
-            color: "#fff",
-            backgroundColor: "#6c5ce7",
-            border: "none",
-            borderRadius: "6px",
-            fontWeight: "500",
-            cursor: "pointer",
-            boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)",
-            transition: "all 0.3s ease"
-          }}>
-            Create Room
-          </button>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            marginRight: "10px",
+          }}
+        >
           <button
-            onClick = {() => setShowJoinModal(true)}
+            onClick={handleCreateRoom}
             style={{
               padding: "8px 14px",
               color: "#fff",
@@ -143,7 +166,23 @@ const Navbar = () => {
               fontWeight: "500",
               cursor: "pointer",
               boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)",
-              transition: "all 0.3s ease"
+              transition: "all 0.3s ease",
+            }}
+          >
+            Create Room
+          </button>
+          <button
+            onClick={() => setShowJoinModal(true)}
+            style={{
+              padding: "8px 14px",
+              color: "#fff",
+              backgroundColor: "#6c5ce7",
+              border: "none",
+              borderRadius: "6px",
+              fontWeight: "500",
+              cursor: "pointer",
+              boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)",
+              transition: "all 0.3s ease",
             }}
           >
             Join Room
@@ -181,118 +220,156 @@ const Navbar = () => {
                 borderRadius: "8px",
                 padding: "10px",
                 minWidth: "160px",
-                zIndex: 20
-                ,
+                zIndex: 20,
               }}
             >
-              <button onClick={handleNavigateTouser} style={{
-                padding: "10px",
-                color: "#fff",
-                backgroundColor: "transparent",
-                border: "none",
-                textAlign: "left",
-                width: "100%",
-                cursor: "pointer",
-                transition: "background 0.2s",
-                borderRadius: "4px"
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = "#1a1a1a"}
-              onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}>
+              <button
+                onClick={handleNavigateTouser}
+                style={{
+                  padding: "10px",
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  textAlign: "left",
+                  width: "100%",
+                  cursor: "pointer",
+                  transition: "background 0.2s",
+                  borderRadius: "4px",
+                }}
+                onMouseOver={(e) =>
+                  (e.target.style.backgroundColor = "#1a1a1a")
+                }
+                onMouseOut={(e) =>
+                  (e.target.style.backgroundColor = "transparent")
+                }
+              >
                 User Details
               </button>
-              <button onClick={handleNavigateToFollowDashboard} style={{
-                padding: "10px",
-                color: "#fff",
-                backgroundColor: "transparent",
-                border: "none",
-                textAlign: "left",
-                width: "100%",
-                cursor: "pointer",
-                transition: "background 0.2s",
-                borderRadius: "4px"
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = "#1a1a1a"}
-              onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}>
+              <button
+                onClick={handleNavigateToFollowDashboard}
+                style={{
+                  padding: "10px",
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  textAlign: "left",
+                  width: "100%",
+                  cursor: "pointer",
+                  transition: "background 0.2s",
+                  borderRadius: "4px",
+                }}
+                onMouseOver={(e) =>
+                  (e.target.style.backgroundColor = "#1a1a1a")
+                }
+                onMouseOut={(e) =>
+                  (e.target.style.backgroundColor = "transparent")
+                }
+              >
                 Follow Dashboard
               </button>
-              <button onClick={handleNavigateToUploadPost} style={{
-                padding: "10px",
-                color: "#fff",
-                backgroundColor: "transparent",
-                border: "none",
-                textAlign: "left",
-                width: "100%",
-                cursor: "pointer",
-                transition: "background 0.2s",
-                borderRadius: "4px"
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = "#1a1a1a"}
-              onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}>
+              <button
+                onClick={handleNavigateToUploadPost}
+                style={{
+                  padding: "10px",
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  textAlign: "left",
+                  width: "100%",
+                  cursor: "pointer",
+                  transition: "background 0.2s",
+                  borderRadius: "4px",
+                }}
+                onMouseOver={(e) =>
+                  (e.target.style.backgroundColor = "#1a1a1a")
+                }
+                onMouseOut={(e) =>
+                  (e.target.style.backgroundColor = "transparent")
+                }
+              >
                 Upload Post
               </button>
-              <button onClick={() => console.log("Problem Solved clicked")} style={{
-                padding: "10px",
-                color: "#fff",
-                backgroundColor: "transparent",
-                border: "none",
-                textAlign: "left",
-                width: "100%",
-                cursor: "pointer",
-                transition: "background 0.2s",
-                borderRadius: "4px"
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = "#1a1a1a"}
-              onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}>
+
+              <button
+                onClick={handleproblemsolved}
+                style={{
+                  padding: "10px",
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  textAlign: "left",
+                  width: "100%",
+                  cursor: "pointer",
+                  transition: "background 0.2s",
+                  borderRadius: "4px",
+                }}
+                onMouseOver={(e) =>
+                  (e.target.style.backgroundColor = "#1a1a1a")
+                }
+                onMouseOut={(e) =>
+                  (e.target.style.backgroundColor = "transparent")
+                }
+              >
                 Problem Solved
               </button>
-              <button onClick={handleLogoutClick} style={{
-                padding: "10px",
-                color: "#fff",
-                backgroundColor: "transparent",
-                border: "none",
-                textAlign: "left",
-                width: "100%",
-                cursor: "pointer",
-                transition: "background 0.2s",
-                borderRadius: "4px"
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = "#1a1a1a"}
-              onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}>
+              <button
+                onClick={handleLogoutClick}
+                style={{
+                  padding: "10px",
+                  color: "#fff",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  textAlign: "left",
+                  width: "100%",
+                  cursor: "pointer",
+                  transition: "background 0.2s",
+                  borderRadius: "4px",
+                }}
+                onMouseOver={(e) =>
+                  (e.target.style.backgroundColor = "#1a1a1a")
+                }
+                onMouseOut={(e) =>
+                  (e.target.style.backgroundColor = "transparent")
+                }
+              >
                 Logout
               </button>
             </div>
           )}
         </div>
-        
       </div>
       {isDsaDashboard && showJoinModal && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          background: "rgba(0, 0, 0, 0.3)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          zIndex: 100,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center"
-        }}>
-          <div style={{
-            backgroundColor: "#14142b",
-            padding: "30px",
-            borderRadius: "12px",
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0, 0, 0, 0.3)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            zIndex: 100,
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
-            gap: "15px",
-            border: "1px solid #6c5ce7",
-            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-            maxWidth: "300px",
-            width: "90%"
-          }}>
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#14142b",
+              padding: "30px",
+              borderRadius: "12px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "15px",
+              border: "1px solid #6c5ce7",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
+              maxWidth: "300px",
+              width: "90%",
+            }}
+          >
             <input
               type="text"
               placeholder="Enter Room ID"
@@ -306,14 +383,40 @@ const Navbar = () => {
                 padding: "12px",
                 outline: "none",
                 width: "100%",
-                fontSize: "1rem"
+                fontSize: "1rem",
               }}
             />
             <div style={{ display: "flex", gap: "10px" }}>
-              <button onClick={handleJoinRoom} style={{ padding: "8px 14px", color: "#fff", backgroundColor: "#6c5ce7", border: "none", borderRadius: "6px", fontWeight: "500", cursor: "pointer", boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)", transition: "all 0.3s ease" }}>
+              <button
+                onClick={handleJoinRoom}
+                style={{
+                  padding: "8px 14px",
+                  color: "#fff",
+                  backgroundColor: "#6c5ce7",
+                  border: "none",
+                  borderRadius: "6px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)",
+                  transition: "all 0.3s ease",
+                }}
+              >
                 Join Room
               </button>
-              <button onClick={() => setShowJoinModal(false)} style={{ padding: "8px 14px", color: "#fff", backgroundColor: "#6c5ce7", border: "none", borderRadius: "6px", fontWeight: "500", cursor: "pointer", boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)", transition: "all 0.3s ease" }}>
+              <button
+                onClick={() => setShowJoinModal(false)}
+                style={{
+                  padding: "8px 14px",
+                  color: "#fff",
+                  backgroundColor: "#6c5ce7",
+                  border: "none",
+                  borderRadius: "6px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)",
+                  transition: "all 0.3s ease",
+                }}
+              >
                 Cancel
               </button>
             </div>
