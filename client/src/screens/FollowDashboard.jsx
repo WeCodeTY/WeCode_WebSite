@@ -168,7 +168,9 @@ const FollowDashboard = () => {
             }}
           />
           <AnimatePresence>
-            {searchResults.length > 0 && (
+            {!searchResults || searchResults.length === 0 ? (
+              <p style={{ color: "#ccc" }}>No users found</p>
+            ) : (
               <motion.ul
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -189,10 +191,10 @@ const FollowDashboard = () => {
                 {searchResults.map((user) => (
                   <li
                     key={user._id}
-                onClick={() => {
+                    onClick={() => {
                       setFollowedName(user.name);
-                  setSelectedUser(user);
-                  setProfileimage(user.profileimage);
+                      setSelectedUser(user);
+                      setProfileimage(user.profileimage);
                       setShowProfile(true);
                       setSearchResults([]);
                       setRecentSearches((prev) => {
