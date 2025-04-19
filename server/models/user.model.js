@@ -75,7 +75,7 @@ const userSchema = mongoose.Schema(
             type: Boolean,
             default: false,
           },
-          timestamps: {
+          timestamp: {
             type: Date,
             default: Date.now,
           },
@@ -110,6 +110,18 @@ const userSchema = mongoose.Schema(
     isGoogleUser: {
       type: Boolean,
       default: false,
+    },
+
+    customLists: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CustomList"
+      }
+    ], 
+
+    activitylog: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ActivityLog",
     }
     
   },

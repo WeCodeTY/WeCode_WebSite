@@ -4,6 +4,7 @@ import axios from "axios";
 import { handleLogout } from "../utils/Logout";
 import Layout from "../Layout1/Layout";
 import Navbar from "../Layout1/Navbar";
+import ReactECharts from "echarts-for-react";
 
 const UserDetails = () => {
   const [showmenu, setshowmenu] = React.useState(false);
@@ -19,6 +20,7 @@ const UserDetails = () => {
   const [following_name, setFollowing_name] = useState([]);
   const [showFollowersPopup, setShowFollowersPopup] = useState(false);
   const [showFollowingPopup, setShowFollowingPopup] = useState(false);
+  const [activityData, setActivityData] = useState([]);
   
   
 
@@ -59,6 +61,31 @@ const UserDetails = () => {
     fetchFollowDashboard();
   }, []);
 
+  useEffect(() => {
+    const fetchActivityData = async () => {
+      try {
+        const res = await axios.get(process.env.REACT_APP_ACTIVITY_LOG, {
+          withCredentials: true,
+        });
+        const logins = res.data.logins || {};
+        const loginKeys = Object.keys(logins);
+        if (loginKeys.length > 0) {
+          console.log("Login data keys:", loginKeys);
+        } else {
+          console.log("Login data appears empty.");
+        }
+        const formatted = Object.entries(logins).map(([day, value]) => ({ day, value }));
+        console.log("Fetched activity data:", formatted);
+        setActivityData(formatted);
+      } catch (error) {
+        console.error("Error fetching activity data:", error);
+      }
+    };
+
+    console.log("Fetching activity data...");
+    fetchActivityData();
+  }, []);
+
   const handleLogoutClick = () => {
     setshowmenu(false);
     handleLogout(navigate);
@@ -74,6 +101,16 @@ const UserDetails = () => {
   const handleNavigateToDashboard = () => {
     navigate("/dsadashboard");
   };
+
+  const chartYear = activityData.length > 0 ? activityData[0].day.split("-")[0] : new Date().getFullYear().toString();
+
+  const today = new Date();
+  const thirtyDaysAgo = new Date(today);
+  thirtyDaysAgo.setDate(today.getDate() - 29); // So 30 days including today
+  const range = [
+    thirtyDaysAgo.toISOString().split("T")[0],
+    today.toISOString().split("T")[0]
+  ];
 
   return (
     <Layout>
@@ -211,6 +248,51 @@ const UserDetails = () => {
             </div>
           ))}
         </div>
+      </div>
+      
+      <div style={{ padding: "2rem", backgroundColor: "#111", color: "#fff", borderRadius: "10px", margin: "2rem", boxShadow: "0 4px 12px rgba(0,0,0,0.4)" }}>
+        <h3 style={{ fontSize: "2rem", marginBottom: "1rem", color: "#8a2be2", borderLeft: "5px solid #8a2be2", paddingLeft: "0.5rem" }}>
+          📅 Login Activity
+        </h3>
+      <div style={{ height: "320px", backgroundColor: "#1a1a1a", borderRadius: "8px", padding: "1rem", boxShadow: "inset 0 0 10px rgba(138, 43, 226, 0.2)" }}>
+        <ReactECharts
+          option={{
+            tooltip: {
+              position: "top",
+              formatter: (params) => `${params.data[0]}: ${params.data[1]} login${params.data[1] > 1 ? "s" : ""}`
+            },
+            visualMap: {
+              min: 0,
+              max: 10,
+              calculable: true,
+              orient: "horizontal",
+              left: "center",
+              top: "top",
+              inRange: {
+                color: ["#3f007d", "#6a51a3", "#9e9ac8", "#dadaeb"]
+              }
+            },
+            calendar: {
+              range: range,
+              cellSize: ["auto", 20],
+              dayLabel: { nameMap: "en" },
+              monthLabel: { nameMap: "en", margin: 15 },
+              yearLabel: { show: false },
+            orient: "horizontal",
+            inverse: true,
+            itemStyle: { borderWidth: 1, borderColor: "#222" }
+            },
+            series: [
+              {
+                type: "heatmap",
+                coordinateSystem: "calendar",
+                data: [...activityData].reverse().map((d) => [d.day, d.value])
+              }
+            ]
+          }}
+          style={{ height: "100%", width: "100%" }}
+        />
+      </div>
       </div>
     </Layout>
   );

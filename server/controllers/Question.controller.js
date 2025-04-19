@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const CustomList = require("../models/customList.model");
 
 
 const updateQuestion = async (req, res) => {
@@ -63,4 +64,126 @@ const getAllUserQuestions = async (req, res) => {
     }
 };
 
-module.exports = { updateQuestion, fetchquestion, getAllUserQuestions };
+const createcustomList = async (req, res) => {
+    try {
+        const { listname } = req.body;
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const customlist = new CustomList({ name: listname, questions: [], userEmail: req.user.email });
+        await customlist.save();
+        user.customLists.push(customlist._id);
+        await user.save();
+        return res.status(200).json({ message: "Custom list created successfully." });
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred.", error });
+    }
+
+}
+
+const allcustomlists = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const customLists = await CustomList.find({ userEmail: req.user.email });
+        return res.status(200).json({ customLists });
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred.", error });
+    }
+
+}
+
+const addquestions = async (req, res) => {
+    try {
+        const { listId, questionId } = req.body;
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const customList = await CustomList.findById(listId);
+        if (!customList) {
+            return res.status(404).json({ message: "Custom list not found." });
+        }
+        if (!customList.questions.includes(questionId)) {
+            customList.questions.push(questionId);
+            await customList.save();
+        }
+        return res.status(200).json({ message: "Question added to custom list." });
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred.", error });
+    }
+}
+
+const viewcustomlist = async (req, res) => {
+    try {
+        const { listId } = req.body;
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const customList = await CustomList.findById(listId);
+        if (!customList) {
+            return res.status(404).json({ message: "Custom list not found." });
+        }
+        return res.status(200).json({ questions: customList.questions });
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred.", error });
+    }
+}
+
+const deletecustomlist = async (req, res) => {
+    try {
+        const { listId } = req.body;
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const customList = await CustomList.findByIdAndDelete(listId);
+        if (!customList) {
+            return res.status(404).json({ message: "Custom list not found." });
+        }
+        // Just remove the custom list reference from the user's customLists
+        user.customLists = user.customLists.filter(id => id.toString() !== listId);
+        await user.save();
+        return res.status(200).json({ message: "Custom list and its questions deleted successfully." });
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred.", error });
+
+    }
+
+}
+
+const deletequestionfromcustomlist = async (req, res) => {
+    try {
+        const { listId, questionId } = req.body;
+        console.log("Deleting from list:", listId, "question:", questionId);
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const customList = await CustomList.findById(listId);
+        if (!customList) {
+            return res.status(404).json({ message: "Custom list not found." });
+        }
+        customList.questions = customList.questions.filter(q => q.toString() !== questionId);
+        await customList.save();
+        return res.status(200).json({ message: "Question deleted from custom list." });
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred.", error });
+    }
+}
+
+module.exports = {
+    updateQuestion,
+    fetchquestion,
+    getAllUserQuestions,
+    createcustomList,
+    allcustomlists,
+    addquestions,
+    viewcustomlist,
+    deletecustomlist,
+    deletequestionfromcustomlist
+};

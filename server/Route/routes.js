@@ -7,15 +7,23 @@ const {
   getTestCasesByTitle,
   getDefaultCodeByTitle,
   googleAuth,
+
+  
 } = require("../controllers/Route.controller");
 const {
   updateQuestion,
   fetchquestion,
-  getAllUserQuestions
+  getAllUserQuestions,
+  createcustomList,
+  allcustomlists,
+  addquestions,
+  viewcustomlist,
+  deletecustomlist,
+  deletequestionfromcustomlist
 } = require("../controllers/Question.controller"); // Import updateQuestion
 const {
   updateuserprofile,
-  fetchuserprofile,
+  fetchuserprofile,  activityLog
 } = require("../controllers/profile.controller");
 
 const { CreateRoom , joinRoom } = require("../controllers/Room.controller");
@@ -49,8 +57,16 @@ router.post("/upload-post", upload.fields([{ name: 'posts', maxCount: 10 }]), ve
 router.get("/Feed", verifyToken, Feedcontroller);
 router.get("/SearchUser", verifyToken, SearchUser);
 
+router.post("/create-list", verifyToken, createcustomList);
+router.get("/my-lists", verifyToken, allcustomlists);
+router.post("/add-question-to-list", verifyToken, addquestions);
+router.post("/customlistquestions", verifyToken, viewcustomlist);
+router.post("/view-list" , verifyToken, viewcustomlist);
+router.post("/delete-custom-list", verifyToken, deletecustomlist);
+router.post("/delete-question-from-list", verifyToken, deletequestionfromcustomlist);
 router.get("/testcases/:title", getTestCasesByTitle);
 router.get("/testcases/default/:title", getDefaultCodeByTitle);
+router.get("/activitylog", verifyToken, activityLog);
 
 router.post("/logout", verifyToken, logoutUser);
 router.post("/auth/google", googleAuth);

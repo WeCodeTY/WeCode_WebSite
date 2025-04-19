@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const ActivityLog = require("../models/activitylog.model");
 
 const fetchuserprofile = async (req, res) => {
     try {
@@ -103,6 +104,44 @@ const uploadProfileImage = async (req, res) => {
   }
 };
 
+const activityLog = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.user.email }).populate("activitylog");
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    if (!user.activitylog) {
+      return res.status(200).json({
+        message: "No activity log found.",
+        logins: {}
+      });
+    }
+    const loginObj = {};
+    user.activitylog.logins.forEach((value, key) => {
+      loginObj[key] = value;
+    });
+    
+    console.log("Raw logins:", user.activitylog.logins);
+    
+    if (Object.keys(loginObj).length === 0) {
+      console.warn("No login data found in response.");
+    } else {
+      console.log("Login data keys:", Object.keys(loginObj));
+    }
+    const formatted = Object.entries(loginObj).map(([day, value]) => ({ day, value }));
+    console.log("Fetched activity data:", formatted);
+
+    return res.status(200).json({
+      message: "Activity log fetched successfully.",
+      logins: loginObj
+    });
+  } catch (error) {
+    console.error("Error fetching activity log:", error);
+    return res.status(500).json({ message: "An error occurred.", error });
+  }
+};    
+    
+
 module.exports = {
-    fetchuserprofile, updateuserprofile, uploadProfileImage
+    fetchuserprofile, updateuserprofile, uploadProfileImage, activityLog
 }
