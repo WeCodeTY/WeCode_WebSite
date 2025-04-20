@@ -30,7 +30,11 @@ const Dashboard = () => {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
-      setQuestions(data);
+      const cleanedData = data.map((q) => ({
+        ...q,
+        Topic: q["Topics"] || q.Topic || "Miscellaneous",
+      }));
+      setQuestions(cleanedData);
       fetchResponse();
     };
     fetchExcel();
@@ -139,6 +143,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
             ...q,
             Important: isImportant ? "Yes" : "No",
             Revision: isRevision ? "Yes" : "No",
+            Topic: q.Topic || "Miscellaneous",
           };
         })
       );
@@ -196,6 +201,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ backgroundColor: "black" }}>
+              <th style={thStyle}>Topic</th>
               <th style={thStyle}>Title</th>
               <th style={thStyle}>Difficulty</th>
               <th style={thStyle}>Revision</th>
@@ -223,6 +229,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                   e.currentTarget.style.backgroundColor = "";
                 }}
               >
+                <td style={tdStyle}>{q.Topic || "N/A"}</td>
                 <td style={tdStyle}>{q.Title}</td>
                 <td style={tdStyle}>{q.Difficulty}</td>
                 <td style={tdStyle}>
