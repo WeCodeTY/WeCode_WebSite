@@ -1,11 +1,11 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { handleLogout } from "../utils/Logout";
+import { handleLogout } from "../utils/Logout.js";
 import { createroom, joinroom } from "../Rooms/room.jsx";
 import { io } from "socket.io-client";
 import axios from "axios";
-import solvedproblemslist from "../screens/solvedproblemslist";
+import solvedproblemslist from "../screens/solvedproblemslist.jsx";
 const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const linkStyle = {

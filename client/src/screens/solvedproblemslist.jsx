@@ -227,10 +227,10 @@ const SolvedProblemsList = () => {
                 <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>{q.questionId}</td>
                 <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>{q.important ? "✅ Yes" : "❌ No"}</td>
                 <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>
-                  {q.timestamps ? new Date(q.timestamps).toLocaleDateString() : "N/A"}
+                {q.timestamp ? new Date(q.timestamp).toLocaleDateString() : "N/A"}
                 </td>
                 <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>
-                  {q.timestamps ? new Date(q.timestamps).toLocaleTimeString() : "N/A"}
+                {q.timestamp ? new Date(q.timestamp).toLocaleTimeString() : "N/A"}
                 </td>
                 <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>
                   <select

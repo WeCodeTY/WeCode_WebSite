@@ -16,7 +16,7 @@ const updateQuestion = async (req, res) => {
         if (questionIndex !== -1) {
             // Update specific field
             user.questions[questionIndex][field.toLowerCase()] = value === "Yes";
-            if(field === "important" && value === "Yes"){
+            if(field.toLowerCase() === "important" && value === "Yes"){
                 user.questions[questionIndex].timestamp = new Date();
             }
         } else {
@@ -25,7 +25,7 @@ const updateQuestion = async (req, res) => {
                 questionId,
                 revision: field === "Revision" ? value === "Yes" : false,
                 important: field === "Important" ? value === "Yes" : false,
-                timestamp: field === "important" && value === "Yes" ? new Date() : null
+            timestamp: value === "Yes" ? new Date() : null
             };
             user.questions.push(newQuestion);
         }

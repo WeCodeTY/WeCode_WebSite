@@ -111,6 +111,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
         process.env.REACT_APP_UPDATE_QUESTION_URI,
         {
           questionId: updatedQuestions[index].Title,
+          
           field,
           value: newValue,
         },
