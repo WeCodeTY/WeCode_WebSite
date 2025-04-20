@@ -19,7 +19,8 @@ const {
   addquestions,
   viewcustomlist,
   deletecustomlist,
-  deletequestionfromcustomlist
+  deletequestionfromcustomlist,
+  questiongraph
 } = require("../controllers/Question.controller"); // Import updateQuestion
 const {
   updateuserprofile,
@@ -56,6 +57,7 @@ router.get("/follow-dashboard", verifyToken, FollowDashboard);
 router.post("/upload-post", upload.fields([{ name: 'posts', maxCount: 10 }]), verifyToken, postcontroller);
 router.get("/Feed", verifyToken, Feedcontroller);
 router.get("/SearchUser", verifyToken, SearchUser);
+router.get("/questiongraph", verifyToken, questiongraph);
 
 router.post("/create-list", verifyToken, createcustomList);
 router.get("/my-lists", verifyToken, allcustomlists);

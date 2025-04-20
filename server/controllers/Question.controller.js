@@ -4,7 +4,7 @@ const CustomList = require("../models/customList.model");
 
 const updateQuestion = async (req, res) => {
     try {
-        const { questionId, field, value } = req.body;
+        const { title ,questionId, field, value } = req.body;
 
         const user = await User.findOne({ email: req.user.email });
         if (!user) {
@@ -22,6 +22,7 @@ const updateQuestion = async (req, res) => {
         } else {
             // Create new question entry with the correct field
             const newQuestion = {
+                title,
                 questionId,
                 revision: field === "Revision" ? value === "Yes" : false,
                 important: field === "Important" ? value === "Yes" : false,
@@ -176,6 +177,27 @@ const deletequestionfromcustomlist = async (req, res) => {
     }
 }
 
+const questiongraph = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const titlecount = {};
+        user.questions.forEach(question => {
+            if (!question.title) return;
+            if (question.title in titlecount) {
+                titlecount[question.title]++;
+            } else {
+                titlecount[question.title] = 1;
+            }
+        });
+        return res.status(200).json({ titlecount });
+    } catch (error) {
+        return res.status(500).json({ message: "An error occurred.", error });
+    }
+}
+
 module.exports = {
     updateQuestion,
     fetchquestion,
@@ -185,5 +207,6 @@ module.exports = {
     addquestions,
     viewcustomlist,
     deletecustomlist,
-    deletequestionfromcustomlist
+    deletequestionfromcustomlist,
+    questiongraph
 };

@@ -63,6 +63,9 @@ const userSchema = mongoose.Schema(
     questions: {
       type: [
         {
+          title: {
+            type : String,
+          },
           questionId: {
             type: String,
             required: true,

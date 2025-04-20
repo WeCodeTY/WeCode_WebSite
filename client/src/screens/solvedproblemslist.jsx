@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-// import Draggable from "react-draggable";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const SolvedProblemsList = () => {
   const [submittedQuestions, setSubmittedQuestions] = useState([]);
@@ -10,6 +10,7 @@ const SolvedProblemsList = () => {
   const [newListName, setNewListName] = useState("");
   const [selectedListId, setSelectedListId] = useState(null); // Added state for selected list
   const [draggedNoteIndex, setDraggedNoteIndex] = useState(null);
+  const [topicGraphData, setTopicGraphData] = useState({});
 
   const fetchsolvedquestions = async () => {
     try {
@@ -24,9 +25,22 @@ const SolvedProblemsList = () => {
     }
   };
 
+  const fetchtopicgraph = async () => {
+    try {
+      const res = await axios.get(process.env.REACT_APP_QUESTION_GRAPH, {
+        withCredentials: true
+      });
+      const data = res.data.topicCount || res.data.titlecount || {};
+      setTopicGraphData(data);
+    } catch (err) {
+      console.error("Error fetching topic graph data:", err);
+    }
+  };
+
   useEffect(() => {
     fetchsolvedquestions();
     getallcustomlists();
+    fetchtopicgraph();
   }, []);
 
   const createnewcustomlist = async (listname) => {
@@ -136,6 +150,37 @@ const SolvedProblemsList = () => {
       }}>
         🌟 Submitted (Important) Problems 🌟
       </h2>
+      {Object.keys(topicGraphData).length > 0 && (
+        <div style={{ width: "100%", maxWidth: "500px", height: 400, margin: "2rem auto" }}>
+          <h3 style={{ color: "#00ffff", textAlign: "center", marginBottom: "1rem" }}>📊 Solved Questions by Topic</h3>
+          <ResponsiveContainer>
+            <PieChart>
+              <Pie
+                data={Object.entries(topicGraphData).map(([name, value]) => ({ name, value }))}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={120}
+                fill="#8884d8"
+                label
+              >
+                {Object.keys(topicGraphData).map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={[
+                    "#00cec9", "#6c5ce7", "#fd79a8", "#fab1a0",
+                    "#81ecec", "#ffeaa7", "#a29bfe", "#55efc4"
+                  ][index % 8]} />
+                ))}
+              </Pie>
+              <Tooltip formatter={(value, name, props) => {
+                if (!name || typeof value !== 'number') return '';
+                return `${name}: ${value} login${value > 1 ? "s" : ""}`;
+              }} />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      )}
       <div style={{
         display: "flex",
         justifyContent: "center",

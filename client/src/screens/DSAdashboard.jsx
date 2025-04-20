@@ -110,8 +110,8 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
       const response = await axios.post(
         process.env.REACT_APP_UPDATE_QUESTION_URI,
         {
+          title : updatedQuestions[index].Topic,
           questionId: updatedQuestions[index].Title,
-          
           field,
           value: newValue,
         },

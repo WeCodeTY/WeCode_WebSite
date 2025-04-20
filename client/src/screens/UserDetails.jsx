@@ -5,6 +5,22 @@ import { handleLogout } from "../utils/Logout";
 import Layout from "../Layout1/Layout";
 import Navbar from "../Layout1/Navbar";
 import ReactECharts from "echarts-for-react";
+import * as echarts from 'echarts/core';
+import {
+  TooltipComponent,
+  VisualMapComponent,
+  CalendarComponent,
+} from 'echarts/components';
+import { HeatmapChart } from 'echarts/charts';
+import { CanvasRenderer } from 'echarts/renderers';
+
+echarts.use([
+  TooltipComponent,
+  VisualMapComponent,
+  CalendarComponent,
+  HeatmapChart,
+  CanvasRenderer,
+]);
 
 const UserDetails = () => {
   const [showmenu, setshowmenu] = React.useState(false);
@@ -175,7 +191,9 @@ const UserDetails = () => {
             <h4 style={{ color: "#8a2be2", marginBottom: "10px" }}>Followers</h4>
             {followers_name.length > 0 ? (
               followers_name.map((follower, idx) => (
-                <p key={idx} style={{ color: "#fff", marginBottom: "6px" }}>{follower.following_id.name}</p>
+                <p key={idx} style={{ color: "#fff", marginBottom: "6px" }}>
+                  {follower?.following_id?.name || "Unknown"}
+                </p>
               ))
             ) : (
               <p style={{ color: "#888" }}>No followers found.</p>
@@ -201,7 +219,9 @@ const UserDetails = () => {
             <h4 style={{ color: "#8a2be2", marginBottom: "10px" }}>Following</h4>
             {following_name.length > 0 ? (
               following_name.map((followed, idx) => (
-                <p key={idx} style={{ color: "#fff", marginBottom: "6px" }}>{followed.followed_id.name}</p>
+                <p key={idx} style={{ color: "#fff", marginBottom: "6px" }}>
+                  {followed?.followed_id?.name || "Unknown"}
+                </p>
               ))
             ) : (
               <p style={{ color: "#888" }}>Not following anyone.</p>
@@ -260,8 +280,13 @@ const UserDetails = () => {
             option={{
               tooltip: {
                 position: "top",
-                formatter: (params) =>
-                  `${params.data[0]}: ${params.data[1]} login${params.data[1] > 1 ? "s" : ""}`
+                formatter: function (params) {
+                  if (!params || !params.data) return '';
+                  const data = Array.isArray(params.data) ? params.data : [params.data.day, params.data.value];
+                  const [day, value] = data;
+                  if (!day || typeof value !== 'number') return '';
+                  return `${day}: ${value} login${value > 1 ? 's' : ''}`;
+                }
               },
               visualMap: {
                 show: false,
