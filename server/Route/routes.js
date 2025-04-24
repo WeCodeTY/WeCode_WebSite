@@ -20,7 +20,9 @@ const {
   viewcustomlist,
   deletecustomlist,
   deletequestionfromcustomlist,
-  questiongraph
+  questiongraph,
+  adminquestionadd,
+  getAllAdminQuestions
 } = require("../controllers/Question.controller"); // Import updateQuestion
 const {
   updateuserprofile,
@@ -35,6 +37,7 @@ const multer = require("multer");
 const { postcontroller , Feedcontroller } = require("../controllers/post.controller");
 
 const upload = require("../middleware/multer");
+
 
 
 // Define Routes
@@ -69,6 +72,8 @@ router.post("/delete-question-from-list", verifyToken, deletequestionfromcustoml
 router.get("/testcases/:title", getTestCasesByTitle);
 router.get("/testcases/default/:title", getDefaultCodeByTitle);
 router.get("/activitylog", verifyToken, activityLog);
+router.post("/adminquestionsadd", verifyToken, adminquestionadd);
+router.get("/allquestions", getAllAdminQuestions);
 
 router.post("/logout", verifyToken, logoutUser);
 router.post("/auth/google", googleAuth);

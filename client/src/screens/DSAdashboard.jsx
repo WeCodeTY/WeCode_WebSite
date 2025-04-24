@@ -22,22 +22,53 @@ const Dashboard = () => {
     setQuote(quoteList[Math.floor(Math.random() * quoteList.length)]);
   }, []);
 
+  // useEffect(() => {
+  //   const fetchExcel = async () => {
+  //     const response = await fetch("/questions.xlsx");
+  //     const arrayBuffer = await response.arrayBuffer();
+  //     const workbook = XLSX.read(arrayBuffer, { type: "buffer" });
+  //     const sheetName = workbook.SheetNames[0];
+  //     const worksheet = workbook.Sheets[sheetName];
+  //     const data = XLSX.utils.sheet_to_json(worksheet);
+  //     const cleanedData = data.map((q) => ({
+  //       ...q,
+  //       Topic: q["Topics"] || q.Topic || "Miscellaneous",
+  //     }));
+  //     setQuestions(cleanedData);
+  //     fetchResponse();
+  //   };
+  //   fetchExcel();
+  // }, []);
+
   useEffect(() => {
-    const fetchExcel = async () => {
-      const response = await fetch("/questions.xlsx");
-      const arrayBuffer = await response.arrayBuffer();
-      const workbook = XLSX.read(arrayBuffer, { type: "buffer" });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const data = XLSX.utils.sheet_to_json(worksheet);
-      const cleanedData = data.map((q) => ({
-        ...q,
-        Topic: q["Topics"] || q.Topic || "Miscellaneous",
-      }));
-      setQuestions(cleanedData);
-      fetchResponse();
+    const fetchQuestionsFromBackend = async () => {
+      try {
+        const response = await axios.get(process.env.REACT_APP_GET_ALL_QUESTIONS, {
+          withCredentials: true
+        });
+        const data = response.data.questions;
+
+        const cleanedData = data.map(q => ({
+          Topic: q.topic || "Miscellaneous",
+          Title: q.title,
+          Difficulty: q.difficulty,
+          Revision: q.revision === 0 ? "No" : "Yes",
+          Important: q.important ? "Yes" : "No",
+          Link: q.link,
+          "Problem Statement": q.problemStatement,
+          "Sample Input": q.sampleInput,
+          "Sample Output": q.sampleOutput,
+          Constraints: q.constraints,
+        }));
+
+        setQuestions(cleanedData);
+        fetchResponse();
+      } catch (error) {
+        console.error("Error fetching questions from backend:", error);
+      }
     };
-    fetchExcel();
+
+    fetchQuestionsFromBackend();
   }, []);
 
   const handleCreateRoom = async (question, customState = {}) => {

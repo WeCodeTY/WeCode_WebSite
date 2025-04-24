@@ -32,7 +32,13 @@ const LoginScreen = () => {
         { withCredentials: true }
       );
       setMessage(response.data.message);
-      navigate("/Feed");
+
+      const { role } = response.data;  // Get role from the response
+      if (role === "admin") {
+        navigate("/admin-dashboard");  // Redirect to admin dashboard
+      } else {
+        navigate("/Feed");  // Redirect to user dashboard
+      }
     } catch (error) {
       console.error(error);
       setMessage(error.response?.data?.message || "Login failed.");
@@ -167,14 +173,19 @@ const LoginScreen = () => {
                   const result = await loginWithGoogle();
                   const idToken = await result.user.getIdToken();
 
-                  await axios.post(
+                  const response = await axios.post(
                     `${process.env.REACT_APP_GOOGLE_AUTH_URI}`,
                     { idToken },
                     { withCredentials: true }
                   );
-
+                  
                   setMessage("Login successful");
-                  navigate("/Feed");
+                  const { role } = response.data;  // Get role from the response
+                  if (role === "admin") {
+                    navigate("/admin-dashboard");  // Redirect to admin dashboard
+                  } else {
+                    navigate("/Feed");  // Redirect to user dashboard
+                  }
                 } catch (error) {
                   console.error("Firebase Google login error:", error);
                   setMessage("Google Login Failed");

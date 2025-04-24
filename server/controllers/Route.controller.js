@@ -57,8 +57,14 @@ const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password." });
     }
+    const adminEmails = process.env.adminEmails.split(",").map(email => email.trim());
+if (adminEmails.includes(user.email)) {
+  user.role = "admin";
+} else {
+  user.role = "user";
+}
 
-    const accessToken = user.getAccessToken();
+    const accessToken = user.getAccessToken({ role: user.role });
     const refreshToken = user.getRefreshToken();
 
     user.refreshToken = refreshToken;
@@ -87,12 +93,12 @@ const loginUser = async (req, res) => {
       sameSite: "None",
     };
 
-    // ✅ Send only ONE response
+    // ✅ Send only ONE response, include user role
     res
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
       .status(200)
-      .json({ message: "Login successful." });
+      .json({ message: "Login successful.", role: user.role });
 
   } catch (error) {
     console.error(error);
@@ -198,7 +204,14 @@ const googleAuth = async (req, res) => {
       await user.save();
     }
 
-    const accessToken = user.getAccessToken();
+    const adminEmails = process.env.adminEmails.split(",").map(email => email.trim());
+if (adminEmails.includes(user.email)) {
+  user.role = "admin";
+} else {
+  user.role = "user";
+}
+    
+    const accessToken = user.getAccessToken({ role: user.role });
     const refreshToken = user.getRefreshToken();
     user.refreshToken = refreshToken;
     await user.save();
@@ -229,7 +242,7 @@ const googleAuth = async (req, res) => {
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
       .status(200)
-      .json({ message: "Google login successful." });
+      .json({ message: "Google login successful.", role: user.role });
 
   } catch (error) {
     console.error("Firebase Auth Error:", error.message, error.stack);

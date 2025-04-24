@@ -125,7 +125,12 @@ const userSchema = mongoose.Schema(
     activitylog: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ActivityLog",
-    }
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
     
   },
   {

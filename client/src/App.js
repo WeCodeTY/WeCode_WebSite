@@ -12,6 +12,7 @@ import Feed from "./screens/Feed";
 import "./App.css";
 import UploadPosts from "./Rooms/UploadPosts";
 import SolvedProblemsList from "./screens/solvedproblemslist";
+import AdminDashboard from "./screens/adminDashboard";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/Feed" element={<Feed />} />
         <Route path="/customroom/:publicRoomId/:privateRoomId" element={<CustomRoom />} />
         <Route path="/solvedproblemslist" element={<SolvedProblemsList />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
     </Router>
   );

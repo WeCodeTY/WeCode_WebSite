@@ -1,6 +1,34 @@
 const User = require("../models/user.model");
 const CustomList = require("../models/customList.model");
+const Problem = require("../models/adminquestions.model");
 
+
+
+const adminquestionadd = async(req , res) => {
+    try {
+        const { topic, title, difficulty, revision, important, link, problemStatement, sampleInput, sampleOutput, constraints } = req.body;
+        const existingQuestion = await Problem.findOne({ title });
+        if (existingQuestion) {
+            return res.status(400).json({ message: "Question already exists." });
+        }
+        const newQuestion = new Problem({ topic, title, difficulty, revision, important, link, problemStatement, sampleInput, sampleOutput, constraints });
+        await newQuestion.save();
+        return res.status(200).json({ message: "Question added successfully." });
+    } catch (error) {
+        console.error("Error adding question:", error);
+        return res.status(500).json({ message: "Failed to add question." });
+        } 
+        
+}
+const getAllAdminQuestions = async (req, res) => {
+    try {
+      const questions = await Problem.find(); // Fetch all questions
+      return res.status(200).json({ questions });
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+      return res.status(500).json({ message: "Failed to fetch questions." });
+    }
+  };
 
 const updateQuestion = async (req, res) => {
     try {
@@ -208,5 +236,7 @@ module.exports = {
     viewcustomlist,
     deletecustomlist,
     deletequestionfromcustomlist,
-    questiongraph
+    questiongraph,
+    adminquestionadd,
+    getAllAdminQuestions
 };
