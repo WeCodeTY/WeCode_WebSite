@@ -20,6 +20,33 @@ const adminquestionadd = async(req , res) => {
         } 
         
 }
+const adminquestiondelete = async(req , res) => {
+    try {
+        const {topic , title} = req.body;
+        const deletedQuestion = await Problem.findOneAndDelete({ title });
+        if (!deletedQuestion) {
+            return res.status(404).json({ message: "Question not found." });
+        }
+        return res.status(200).json({ message: "Question deleted successfully." });
+    } catch (error) {
+        console.error("Error deleting question:", error);
+        return res.status(500).json({ message: "Failed to delete question." });
+        }
+}
+
+const adminquestionupdate = async(req , res) => {
+    try {
+        const { topic, title, difficulty, revision, important, link, problemStatement, sampleInput, sampleOutput, constraints } = req.body;
+        const updatedQuestion = await Problem.findOneAndUpdate({ title }, { topic, difficulty, revision, important, link, problemStatement, sampleInput, sampleOutput, constraints }, { new: true });
+        if (!updatedQuestion) {
+            return res.status(404).json({ message: "Question not found." });
+        }
+        return res.status(200).json({ message: "Question updated successfully." });
+    } catch (error) {
+        console.error("Error updating question:", error);
+        return res.status(500).json({ message: "Failed to update question." });
+   } 
+}
 const getAllAdminQuestions = async (req, res) => {
     try {
       const questions = await Problem.find(); // Fetch all questions
@@ -238,5 +265,7 @@ module.exports = {
     deletequestionfromcustomlist,
     questiongraph,
     adminquestionadd,
-    getAllAdminQuestions
+    getAllAdminQuestions,
+    adminquestiondelete,
+    adminquestionupdate
 };

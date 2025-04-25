@@ -7,6 +7,9 @@ const {
   getTestCasesByTitle,
   getDefaultCodeByTitle,
   googleAuth,
+  allusers,
+  allgoogleusers,
+  alluserssignedin,
 
   
 } = require("../controllers/Route.controller");
@@ -22,11 +25,14 @@ const {
   deletequestionfromcustomlist,
   questiongraph,
   adminquestionadd,
-  getAllAdminQuestions
+  getAllAdminQuestions,
+  adminquestiondelete,
+  adminquestionupdate
 } = require("../controllers/Question.controller"); // Import updateQuestion
 const {
   updateuserprofile,
-  fetchuserprofile,  activityLog
+  fetchuserprofile,  activityLog,
+  userpointsview
 } = require("../controllers/profile.controller");
 
 const { CreateRoom , joinRoom } = require("../controllers/Room.controller");
@@ -46,6 +52,7 @@ router.get("/", (req, res) => {
 });
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+
 router.post("/questions_update", verifyToken, updateQuestion);
 router.get("/fetch_dashboard", verifyToken, fetchquestion);
 router.get("/solvedquestions" , verifyToken, getAllUserQuestions);
@@ -61,7 +68,6 @@ router.post("/upload-post", upload.fields([{ name: 'posts', maxCount: 10 }]), ve
 router.get("/Feed", verifyToken, Feedcontroller);
 router.get("/SearchUser", verifyToken, SearchUser);
 router.get("/questiongraph", verifyToken, questiongraph);
-
 router.post("/create-list", verifyToken, createcustomList);
 router.get("/my-lists", verifyToken, allcustomlists);
 router.post("/add-question-to-list", verifyToken, addquestions);
@@ -74,6 +80,12 @@ router.get("/testcases/default/:title", getDefaultCodeByTitle);
 router.get("/activitylog", verifyToken, activityLog);
 router.post("/adminquestionsadd", verifyToken, adminquestionadd);
 router.get("/allquestions", getAllAdminQuestions);
+router.post("/adminquestiondelete", verifyToken, adminquestiondelete);
+router.post("/adminquestionupdate", verifyToken, adminquestionupdate);
+router.get("/alluserssignedin", verifyToken, alluserssignedin);
+router.get("/allgoogleusers", verifyToken, allgoogleusers);
+router.get("/allusers", verifyToken, allusers);
+router.get("/userpoints", verifyToken, userpointsview);
 
 router.post("/logout", verifyToken, logoutUser);
 router.post("/auth/google", googleAuth);

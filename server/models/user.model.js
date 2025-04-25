@@ -131,6 +131,10 @@ const userSchema = mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    points: {
+      type: Number,
+      default: 0
+    },
     
   },
   {

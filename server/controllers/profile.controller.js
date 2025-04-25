@@ -19,6 +19,19 @@ const fetchuserprofile = async (req, res) => {
     }
 }
 
+const userpointsview = async (req, res) => {
+  // the user oints are updated for every login by the user
+  try {
+    const user = await User.findOne({ email: req.user.email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    return res.status(200).json({ points: user.points });
+  } catch (error) {
+    return res.status(500).json({ message: "An error occurred.", error });
+  }
+}
+
 const updateuserprofile = async (req, res) => {
     try {
       const user = await User.findOne({ email: req.user.email });
@@ -143,5 +156,5 @@ const activityLog = async (req, res) => {
     
 
 module.exports = {
-    fetchuserprofile, updateuserprofile, uploadProfileImage, activityLog
+    fetchuserprofile, updateuserprofile, uploadProfileImage, activityLog, userpointsview
 }

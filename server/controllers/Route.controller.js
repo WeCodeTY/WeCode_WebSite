@@ -68,6 +68,7 @@ if (adminEmails.includes(user.email)) {
     const refreshToken = user.getRefreshToken();
 
     user.refreshToken = refreshToken;
+    user.points = ++user.points;
     await user.save();
 
     // ✅ Log login activity
@@ -178,6 +179,32 @@ const getDefaultCodeByTitle = (req, res) => {
   }
 };
 
+
+const alluserssignedin = async (req, res) => {
+  try {
+    const users = await User.find({ isGoogleUser: false });
+    return res.status(200).json({ users });
+  } catch (error) {
+    return res.status(500).json({ message: "An error occurred.", error });
+  }
+}
+const allusers = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json({ users });
+  } catch (error) {
+    return res.status(500).json({ message: "An error occurred.", error });
+  }
+}
+const allgoogleusers = async (req, res) => {
+  try {
+    const users = await User.find({ isGoogleUser: true });
+    return res.status(200).json({ users });
+  } catch (error) {
+    return res.status(500).json({ message: "An error occurred.", error });
+  }
+}
+
 const googleAuth = async (req, res) => {
   const { idToken } = req.body;
 
@@ -214,6 +241,7 @@ if (adminEmails.includes(user.email)) {
     const accessToken = user.getAccessToken({ role: user.role });
     const refreshToken = user.getRefreshToken();
     user.refreshToken = refreshToken;
+    user.points = ++user.points;
     await user.save();
     
     const today = new Date().toISOString().split("T")[0];
@@ -302,4 +330,7 @@ module.exports = {
   googleAuth,
   authenticateUser,
   createRoom,
+  allgoogleusers,
+  allusers,
+  alluserssignedin,
 };

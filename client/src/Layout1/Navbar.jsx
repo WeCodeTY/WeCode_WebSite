@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { handleLogout } from "../utils/Logout.js";
@@ -17,9 +17,25 @@ const Navbar = () => {
   const [showmenu, setShowmenu] = React.useState(false);
   const [joinRoomId, setJoinRoomId] = React.useState("");
   const [showJoinModal, setShowJoinModal] = React.useState(false);
+  const [userPoints, setUserPoints] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const isDsaDashboard = location.pathname.startsWith("/dsadashboard");
+
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      try {
+        const response = await axios.get(process.env.REACT_APP_USER_POINTS_VIEW, { withCredentials: true });
+        if (response.data && typeof response.data.points === "number") {
+          setUserPoints(response.data.points);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user points:", error);
+      }
+    };
+
+    fetchUserPoints();
+  }, []);
 
   const handleToggleMenu = () => setShowmenu(!showmenu);
   const handleLogoutClick = () => {
@@ -191,6 +207,9 @@ const Navbar = () => {
       )}
 
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <span style={{ color: "#fff", fontWeight: "bold", marginRight: "10px" }}>
+          Points: {userPoints}
+        </span>
         <div style={{ position: "relative" }}>
           <button
             onClick={handleToggleMenu}
