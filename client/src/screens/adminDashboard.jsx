@@ -179,63 +179,147 @@ const AdminDashboard = () => {
     }
   };
 
+  const COLORS = {
+    primary: "#213448",
+    secondary: "#547792",
+    accent: "#94B4C1",
+    background: "#ECEFCA"
+  };
   const formContainerStyle = {
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.secondary,
     padding: "2rem",
     borderRadius: "8px",
     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
     display: "flex",
     flexDirection: "column",
     gap: "1.25rem",
-    marginBottom: "2rem"
+    marginBottom: "2rem",
+    color: COLORS.background,
+    transition: "all 0.3s ease",
+    transform: "scale(1)"
+    // Note: ':hover' pseudo is not supported in inline styles, handled below
   };
 
-  return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <div style={{ width: "220px", backgroundColor: "#f5f5f5", padding: "1.5rem", borderRight: "1px solid #ddd" }}>
-        <h3 style={{ marginBottom: "2rem", fontWeight: "bold", color: "#333" }}>Admin Panel</h3>
+  // Sidebar Button hover/transition helpers
+  const sidebarButtonBaseStyle = {
+    display: "block",
+    width: "100%",
+    marginBottom: "1rem",
+    padding: "0.75rem",
+    borderRadius: "6px",
+    border: "none",
+    backgroundColor: COLORS.secondary,
+    color: COLORS.background,
+    cursor: "pointer",
+    textTransform: "capitalize",
+    transition: "all 0.3s ease-in-out"
+  };
+
+  // Animated form container wrapper
+  const AnimatedFormContainer = ({ children }) => {
+    // Use React state for hover scale effect
+    const [hovered, setHovered] = useState(false);
+    return (
+      <div
+        style={{
+          ...formContainerStyle,
+          transform: hovered ? "scale(1.01)" : "scale(1)"
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {children}
+      </div>
+    );
+  };
+
+  // Sidebar modularization
+  const Sidebar = () => {
+    // Track hover for each button
+    const [hoveredBtn, setHoveredBtn] = useState(null);
+    return (
+      <div style={{
+        width: "220px",
+        backgroundColor: COLORS.primary,
+        padding: "1.5rem",
+        borderRight: `1px solid ${COLORS.accent}`,
+        display: "flex",
+        flexDirection: "column"
+      }}>
+        <h3 style={{ marginBottom: "2rem", fontWeight: "bold", color: COLORS.accent }}>Admin Panel</h3>
         {["add", "delete", "update", "users"].map((type) => (
           <button
             key={type}
             onClick={() => setAction(type)}
             style={{
-              display: "block",
-              width: "100%",
-              marginBottom: "1rem",
-              padding: "0.75rem",
-              borderRadius: "6px",
-              border: "none",
-              backgroundColor: action === type ? "#007bff" : "#ddd",
-              color: action === type ? "#fff" : "#333",
-              cursor: "pointer",
-              textTransform: "capitalize"
+              ...sidebarButtonBaseStyle,
+              fontWeight: action === type ? "bold" : "normal",
+              outline: action === type ? `2px solid ${COLORS.accent}` : "none",
+              boxShadow: action === type ? `0 0 0 2px ${COLORS.accent}33` : "none",
+              backgroundColor:
+                hoveredBtn === type
+                  ? COLORS.accent
+                  : COLORS.secondary,
+              color:
+                hoveredBtn === type
+                  ? COLORS.primary
+                  : COLORS.background
             }}
+            onMouseEnter={() => setHoveredBtn(type)}
+            onMouseLeave={() => setHoveredBtn(null)}
           >
             {type === "users" ? "Users" : `${type} Question`}
           </button>
         ))}
         {/* Analytics Section */}
-        <div style={{ marginTop: "2rem", backgroundColor: "#fff", padding: "1.25rem", borderRadius: "8px" }}>
-          <h2 style={{ fontWeight: "bold", marginBottom: "1rem", color: "#222" }}>Analytics</h2>
+        <div style={{
+          marginTop: "2rem",
+          backgroundColor: COLORS.secondary,
+          color: COLORS.background,
+          padding: "1.25rem",
+          borderRadius: "8px",
+          border: `1px solid ${COLORS.accent}`
+        }}>
+          <h2 style={{ fontWeight: "bold", marginBottom: "1rem", color: COLORS.background }}>Analytics</h2>
           <Pie data={chartData} />
         </div>
       </div>
-      <div style={{ flexGrow: 1, padding: "2rem", overflowY: "auto" }}>
-        <div style={{ marginBottom: "2rem", backgroundColor: "#e9f2ff", padding: "1.25rem", borderRadius: "8px" }}>
-          <h2 style={{ fontWeight: "bold", marginBottom: "1rem", color: "#222" }}>All Questions</h2>
-          <ul style={{ maxHeight: "180px", overflowY: "auto", paddingLeft: "1rem" }}>
-            {questionsList.map((q, index) => (
-              <li key={index} style={{ marginBottom: "0.5rem", color: "#333" }}>
-                <strong>{q.topic}</strong> - {q.title}
-              </li>
-            ))}
-          </ul>
-        </div>
+    );
+  };
 
-
-        {action === "add" && (
-          <form onSubmit={handleSubmit} style={formContainerStyle}>
-            <h2 style={{ fontWeight: "bold", color: "#333" }}>Add Question</h2>
+  // Main content modularization
+  const MainContent = () => (
+    <div
+      style={{
+        flexGrow: 1,
+        padding: "2rem",
+        overflowY: "auto",
+        scrollBehavior: "smooth",
+        backgroundColor: COLORS.primary,
+        minHeight: "100vh",
+        maxHeight: "100vh"
+      }}
+    >
+      <div style={{
+        marginBottom: "2rem",
+        backgroundColor: COLORS.secondary,
+        padding: "1.25rem",
+        borderRadius: "8px",
+        border: `1px solid ${COLORS.accent}`
+      }}>
+        <h2 style={{ fontWeight: "bold", marginBottom: "1rem", color: COLORS.background }}>All Questions</h2>
+        <ul style={{ maxHeight: "180px", overflowY: "auto", paddingLeft: "1rem" }}>
+          {questionsList.map((q, index) => (
+            <li key={index} style={{ marginBottom: "0.5rem", color: COLORS.background }}>
+              <strong>{q.topic}</strong> - {q.title}
+            </li>
+          ))}
+        </ul>
+      </div>
+      {action === "add" && (
+        <AnimatedFormContainer>
+          <form onSubmit={handleSubmit}>
+            <h2 style={{ fontWeight: "bold", color: COLORS.background }}>Add Question</h2>
             {/* form fields map */}
             {[
               { label: "Topic", name: "topic", type: "text" },
@@ -274,7 +358,7 @@ const AdminDashboard = () => {
               }
             ].map((field, index) => (
               <div key={index} className="form-group" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <label style={{ fontWeight: "500", color: "#444" }}>{field.label}</label>
+                <label style={{ fontWeight: "500", color: COLORS.accent }}>{field.label}</label>
                 {field.type === "select" ? (
                   <select
                     name={field.name}
@@ -283,12 +367,14 @@ const AdminDashboard = () => {
                     style={{
                       padding: "0.5rem",
                       borderRadius: "4px",
-                      border: "1px solid #ccc",
-                      outline: "none"
+                      border: `1px solid ${COLORS.accent}`,
+                      outline: "none",
+                      backgroundColor: COLORS.primary,
+                      color: COLORS.background
                     }}
                   >
                     {field.options.map((opt, i) => (
-                      <option key={i} value={opt}>
+                      <option key={i} value={opt} style={{ color: COLORS.primary }}>
                         {opt}
                       </option>
                     ))}
@@ -303,8 +389,10 @@ const AdminDashboard = () => {
                     style={{
                       padding: "0.5rem",
                       borderRadius: "4px",
-                      border: "1px solid #ccc",
-                      resize: "vertical"
+                      border: `1px solid ${COLORS.accent}`,
+                      resize: "vertical",
+                      backgroundColor: COLORS.primary,
+                      color: COLORS.background
                     }}
                   />
                 ) : (
@@ -317,7 +405,9 @@ const AdminDashboard = () => {
                     style={{
                       padding: "0.5rem",
                       borderRadius: "4px",
-                      border: "1px solid #ccc"
+                      border: `1px solid ${COLORS.accent}`,
+                      backgroundColor: COLORS.primary,
+                      color: COLORS.background
                     }}
                   />
                 )}
@@ -330,34 +420,36 @@ const AdminDashboard = () => {
                 checked={formData.important}
                 onChange={handleChange}
               />
-              <label style={{ fontWeight: "500", color: "#444" }}>Mark as Important</label>
+              <label style={{ fontWeight: "500", color: COLORS.accent }}>Mark as Important</label>
             </div>
             <button
               type="submit"
               className="submit-button"
               style={{
                 padding: "0.75rem 1.5rem",
-                backgroundColor: "#4CAF50",
-                color: "#fff",
+                backgroundColor: COLORS.accent,
+                color: COLORS.primary,
                 border: "none",
                 borderRadius: "5px",
                 cursor: "pointer",
                 fontWeight: "bold",
-                transition: "background-color 0.3s"
+                transition: "all 0.3s ease-in-out"
               }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#45A049")}
-              onMouseOut={(e) => (e.target.style.backgroundColor = "#4CAF50")}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = COLORS.primary}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = COLORS.accent}
             >
               Add Question
             </button>
           </form>
-        )}
-        {action === "delete" && (
-          <form onSubmit={handleDelete} style={formContainerStyle}>
-            <h2 style={{ fontWeight: "bold", color: "#333" }}>Delete Question</h2>
+        </AnimatedFormContainer>
+      )}
+      {action === "delete" && (
+        <AnimatedFormContainer>
+          <form onSubmit={handleDelete}>
+            <h2 style={{ fontWeight: "bold", color: COLORS.background }}>Delete Question</h2>
             {/* delete fields */}
             <div className="form-group" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <label style={{ fontWeight: "500", color: "#444" }}>Topic</label>
+              <label style={{ fontWeight: "500", color: COLORS.accent }}>Topic</label>
               <input
                 type="text"
                 name="topic"
@@ -368,12 +460,14 @@ const AdminDashboard = () => {
                 style={{
                   padding: "0.5rem",
                   borderRadius: "4px",
-                  border: "1px solid #ccc"
+                  border: `1px solid ${COLORS.accent}`,
+                  backgroundColor: COLORS.primary,
+                  color: COLORS.background
                 }}
               />
             </div>
             <div className="form-group" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <label style={{ fontWeight: "500", color: "#444" }}>Title</label>
+              <label style={{ fontWeight: "500", color: COLORS.accent }}>Title</label>
               <input
                 type="text"
                 name="title"
@@ -384,7 +478,9 @@ const AdminDashboard = () => {
                 style={{
                   padding: "0.5rem",
                   borderRadius: "4px",
-                  border: "1px solid #ccc"
+                  border: `1px solid ${COLORS.accent}`,
+                  backgroundColor: COLORS.primary,
+                  color: COLORS.background
                 }}
               />
             </div>
@@ -393,20 +489,25 @@ const AdminDashboard = () => {
               style={{
                 padding: "0.75rem 1.5rem",
                 backgroundColor: "#f44336",
-                color: "#fff",
+                color: COLORS.background,
                 border: "none",
                 borderRadius: "5px",
                 cursor: "pointer",
-                fontWeight: "bold"
+                fontWeight: "bold",
+                transition: "all 0.3s ease-in-out"
               }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = "#b71c1c"}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = "#f44336"}
             >
               Delete
             </button>
           </form>
-        )}
-        {action === "update" && (
-          <form onSubmit={handleUpdate} style={formContainerStyle}>
-            <h2 style={{ fontWeight: "bold", color: "#333" }}>Update Question</h2>
+        </AnimatedFormContainer>
+      )}
+      {action === "update" && (
+        <AnimatedFormContainer>
+          <form onSubmit={handleUpdate}>
+            <h2 style={{ fontWeight: "bold", color: COLORS.background }}>Update Question</h2>
             {/* update fields */}
             {[
               { label: "Topic", name: "topic", type: "text" },
@@ -445,7 +546,7 @@ const AdminDashboard = () => {
               }
             ].map((field, index) => (
               <div key={index} className="form-group" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <label style={{ fontWeight: "500", color: "#444" }}>{field.label}</label>
+                <label style={{ fontWeight: "500", color: COLORS.accent }}>{field.label}</label>
                 {field.type === "select" ? (
                   <select
                     name={field.name}
@@ -454,12 +555,14 @@ const AdminDashboard = () => {
                     style={{
                       padding: "0.5rem",
                       borderRadius: "4px",
-                      border: "1px solid #ccc",
-                      outline: "none"
+                      border: `1px solid ${COLORS.accent}`,
+                      outline: "none",
+                      backgroundColor: COLORS.primary,
+                      color: COLORS.background
                     }}
                   >
                     {field.options.map((opt, i) => (
-                      <option key={i} value={opt}>
+                      <option key={i} value={opt} style={{ color: COLORS.primary }}>
                         {opt}
                       </option>
                     ))}
@@ -474,8 +577,10 @@ const AdminDashboard = () => {
                     style={{
                       padding: "0.5rem",
                       borderRadius: "4px",
-                      border: "1px solid #ccc",
-                      resize: "vertical"
+                      border: `1px solid ${COLORS.accent}`,
+                      resize: "vertical",
+                      backgroundColor: COLORS.primary,
+                      color: COLORS.background
                     }}
                   />
                 ) : (
@@ -488,7 +593,9 @@ const AdminDashboard = () => {
                     style={{
                       padding: "0.5rem",
                       borderRadius: "4px",
-                      border: "1px solid #ccc"
+                      border: `1px solid ${COLORS.accent}`,
+                      backgroundColor: COLORS.primary,
+                      color: COLORS.background
                     }}
                   />
                 )}
@@ -501,47 +608,60 @@ const AdminDashboard = () => {
                 checked={formData.important}
                 onChange={handleChange}
               />
-              <label style={{ fontWeight: "500", color: "#444" }}>Mark as Important</label>
+              <label style={{ fontWeight: "500", color: COLORS.accent }}>Mark as Important</label>
             </div>
             <button
               type="submit"
               style={{
                 padding: "0.75rem 1.5rem",
-                backgroundColor: "#2196F3",
-                color: "#fff",
+                backgroundColor: COLORS.accent,
+                color: COLORS.primary,
                 border: "none",
                 borderRadius: "5px",
                 cursor: "pointer",
-                fontWeight: "bold"
+                fontWeight: "bold",
+                transition: "all 0.3s ease-in-out"
               }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = COLORS.primary}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = COLORS.accent}
             >
               Update
             </button>
           </form>
-        )}
-        {action === "users" && (
-          <div style={{ padding: "2rem", backgroundColor: "#f9f9f9", borderRadius: "8px" }}>
-            <h2 style={{ fontWeight: "bold", color: "#000" }}>User Statistics</h2>
-            <div style={{ marginBottom: "1rem", color: "#000" }}>
-              <strong style={{ color: "#000" }}>Total Users:</strong> {userStats.totalUsers}
+        </AnimatedFormContainer>
+      )}
+      {action === "users" && (
+        <AnimatedFormContainer>
+          <div>
+            <h2 style={{ fontWeight: "bold", color: COLORS.background }}>User Statistics</h2>
+            <div style={{ marginBottom: "1rem", color: COLORS.background }}>
+              <strong style={{ color: COLORS.accent }}>Total Users:</strong> {userStats.totalUsers}
             </div>
-            <div style={{ marginBottom: "1rem", color: "#000" }}>
-              <strong style={{ color: "#000" }}>Google Login Users:</strong> {userStats.googleUsers}
+            <div style={{ marginBottom: "1rem", color: COLORS.background }}>
+              <strong style={{ color: COLORS.accent }}>Google Login Users:</strong> {userStats.googleUsers}
             </div>
-            <div style={{ marginBottom: "1rem", color: "#000" }}>
-              <strong style={{ color: "#000" }}>Signed-In Users:</strong> {userStats.signedInUsers}
+            <div style={{ marginBottom: "1rem", color: COLORS.background }}>
+              <strong style={{ color: COLORS.accent }}>Signed-In Users:</strong> {userStats.signedInUsers}
             </div>
             <div>
-              <h3 style={{ color: "#000" }}>User List:</h3>
+              <h3 style={{ color: COLORS.accent }}>User List:</h3>
               <ul>
                 {userStats.userNames.map((name, index) => (
-                  <li key={index} style={{ color: "#000" }}>{name}</li>
+                  <li key={index} style={{ color: COLORS.background }}>{name}</li>
                 ))}
               </ul>
             </div>
           </div>
-        )}
-      </div>
+        </AnimatedFormContainer>
+      )}
+    </div>
+  );
+
+  // Main layout with Sidebar and MainContent as fragments
+  return (
+    <div style={{ display: "flex", height: "100vh", backgroundColor: COLORS.background }}>
+      <Sidebar />
+      <MainContent />
     </div>
   );
 };

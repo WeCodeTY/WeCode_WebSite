@@ -135,21 +135,21 @@ const UserDetails = () => {
         onDashboard={handleNavigateToDashboard}
       />
 
-      <div style={{ padding: "2rem", backgroundColor: "#000", color: "#fff", marginBottom: "2rem", fontFamily: "sans-serif", display: "flex", justifyContent: "center" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "3rem", maxWidth: "900px", width: "100%", backgroundColor: "#111", padding: "2rem", borderRadius: "10px", boxShadow: "0 4px 12px rgba(0,0,0,0.4)" }}>
+      <div style={{ padding: "2rem", backgroundColor: "#213448", color: "#ECEFCA", marginBottom: "2rem", fontFamily: "sans-serif", display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "3rem", maxWidth: "900px", width: "100%", backgroundColor: "#213448", padding: "2rem", borderRadius: "10px", boxShadow: "0 4px 12px rgba(0,0,0,0.4)" }}>
           <img
             src={profileImage && profileImage.trim() !== "" ? profileImage : `https://api.dicebear.com/7.x/micah/svg?seed=${name}`}
             alt="Profile"
-            style={{ borderRadius: "50%", width: "150px", height: "150px", objectFit: "cover", border: "3px solid #8a2be2" }}
+            style={{ borderRadius: "50%", width: "150px", height: "150px", objectFit: "cover", border: "3px solid #94B4C1" }}
           />
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
-              <h2 style={{ fontSize: "2rem", fontWeight: "bold", color: "#8a2be2" }}>{name}</h2>
+              <h2 style={{ fontSize: "2rem", fontWeight: "bold", color: "#94B4C1" }}>{name}</h2>
               <button
                 onClick={() => navigate("/userupdatedetails")}
                 style={{
-                  backgroundColor: "#8a2be2",
-                  color: "#fff",
+                  backgroundColor: "#547792",
+                  color: "#ECEFCA",
                   border: "none",
                   borderRadius: "5px",
                   padding: "0.5rem 1rem",
@@ -157,8 +157,8 @@ const UserDetails = () => {
                   fontSize: "1rem",
                   transition: "0.3s",
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.opacity = "0.8")}
-                onMouseOut={(e) => (e.currentTarget.style.opacity = "1")}
+                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#94B4C1")}
+                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#547792")}
               >
                 Edit Profile
               </button>
@@ -177,26 +177,26 @@ const UserDetails = () => {
       {showFollowersPopup && (
         <div style={{
           position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh",
-          backgroundColor: "rgba(0, 0, 0, 0.6)", backdropFilter: "blur(5px)", display: "flex",
+          backgroundColor: "rgba(33, 52, 72, 0.7)", backdropFilter: "blur(5px)", display: "flex",
           alignItems: "center", justifyContent: "center", zIndex: 999
         }}
           onClick={() => setShowFollowersPopup(false)}
         >
           <div style={{
-            backgroundColor: "#111", padding: "20px", borderRadius: "10px", minWidth: "300px",
-            maxHeight: "400px", overflowY: "auto", boxShadow: "0 0 15px rgba(0,0,0,0.5)"
+            backgroundColor: "#547792", padding: "20px", borderRadius: "10px", minWidth: "300px",
+            maxHeight: "400px", overflowY: "auto", boxShadow: "0 0 15px rgba(33,52,72,0.5)"
           }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h4 style={{ color: "#8a2be2", marginBottom: "10px" }}>Followers</h4>
+            <h4 style={{ color: "#94B4C1", marginBottom: "10px" }}>Followers</h4>
             {followers_name.length > 0 ? (
               followers_name.map((follower, idx) => (
-                <p key={idx} style={{ color: "#fff", marginBottom: "6px" }}>
+                <p key={idx} style={{ color: "#ECEFCA", marginBottom: "6px" }}>
                   {follower?.following_id?.name || "Unknown"}
                 </p>
               ))
             ) : (
-              <p style={{ color: "#888" }}>No followers found.</p>
+              <p style={{ color: "#ECEFCA" }}>No followers found.</p>
             )}
           </div>
         </div>
@@ -205,33 +205,33 @@ const UserDetails = () => {
       {showFollowingPopup && (
         <div style={{
           position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh",
-          backgroundColor: "rgba(0, 0, 0, 0.6)", backdropFilter: "blur(5px)", display: "flex",
+          backgroundColor: "rgba(33, 52, 72, 0.7)", backdropFilter: "blur(5px)", display: "flex",
           alignItems: "center", justifyContent: "center", zIndex: 999
         }}
           onClick={() => setShowFollowingPopup(false)}
         >
           <div style={{
-            backgroundColor: "#111", padding: "20px", borderRadius: "10px", minWidth: "300px",
-            maxHeight: "400px", overflowY: "auto", boxShadow: "0 0 15px rgba(0,0,0,0.5)"
+            backgroundColor: "#547792", padding: "20px", borderRadius: "10px", minWidth: "300px",
+            maxHeight: "400px", overflowY: "auto", boxShadow: "0 0 15px rgba(33,52,72,0.5)"
           }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h4 style={{ color: "#8a2be2", marginBottom: "10px" }}>Following</h4>
+            <h4 style={{ color: "#94B4C1", marginBottom: "10px" }}>Following</h4>
             {following_name.length > 0 ? (
               following_name.map((followed, idx) => (
-                <p key={idx} style={{ color: "#fff", marginBottom: "6px" }}>
+                <p key={idx} style={{ color: "#ECEFCA", marginBottom: "6px" }}>
                   {followed?.followed_id?.name || "Unknown"}
                 </p>
               ))
             ) : (
-              <p style={{ color: "#888" }}>Not following anyone.</p>
+              <p style={{ color: "#ECEFCA" }}>Not following anyone.</p>
             )}
           </div>
         </div>
       )}
 
-      <div style={{ padding: "2rem", backgroundColor: "#000", color: "#fff" }}>
-        <h3 style={{ fontSize: "1.8rem", marginBottom: "1rem", color: "#8a2be2" }}>Your Posts</h3>
+      <div style={{ padding: "2rem", backgroundColor: "#213448", color: "#ECEFCA" }}>
+        <h3 style={{ fontSize: "1.8rem", marginBottom: "1rem", color: "#94B4C1" }}>Your Posts</h3>
         <div
           style={{
             display: "flex",
@@ -246,17 +246,17 @@ const UserDetails = () => {
             <div
               key={idx}
               style={{
-                backgroundColor: "#1a1a1a",
+                backgroundColor: "#547792",
                 borderRadius: "10px",
                 padding: "1.5rem",
-                color: "#fff",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                color: "#ECEFCA",
+                boxShadow: "0 2px 8px rgba(33,52,72,0.3)",
                 transition: "transform 0.2s ease",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
               onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
-              <strong style={{ color: "#8a2be2" }}>You ({name})</strong>
+              <strong style={{ color: "#94B4C1" }}>You ({name})</strong>
               <p style={{ margin: "0.5rem 0" }}>{item.caption}</p>
               <img
                 src={item.post?.mediaUrl}
@@ -268,14 +268,14 @@ const UserDetails = () => {
         </div>
       </div>
       
-      <div style={{ padding: "2rem", backgroundColor: "#111", color: "#fff", borderRadius: "10px", margin: "2rem", boxShadow: "0 4px 12px rgba(0,0,0,0.4)" }}>
-        <h3 style={{ fontSize: "2rem", marginBottom: "1rem", color: "#8a2be2", borderLeft: "5px solid #8a2be2", paddingLeft: "0.5rem" }}>
+      <div style={{ padding: "2rem", backgroundColor: "#547792", color: "#ECEFCA", borderRadius: "10px", margin: "2rem", boxShadow: "0 4px 12px rgba(33,52,72,0.4)" }}>
+        <h3 style={{ fontSize: "2rem", marginBottom: "1rem", color: "#94B4C1", borderLeft: "5px solid #94B4C1", paddingLeft: "0.5rem" }}>
           📅 Login Activity
         </h3>
-        <p style={{ color: "#bbb", fontSize: "0.9rem", marginBottom: "1rem" }}>
+        <p style={{ color: "#ECEFCA", fontSize: "0.9rem", marginBottom: "1rem" }}>
           Showing login activity for <strong>{chartYear}</strong>
         </p>
-        <div style={{ height: "180px", backgroundColor: "#1a1a1a", borderRadius: "8px", padding: "1.9rem", boxShadow: "inset 0 0 10px rgba(138, 43, 226, 0.2)", overflowX: "auto", overflowY: "hidden", whiteSpace: "nowrap" }}>
+        <div style={{ height: "180px", backgroundColor: "#213448", borderRadius: "8px", padding: "1.9rem", boxShadow: "inset 0 0 10px rgba(148,180,193,0.2)", overflowX: "auto", overflowY: "hidden", whiteSpace: "nowrap" }}>
           <ReactECharts
             option={{
               tooltip: {
@@ -293,7 +293,7 @@ const UserDetails = () => {
                 min: 0,
                 max: 10,
                 inRange: {
-                  color: ["#3f007d", "#6a51a3", "#9e9ac8", "#dadaeb"]
+                  color: ["#213448", "#547792", "#94B4C1", "#ECEFCA"]
                 }
               },
               calendar: [...Array(12).keys()].map((m, idx) => ({
@@ -305,7 +305,7 @@ const UserDetails = () => {
                   monthLabel: {
                     show: true,
                     nameMap: "en",
-                    color: "#fff",
+                    color: "#ECEFCA",
                     fontSize: 12,
                     margin: 10,
                     position: "top",
@@ -322,7 +322,7 @@ const UserDetails = () => {
                 dayLabel: {
                   show: true,
                   nameMap: "en",
-                  color: "#fff",
+                  color: "#ECEFCA",
                   fontSize: 8,
                   formatter: (value, index) => {
                     const date = new Date(value);
@@ -330,7 +330,7 @@ const UserDetails = () => {
                     return `${monthNames[date.getMonth()]} ${date.getDate()}`;
                   }
                 },
-                itemStyle: { borderColor: "#333", borderWidth: 0.4 },
+                itemStyle: { borderColor: "#94B4C1", borderWidth: 0.4 },
                 splitLine: { show: false },
                 orient: "horizontal"
               })),
@@ -357,7 +357,7 @@ const UserDetails = () => {
             marginLeft: '1rem'
           }}>
             {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((month, idx) => (
-            <div key={idx} style={{ flex: "0 9 auto", textAlign: "center", color: "#aaa", fontSize: "0.75rem" }}>{month}</div>
+            <div key={idx} style={{ flex: "0 9 auto", textAlign: "center", color: "#ECEFCA", fontSize: "0.75rem" }}>{month}</div>
             ))}
           </div>
         </div>
@@ -368,17 +368,17 @@ const UserDetails = () => {
 
 const inputStyle = {
   padding: "12px",
-  border: "1px solid #8a2be2",
+  border: "1px solid #94B4C1",
   borderRadius: "5px",
-  backgroundColor: "#111",
-  color: "#fff",
+  backgroundColor: "#213448",
+  color: "#ECEFCA",
   fontSize: "14px",
 };
 
 const buttonStyle = {
   padding: "12px",
-  backgroundColor: "#8a2be2",
-  color: "#fff",
+  backgroundColor: "#547792",
+  color: "#ECEFCA",
   border: "none",
   borderRadius: "5px",
   fontWeight: "bold",
@@ -386,7 +386,7 @@ const buttonStyle = {
 };
 
 const linkStyle = {
-  color: "#fff",
+  color: "#ECEFCA",
   textDecoration: "none",
 };
 

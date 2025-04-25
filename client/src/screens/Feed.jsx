@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../Layout1/Navbar.jsx";
+import Layout from "../Layout1/Layout.jsx";
+import Footer from "../Layout1/Footer.jsx";
 import { formatDistanceToNow } from 'date-fns';
 
 const Feed = () => {
@@ -26,16 +27,17 @@ const Feed = () => {
   }, []);
 
   return (
-    <>
-      <Navbar />
+    <Layout>
       <div style={{
         maxWidth: '600px',
         margin: '0 auto',
         padding: '20px',
-        paddingTop: '80px'
+        paddingTop: '80px',
+        backgroundColor: '#213448',
+        color: '#ECEFCA'
       }}>
         <h1 style={{
-          color: 'white',
+          color: '#ECEFCA',
           marginBottom: '24px',
           fontSize: '28px',
           fontWeight: '600'
@@ -45,7 +47,7 @@ const Feed = () => {
           <div style={{
             textAlign: 'center',
             padding: '40px 0',
-            color: '#aaa'
+            color: '#94B4C1'
           }}>
             <p style={{ fontSize: '18px' }}>No posts from followed users yet.</p>
             <p>Follow more users to see their content here</p>
@@ -55,8 +57,8 @@ const Feed = () => {
             <div
               key={post._id}
               style={{
-                backgroundColor: '#1e1e1e',
-                color: 'white',
+                backgroundColor: '#547792',
+                color: '#ECEFCA',
                 padding: '16px',
                 borderRadius: '12px',
                 marginBottom: '20px',
@@ -77,9 +79,9 @@ const Feed = () => {
                   height: '40px',
                   borderRadius: '50%',
                   overflow: 'hidden',
-                  border: '2px solid #8a2be2',
+                  border: '2px solid #94B4C1',
                   marginRight: '12px',
-                  boxShadow: '0 0 8px rgba(138, 43, 226, 0.5)'
+                  boxShadow: '0 0 8px rgba(148, 180, 193, 0.5)'
                 }}>
                   <img 
                     src={post.user.profilePicture || `https://ui-avatars.com/api/?name=${post.user.name?.charAt(0) || "U"}&background=8a2be2&color=fff&size=40`} 
@@ -95,7 +97,7 @@ const Feed = () => {
                   }}>{post.user.username}</p>
                   <p style={{ 
                     margin: 0, 
-                    color: '#aaa',
+                    color: '#94B4C1',
                     fontSize: '12px'
                   }}>
                     {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
@@ -112,7 +114,7 @@ const Feed = () => {
               
               <p style={{
                 margin: '8px 0 16px',
-                color: '#e0e0e0',
+                color: '#ECEFCA',
                 lineHeight: '1.5'
               }}>{post.description}</p>
               
@@ -141,12 +143,12 @@ const Feed = () => {
               <div style={{
                 display: 'flex',
                 paddingTop: '8px',
-                borderTop: '1px solid #333'
+                borderTop: '1px solid #94B4C1'
               }}>
                 <button style={{
                   background: 'none',
                   border: 'none',
-                  color: '#aaa',
+                  color: '#ECEFCA',
                   display: 'flex',
                   alignItems: 'center',
                   marginRight: '20px',
@@ -158,7 +160,7 @@ const Feed = () => {
                 <button style={{
                   background: 'none',
                   border: 'none',
-                  color: '#aaa',
+                  color: '#ECEFCA',
                   display: 'flex',
                   alignItems: 'center',
                   marginRight: '20px',
@@ -170,7 +172,7 @@ const Feed = () => {
                 <button style={{
                   background: 'none',
                   border: 'none',
-                  color: '#aaa',
+                  color: '#ECEFCA',
                   display: 'flex',
                   alignItems: 'center',
                   cursor: 'pointer'
@@ -183,7 +185,7 @@ const Feed = () => {
           ))
         )}
       </div>
-    </>
+    </Layout>
   );
 };
 

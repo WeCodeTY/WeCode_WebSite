@@ -216,7 +216,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
   } 
 
   return (
-    <Layout>
+    <Layout style={{ boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)" }}>
       <Navbar
         showMenu={showmenu}
         onToggleMenu={handleToggleMenu}
@@ -224,15 +224,15 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
         onDashboard={handleNavigateToDashboard}
       />
 
-      <h1 style={{ textAlign: "center", fontSize: "3rem", color: "#fff", marginTop: "140px", marginBottom: "30px", fontWeight: "700" }}>
+      <h1 style={{ textAlign: "center", fontSize: "3rem", color: "#213448", marginTop: "140px", marginBottom: "30px", fontWeight: "700" }}>
         {quote}
       </h1>
 
       <div style={tableContainerStyle}>
-        <h2 style={{ color: "white", textAlign: "center", marginBottom: "20px" }}>DSA Questions</h2>
+        <h2 style={{ color: "#213448", textAlign: "center", marginBottom: "20px", fontWeight: "700" }}>DSA Questions</h2>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
-            <tr style={{ backgroundColor: "black" }}>
+            <tr style={{ background: "#213448" }}>
               <th style={thStyle}>Topic</th>
               <th style={thStyle}>Title</th>
               <th style={thStyle}>Difficulty</th>
@@ -251,10 +251,11 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                 style={{
                   transition: "transform 0.2s ease, background-color 0.2s ease",
                   cursor: "pointer",
+                  color: "#213448",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "scale(1.01)";
-                  e.currentTarget.style.backgroundColor = "#2a2a45";
+                  e.currentTarget.style.backgroundColor = "#94B4C1";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "scale(1)";
@@ -269,7 +270,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                     type="checkbox"
                     checked={q.Revision === "Yes"}
                     onChange={() => handleUpdateQuestion(index, "Revision", q.Revision)}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer", ...inputStyle }}
                   />
                 </td>
                 <td style={tdStyle}>
@@ -277,7 +278,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                     type="checkbox"
                     checked={q.Important === "Yes"}
                     onChange={() => handleUpdateQuestion(index, "Important", q.Important)}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer", ...inputStyle }}
                   />
                 </td>
                 <td style={tdStyle}>
@@ -285,17 +286,31 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                     style={actionBtnStyle1}
                     title="Submit Solution"
                     onClick={() => handleSolvequestion(q)}
+                    onMouseEnter={e => e.currentTarget.style.background = "#94B4C1"}
+                    onMouseLeave={e => e.currentTarget.style.background = "#547792"}
                   >
                     Submit
                   </button>
                 </td>
                 <td style={tdStyle}>
-                  <button onClick={() => handleJoinQuestionRoom(q.Title)} style={buttonStyle} title="Join public room for this question">
+                  <button 
+                    onClick={() => handleJoinQuestionRoom(q.Title)} 
+                    style={buttonStyle} 
+                    title="Join public room for this question"
+                    onMouseEnter={e => e.currentTarget.style.background = "#94B4C1"}
+                    onMouseLeave={e => e.currentTarget.style.background = "#547792"}
+                  >
                     Join Room
                   </button>
                 </td>
                 <td style={tdStyle}>
-                  <button onClick={() => handleCreateRoom(q)} style={buttonStyle} title="Create a private room">
+                  <button 
+                    onClick={() => handleCreateRoom(q)} 
+                    style={buttonStyle} 
+                    title="Create a private room"
+                    onMouseEnter={e => e.currentTarget.style.background = "#94B4C1"}
+                    onMouseLeave={e => e.currentTarget.style.background = "#547792"}
+                  >
                     Create Room
                   </button>
                 </td>
@@ -304,6 +319,8 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                     onClick={() => handleJoinRoom(q)}
                     style={buttonStyle}
                     title="Join a private room"
+                    onMouseEnter={e => e.currentTarget.style.background = "#94B4C1"}
+                    onMouseLeave={e => e.currentTarget.style.background = "#547792"}
                   >
                     Join Private
                   </button>
@@ -320,7 +337,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
 // --- Styles ---
 
 const buttonStyle = {
-  backgroundColor: "#6c5ce7",
+  backgroundColor: "#547792", // Light Blue for buttons
   padding: "10px 20px",
   color: "#fff",
   border: "none",
@@ -328,44 +345,41 @@ const buttonStyle = {
   fontWeight: "600",
   cursor: "pointer",
   transition: "all 0.3s ease",
-  boxShadow: "0 2px 10px rgba(108, 92, 231, 0.3)",
-  "&:hover": {
-    backgroundColor: "#5c4dcf",
-  },
+  boxShadow: "0 2px 10px rgba(84, 119, 146, 0.3)", 
 };
 
 const inputStyle = {
-  backgroundColor: "#1e1e2f",
+  backgroundColor: "#213448", // Dark Blue background for inputs
   color: "#fff",
-  border: "1px solid #6c5ce7",
+  border: "1px solid #94B4C1", // Soft Blue border for input fields
   borderRadius: "8px",
   padding: "10px",
   outline: "none",
 };
 
 const tableContainerStyle = {
-  background: "#1e1e2f",
+  background: "#ECEFCA", // Pale Yellow background for cleaner design
   padding: "30px",
   borderRadius: "16px",
-  boxShadow: "0 8px 40px rgba(0, 0, 0, 0.3)",
+  boxShadow: "0 8px 40px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
   border: "1px solid rgba(255, 255, 255, 0.05)",
   margin: "40px auto",
   maxWidth: "1200px",
 };
 
 const thStyle = {
-  borderBottom: "2px solid #6c5ce7",
+  borderBottom: "2px solid #94B4C1", // Soft Blue for header borders
   padding: "12px",
   color: "#fff",
   fontWeight: "600",
-  backgroundColor: "#14142b",
+  background: "#213448", // Dark Blue header background
 };
 
 const tdStyle = {
   padding: "12px",
-  color: "#dcdde1",
+  color: "#213448", // Dark Blue for table text
   textAlign: "center",
-  backgroundColor: "#20203a",
+  backgroundColor: "#ECEFCA", // Pale Yellow background for table rows
 };
 
 const actionBtnStyle1 = {
@@ -373,7 +387,7 @@ const actionBtnStyle1 = {
   padding: "6px 12px",
   borderRadius: "6px",
   border: "none",
-  background: "#00cec9",
+  background: "#547792", // Light Blue for action buttons
   color: "#fff",
   cursor: "pointer",
   transition: "0.3s ease",
@@ -383,7 +397,7 @@ const actionBtnStyle2 = {
   padding: "6px 12px",
   borderRadius: "6px",
   border: "none",
-  background: "#e84393",
+  background: "#94B4C1", // Soft Blue for accent buttons
   color: "#fff",
   cursor: "pointer",
   transition: "0.3s ease",

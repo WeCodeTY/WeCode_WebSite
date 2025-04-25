@@ -30,12 +30,12 @@ const RegisterUserScreen = () => {
     <div
     style={{
       minHeight: "100vh",
-      backgroundColor: "#0d1117",
+      backgroundColor: "#213448",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
-      color: "#ffffff",
+      color: "#ECEFCA",
       fontFamily: "Segoe UI, sans-serif",
     }}
     >
@@ -51,8 +51,8 @@ const RegisterUserScreen = () => {
       <form
         onSubmit={handleRegister}
         style={{
-          backgroundColor: "#0d1117",
-          border: "1px solid #30363d",
+          backgroundColor: "#547792",
+          border: "1px solid #94B4C1",
           borderRadius: "6px",
           padding: "20px",
           width: "300px",
@@ -106,11 +106,11 @@ const RegisterUserScreen = () => {
           <div
             style={{
               marginTop: "15px",
-              color: "#f85149",
-              backgroundColor: "#1f2a35",
+              color: "#ECEFCA",
+              backgroundColor: "#547792",
               padding: "10px",
               borderRadius: "5px",
-              border: "1px solid #30363d",
+              border: "1px solid #94B4C1",
               fontWeight: "bold",
             }}
           >
@@ -147,7 +147,7 @@ const RegisterUserScreen = () => {
             width: "100%",
             padding: "10px",
             backgroundColor: "#4285F4",
-            color: "#fff",
+            color: "#ECEFCA",
             border: "none",
             borderRadius: "6px",
             fontSize: "16px",
@@ -167,14 +167,15 @@ const RegisterUserScreen = () => {
           fontSize: "14px",
           padding: "10px 20px",
           borderRadius: "6px",
-          border: "1px solid #30363d",
-          backgroundColor: "rgba(255, 255, 255, 0.05)",
+          border: "1px solid #94B4C1",
+          backgroundColor: "#547792",
+          color: "#ECEFCA",
         }}
       >
         Already have an account?{" "}
         <span
           onClick={() => navigate("/login")}
-          style={{ color: "#58a6ff", cursor: "pointer" }}
+          style={{ color: "#94B4C1", cursor: "pointer" }}
         >
           Log in
         </span>
@@ -188,9 +189,9 @@ const inputStyle = {
   padding: "10px",
   fontSize: "15px",
   borderRadius: "5px",
-  border: "1px solid #30363d",
-  backgroundColor: "#0d1117",
-  color: "#c9d1d9",
+  border: "1px solid #94B4C1",
+  backgroundColor: "#213448",
+  color: "#ECEFCA",
   outline: "none",
 };
 
@@ -199,8 +200,8 @@ const buttonStyle = {
   padding: "10px",
   fontSize: "15px",
   borderRadius: "5px",
-  backgroundColor: "#238636",
-  color: "#fff",
+  backgroundColor: "#94B4C1",
+  color: "#213448",
   border: "none",
   fontWeight: "bold",
   cursor: "pointer",

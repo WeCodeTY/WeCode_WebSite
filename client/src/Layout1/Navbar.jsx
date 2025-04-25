@@ -9,7 +9,7 @@ import solvedproblemslist from "../screens/solvedproblemslist.jsx";
 const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const linkStyle = {
-  color: "#fff",
+  color: "#ECEFCA",
   textDecoration: "none",
 };
 
@@ -111,13 +111,13 @@ const Navbar = () => {
         left: 0,
         width: "100%",
         height: "80px",
-        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        backgroundColor: "#213448",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         paddingLeft: "20px",
         paddingRight: "5px",
-        color: "#fff",
+        color: "#ECEFCA",
         zIndex: 10,
         boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
         backdropFilter: "blur(10px)",
@@ -137,7 +137,7 @@ const Navbar = () => {
           alt="WeCode Logo"
           style={{ height: "40px" }}
         />
-        <span style={{ fontSize: "2rem", fontWeight: "bold", color: "#fff" }}>
+        <span style={{ fontSize: "2rem", fontWeight: "bold", color: "#ECEFCA" }}>
           WeCode
         </span>
       </div>
@@ -175,15 +175,17 @@ const Navbar = () => {
             onClick={handleCreateRoom}
             style={{
               padding: "8px 14px",
-              color: "#fff",
-              backgroundColor: "#6c5ce7",
+              color: "#ECEFCA",
+              backgroundColor: "#547792",
               border: "none",
               borderRadius: "6px",
               fontWeight: "500",
               cursor: "pointer",
-              boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)",
+              boxShadow: "0 2px 8px rgba(84, 119, 146, 0.4)",
               transition: "all 0.3s ease",
             }}
+            onMouseOver={(e) => (e.target.style.backgroundColor = "#94B4C1")}
+            onMouseOut={(e) => (e.target.style.backgroundColor = "#547792")}
           >
             Create Room
           </button>
@@ -191,15 +193,17 @@ const Navbar = () => {
             onClick={() => setShowJoinModal(true)}
             style={{
               padding: "8px 14px",
-              color: "#fff",
-              backgroundColor: "#6c5ce7",
+              color: "#ECEFCA",
+              backgroundColor: "#547792",
               border: "none",
               borderRadius: "6px",
               fontWeight: "500",
               cursor: "pointer",
-              boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)",
+              boxShadow: "0 2px 8px rgba(84, 119, 146, 0.4)",
               transition: "all 0.3s ease",
             }}
+            onMouseOver={(e) => (e.target.style.backgroundColor = "#94B4C1")}
+            onMouseOut={(e) => (e.target.style.backgroundColor = "#547792")}
           >
             Join Room
           </button>
@@ -207,7 +211,7 @@ const Navbar = () => {
       )}
 
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <span style={{ color: "#fff", fontWeight: "bold", marginRight: "10px" }}>
+        <span style={{ color: "#ECEFCA", fontWeight: "bold", marginRight: "10px" }}>
           Points: {userPoints}
         </span>
         <div style={{ position: "relative" }}>
@@ -218,7 +222,7 @@ const Navbar = () => {
               padding: "15px 30px",
               backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(9, 21, 125, 0.6))`,
               borderRadius: "50%",
-              color: "#fff",
+              color: "#ECEFCA",
               border: "1px solid rgba(255, 255, 255, 0.2)",
               cursor: "pointer",
               backdropFilter: "blur(5px)",
@@ -234,7 +238,7 @@ const Navbar = () => {
                 position: "absolute",
                 top: "110%",
                 right: 0,
-                backgroundColor: "rgba(0, 0, 0, 0.95)",
+                backgroundColor: "rgba(33, 52, 72, 0.95)",
                 border: "1px solid rgba(255, 255, 255, 0.2)",
                 borderRadius: "8px",
                 padding: "10px",
@@ -246,7 +250,7 @@ const Navbar = () => {
                 onClick={handleNavigateTouser}
                 style={{
                   padding: "10px",
-                  color: "#fff",
+                  color: "#ECEFCA",
                   backgroundColor: "transparent",
                   border: "none",
                   textAlign: "left",
@@ -268,7 +272,7 @@ const Navbar = () => {
                 onClick={handleNavigateToFollowDashboard}
                 style={{
                   padding: "10px",
-                  color: "#fff",
+                  color: "#ECEFCA",
                   backgroundColor: "transparent",
                   border: "none",
                   textAlign: "left",
@@ -290,7 +294,7 @@ const Navbar = () => {
                 onClick={handleNavigateToUploadPost}
                 style={{
                   padding: "10px",
-                  color: "#fff",
+                  color: "#ECEFCA",
                   backgroundColor: "transparent",
                   border: "none",
                   textAlign: "left",
@@ -313,7 +317,7 @@ const Navbar = () => {
                 onClick={handleproblemsolved}
                 style={{
                   padding: "10px",
-                  color: "#fff",
+                  color: "#ECEFCA",
                   backgroundColor: "transparent",
                   border: "none",
                   textAlign: "left",
@@ -335,7 +339,7 @@ const Navbar = () => {
                 onClick={handleLogoutClick}
                 style={{
                   padding: "10px",
-                  color: "#fff",
+                  color: "#ECEFCA",
                   backgroundColor: "transparent",
                   border: "none",
                   textAlign: "left",
@@ -365,7 +369,7 @@ const Navbar = () => {
             left: 0,
             width: "100vw",
             height: "100vh",
-            background: "rgba(0, 0, 0, 0.3)",
+            background: "rgba(33, 52, 72, 0.8)",
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
             zIndex: 100,
@@ -376,14 +380,14 @@ const Navbar = () => {
         >
           <div
             style={{
-              backgroundColor: "#14142b",
+              backgroundColor: "#547792",
               padding: "30px",
               borderRadius: "12px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               gap: "15px",
-              border: "1px solid #6c5ce7",
+              border: "1px solid #94B4C1",
               boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
               maxWidth: "300px",
               width: "90%",
@@ -395,9 +399,9 @@ const Navbar = () => {
               value={joinRoomId}
               onChange={(e) => setJoinRoomId(e.target.value)}
               style={{
-                backgroundColor: "#1e1e2f",
-                color: "#fff",
-                border: "1px solid #6c5ce7",
+                backgroundColor: "#94B4C1",
+                color: "#213448",
+                border: "1px solid #213448",
                 borderRadius: "8px",
                 padding: "12px",
                 outline: "none",
@@ -410,15 +414,17 @@ const Navbar = () => {
                 onClick={handleJoinRoom}
                 style={{
                   padding: "8px 14px",
-                  color: "#fff",
-                  backgroundColor: "#6c5ce7",
+                  color: "#ECEFCA",
+                  backgroundColor: "#547792",
                   border: "none",
                   borderRadius: "6px",
                   fontWeight: "500",
                   cursor: "pointer",
-                  boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)",
+                  boxShadow: "0 2px 8px rgba(84, 119, 146, 0.4)",
                   transition: "all 0.3s ease",
                 }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = "#94B4C1")}
+                onMouseOut={(e) => (e.target.style.backgroundColor = "#547792")}
               >
                 Join Room
               </button>
@@ -426,15 +432,17 @@ const Navbar = () => {
                 onClick={() => setShowJoinModal(false)}
                 style={{
                   padding: "8px 14px",
-                  color: "#fff",
-                  backgroundColor: "#6c5ce7",
+                  color: "#ECEFCA",
+                  backgroundColor: "#547792",
                   border: "none",
                   borderRadius: "6px",
                   fontWeight: "500",
                   cursor: "pointer",
-                  boxShadow: "0 2px 8px rgba(108, 92, 231, 0.4)",
+                  boxShadow: "0 2px 8px rgba(84, 119, 146, 0.4)",
                   transition: "all 0.3s ease",
                 }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = "#94B4C1")}
+                onMouseOut={(e) => (e.target.style.backgroundColor = "#547792")}
               >
                 Cancel
               </button>

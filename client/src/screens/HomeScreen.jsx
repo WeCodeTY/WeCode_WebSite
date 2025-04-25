@@ -20,7 +20,7 @@ const Typewriter = ({ text = "", speed = 80 }) => {
       style={{
         fontSize: "64px",
         fontWeight: "bold",
-        color: "#f0f6fc",
+        color: "#e0e6d4",
         whiteSpace: "pre-wrap",
         textAlign: "center",
         display: "flex",
@@ -36,7 +36,7 @@ const Typewriter = ({ text = "", speed = 80 }) => {
             width: "10px",
             height: "64px",
             marginLeft: "2px",
-            backgroundColor: "#f0f6fc",
+            backgroundColor: "#e0e6d4",
             animation: "blink 1s step-end infinite",
           }}
         ></span>
@@ -60,7 +60,7 @@ const HomeScreen = () => {
     <div
       style={{
         fontFamily: "Segoe UI, sans-serif",
-        backgroundColor: "#0d1117",
+        backgroundColor: "#1a2735",
         color: "#c9d1d9",
         minHeight: "100vh",
         padding: "0",
@@ -74,8 +74,8 @@ const HomeScreen = () => {
           justifyContent: "space-between",
           alignItems: "center",
           padding: "16px 40px",
-          borderBottom: "1px solid #21262d",
-          backgroundColor: "#161b22",
+          borderBottom: "1px solid #94B4C1",
+          backgroundColor: "#2e475f",
         }}
       >
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -84,7 +84,7 @@ const HomeScreen = () => {
             alt="WeCode Logo"
             style={{ width: "32px", height: "32px", marginRight: "8px" }}
           />
-          <span style={{ fontSize: "24px", fontWeight: "bold", color: "#f0f6fc" }}>
+          <span style={{ fontSize: "24px", fontWeight: "bold", color: "#e0e6d4" }}>
             WeCode
           </span>
         </div>
@@ -93,8 +93,8 @@ const HomeScreen = () => {
           <button
             onClick={() => navigate("/login")}
             style={{
-              backgroundColor: "#238636",
-              color: "#fff",
+              backgroundColor: "#2e475f",
+              color: "#e0e6d4",
               padding: "8px 16px",
               fontSize: "14px",
               border: "none",
@@ -110,10 +110,10 @@ const HomeScreen = () => {
             onClick={() => navigate("/register")}
             style={{
               backgroundColor: "transparent",
-              color: "#f0f6fc",
+              color: "#e0e6d4",
               padding: "8px 16px",
               fontSize: "14px",
-              border: "1px solid #30363d",
+              border: "1px solid #94B4C1",
               borderRadius: "6px",
               cursor: "pointer",
               fontWeight: "bold",
@@ -138,7 +138,7 @@ const HomeScreen = () => {
         <p
           style={{
             fontSize: "20px",
-            color: "#8b949e",
+            color: "#94B4C1",
             maxWidth: "700px",
             margin: "20px auto 40px",
           }}
@@ -153,14 +153,14 @@ const HomeScreen = () => {
             padding: "15px 30px",
             fontSize: "20px",
             borderRadius: "8px",
-            backgroundColor: "#4CAF50",
-            color: "white",
+            backgroundColor: "#94B4C1",
+            color: "#1a2735",
             border: "none",
             cursor: "pointer",
             transition: "background-color 0.3s ease",
           }}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#45a049")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#4CAF50")}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#2e475f")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#94B4C1")}
         >
           Start Coding Now
         </button>
@@ -188,12 +188,13 @@ const HomeScreen = () => {
           <div
             key={feature.title}
             style={{
-              backgroundColor: "#161b22",
+              backgroundColor: "#2e475f",
               padding: "20px",
               borderRadius: "10px",
-              border: "1px solid #30363d",
+              border: "1px solid #94B4C1",
               textAlign: "center",
               transition: "transform 0.3s ease",
+              color: "#e0e6d4",
             }}
             onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
             onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -201,7 +202,7 @@ const HomeScreen = () => {
             <div style={{ fontSize: "32px", marginBottom: "10px" }}>
               {feature.icon}
             </div>
-            <h3 style={{ fontSize: "20px", color: "#f0f6fc" }}>
+            <h3 style={{ fontSize: "20px", color: "#e0e6d4" }}>
               {feature.title}
             </h3>
           </div>
@@ -213,10 +214,11 @@ const HomeScreen = () => {
         style={{
           textAlign: "center",
           padding: "40px 20px 20px",
-          color: "#8b949e",
-          borderTop: "1px solid #21262d",
+          color: "#94B4C1",
+          borderTop: "1px solid #547792",
           marginTop: "60px",
           fontSize: "14px",
+          backgroundColor: "#1a2735",
         }}
       >
         Built with ❤️ by the WeCode Team • © 2025

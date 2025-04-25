@@ -135,24 +135,25 @@ const SolvedProblemsList = () => {
   return (
     <div style={{
       padding: "2rem",
-      backgroundColor: "#1a1a1a",
+      backgroundColor: "#213448",
       borderRadius: "12px",
-      color: "#fff",
+      color: "#ECEFCA",
       fontFamily: "Segoe UI, sans-serif",
       boxShadow: "0 4px 20px rgba(0,0,0,0.6)"
     }}>
       <h2 style={{
-        fontSize: "2.2rem",
-        marginBottom: "1.5rem",
-        color: "#00ffff",
+        fontSize: "1.5rem",
+        fontWeight: 500,
+        marginBottom: "1.2rem",
+        color: "#94B4C1",
         textAlign: "center",
-        textShadow: "0 0 10px #00ffff"
+        textShadow: "0 0 4px #94B4C1"
       }}>
-        🌟 Submitted (Important) Problems 🌟
+        📘 Your Important Submissions
       </h2>
       {Object.keys(topicGraphData).length > 0 && (
         <div style={{ width: "100%", maxWidth: "500px", height: 400, margin: "2rem auto" }}>
-          <h3 style={{ color: "#00ffff", textAlign: "center", marginBottom: "1rem" }}>📊 Solved Questions by Topic</h3>
+          <h3 style={{ color: "#94B4C1", textAlign: "center", marginBottom: "1rem", fontSize: "1.1rem", fontWeight: 500 }}>📈 Topic-wise Breakdown</h3>
           <ResponsiveContainer>
             <PieChart>
               <Pie
@@ -167,7 +168,7 @@ const SolvedProblemsList = () => {
               >
                 {Object.keys(topicGraphData).map((_, index) => (
                   <Cell key={`cell-${index}`} fill={[
-                    "#00cec9", "#6c5ce7", "#fd79a8", "#fab1a0",
+                    "#547792", "#94B4C1", "#6c5ce7", "#fab1a0",
                     "#81ecec", "#ffeaa7", "#a29bfe", "#55efc4"
                   ][index % 8]} />
                 ))}
@@ -196,9 +197,9 @@ const SolvedProblemsList = () => {
           style={{
             padding: "0.6rem 1rem",
             borderRadius: "6px",
-            border: "1px solid #00ffff",
-            backgroundColor: "#1a1a1a",
-            color: "#fff",
+            border: "1px solid #94B4C1",
+            backgroundColor: "#547792",
+            color: "#ECEFCA",
             width: "300px"
           }}
         />
@@ -216,20 +217,20 @@ const SolvedProblemsList = () => {
           }}
           style={{
             padding: "0.6rem 1.2rem",
-            backgroundColor: "#00ffff",
-            color: "#000",
-            border: "none",
+            backgroundColor: "#547792",
+            color: "#ECEFCA",
+            border: "1px solid #94B4C1",
             borderRadius: "6px",
             cursor: "pointer",
-            fontWeight: "600",
-            boxShadow: "0 0 10px #00ffff"
+            fontWeight: "500",
+            boxShadow: "0 0 6px #94B4C1"
           }}
         >
-          ➕ Create List
+          Add List
         </button>
       </div>
       {submittedQuestions.length === 0 ? (
-        <p style={{ color: "#ccc", textAlign: "center" }}>No submitted (important) questions found.</p>
+        <p style={{ color: "#ccc", textAlign: "center" }}>You haven't marked any questions as important yet.</p>
       ) : (
         <table style={{
           width: "100%",
@@ -240,16 +241,16 @@ const SolvedProblemsList = () => {
         }}>
           <thead>
             <tr style={{
-              background: "linear-gradient(to right, #00c6ff, #0072ff)",
-              color: "#fff",
+              background: "#547792",
+              color: "#ECEFCA",
               textTransform: "uppercase",
               letterSpacing: "1px"
             }}>
-              <th style={{ padding: "14px", borderBottom: "2px solid #00ffff" }}>🆔 Question ID</th>
-              <th style={{ padding: "14px", borderBottom: "2px solid #00ffff" }}>📌 Submitted</th>
-              <th style={{ padding: "14px", borderBottom: "2px solid #00ffff" }}>📅 Date</th>
-              <th style={{ padding: "14px", borderBottom: "2px solid #00ffff" }}>⏰ Time</th>
-              <th style={{ padding: "14px", borderBottom: "2px solid #00ffff" }}>📂 Actions</th>
+              <th style={{ padding: "14px", borderBottom: "2px solid #94B4C1" }}>🆔 Question ID</th>
+              <th style={{ padding: "14px", borderBottom: "2px solid #94B4C1" }}>📌 Submitted</th>
+              <th style={{ padding: "14px", borderBottom: "2px solid #94B4C1" }}>📅 Date</th>
+              <th style={{ padding: "14px", borderBottom: "2px solid #94B4C1" }}>⏰ Time</th>
+              <th style={{ padding: "14px", borderBottom: "2px solid #94B4C1" }}>📂 Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -257,40 +258,43 @@ const SolvedProblemsList = () => {
               <tr
                 key={idx}
                 style={{
-                  backgroundColor: idx % 2 === 0 ? "#222" : "#2b2b2b",
+                  backgroundColor: idx % 2 === 0 ? "#547792" : "#94B4C1",
                   transition: "all 0.3s ease",
+                  color: "#213448"
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#3a3a3a";
-                  e.currentTarget.style.boxShadow = "0 0 10px #00ffff";
+                  e.currentTarget.style.backgroundColor = "#6e8ca9";
+                  e.currentTarget.style.boxShadow = "0 0 8px #94B4C1";
+                  e.currentTarget.style.color = "#213448";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = idx % 2 === 0 ? "#222" : "#2b2b2b";
+                  e.currentTarget.style.backgroundColor = idx % 2 === 0 ? "#547792" : "#94B4C1";
                   e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.color = "#213448";
                 }}
               >
-                <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>{q.questionId}</td>
-                <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>{q.important ? "✅ Yes" : "❌ No"}</td>
-                <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>
+                <td style={{ padding: "14px", borderBottom: "1px solid #94B4C1" }}>{q.questionId}</td>
+                <td style={{ padding: "14px", borderBottom: "1px solid #94B4C1" }}>{q.important ? "✅ Yes" : "❌ No"}</td>
+                <td style={{ padding: "14px", borderBottom: "1px solid #94B4C1" }}>
                 {q.timestamp ? new Date(q.timestamp).toLocaleDateString() : "N/A"}
                 </td>
-                <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>
+                <td style={{ padding: "14px", borderBottom: "1px solid #94B4C1" }}>
                 {q.timestamp ? new Date(q.timestamp).toLocaleTimeString() : "N/A"}
                 </td>
-                <td style={{ padding: "14px", borderBottom: "1px solid #444" }}>
+                <td style={{ padding: "14px", borderBottom: "1px solid #94B4C1" }}>
                   <select
                     defaultValue=""
                     onChange={(e) => addquestiontocustomlist(e.target.value, q.questionId)}
                     data-question-id={q.questionId}
                     style={{
-                      backgroundColor: "#1a1a1a",
-                      color: "#fff",
-                      border: "1px solid #00ffff",
+                      backgroundColor: "#547792",
+                      color: "#ECEFCA",
+                      border: "1px solid #94B4C1",
                       borderRadius: "4px",
                       padding: "6px",
                     }}
                   >
-                    <option value="" disabled>📂 Save to List</option>
+                    <option value="" disabled style={{color:"#ECEFCA"}}>Save</option>
                     {customlist.map((list) => (
                       <option key={list._id} value={list._id}>
                         {list.name}
@@ -303,22 +307,22 @@ const SolvedProblemsList = () => {
           </tbody>
         </table>
       )}
-      <div style={{ marginTop: "3rem", padding: "1rem", backgroundColor: "#111", borderRadius: "10px" }}>
-        <h3 style={{ color: "#00ffff", marginBottom: "1rem" }}>📋 Questions in Selected Custom List</h3>
+      <div style={{ marginTop: "3rem", padding: "1rem", backgroundColor: "#213448", borderRadius: "10px" }}>
+        <h3 style={{ color: "#94B4C1", marginBottom: "1rem", fontSize: "1.1rem", fontWeight: 500 }}>📁 Saved List Questions</h3>
         <select
           id="list-view-selector"
           defaultValue=""
           onChange={(e) => viewcustomlist(e.target.value)}
           style={{
-            backgroundColor: "#1a1a1a",
-            color: "#fff",
-            border: "1px solid #00ffff",
+            backgroundColor: "#547792",
+            color: "#ECEFCA",
+            border: "1px solid #94B4C1",
             borderRadius: "6px",
             padding: "0.6rem",
             marginBottom: "1rem"
           }}
         >
-          <option disabled value="">🔽 Select a List to View Questions</option>
+          <option disabled value="" style={{color:"#ECEFCA"}}>🔽 Select a List to View Questions</option>
           {customlist.map((list) => (
             <option key={list._id} value={list._id}>
               {list.name}
@@ -343,10 +347,12 @@ const SolvedProblemsList = () => {
               borderRadius: "6px",
               cursor: "pointer",
               marginBottom: "1rem",
-              marginLeft: "1rem"
+              marginLeft: "1rem",
+              fontWeight: "500",
+              fontFamily: "Segoe UI, sans-serif"
             }}
           >
-            🗑️ Delete Selected List
+            Remove List
           </button>
         )}
         {selectedListId && showcustomlistquestions.length > 0 ? ( // Only show if a list is selected
@@ -371,16 +377,16 @@ const SolvedProblemsList = () => {
                   width: "200px",
                   padding: "1rem",
                   margin: "1rem",
-                  backgroundColor: "#fffc99",
-                  color: "#333",
+                  backgroundColor: "#ECEFCA",
+                  color: "#213448",
                   borderRadius: "8px",
                   boxShadow: "2px 2px 8px rgba(0,0,0,0.3)",
-                  fontWeight: "bold",
+                  fontWeight: 500,
                   cursor: "grab",
                   zIndex: 1000
                 }}
               >
-                🧩 {q}
+                Q: {q}
                 <button
                   onClick={() => {
                     const selectedListId = document.getElementById("list-view-selector").value;
@@ -409,7 +415,7 @@ const SolvedProblemsList = () => {
             ))}
           </div>
         ) : (
-          <p style={{ color: "#ccc" }}>No questions in this list yet.</p>
+          <p style={{ color: "#ccc" }}>This list doesn't have any saved questions.</p>
         )}
       </div>
     </div>

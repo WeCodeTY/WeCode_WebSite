@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Layout from "../Layout1/Layout.jsx";
 
 const UploadPosts = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [message, setMessage] = useState("");
+  const [isHover, setIsHover] = useState(false);
 
   const handleImageChange = (e) => {
     setImages([...e.target.files]);
@@ -47,55 +49,94 @@ const UploadPosts = () => {
   };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "600px", margin: "0 auto" }}>
-      <h2>Upload Posts</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <div style={{ marginBottom: "1rem" }}>
-          <input
-            type="text"
-            placeholder="Post Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            style={{ width: "100%", padding: "0.5rem" }}
-          />
-        </div>
+    <Layout>
+      <style>
+        {`
+          input::placeholder, textarea::placeholder {
+            color: #ECEFCA;
+            opacity: 1;
+          }
+        `}
+      </style>
+      <div style={{ padding: "3rem", maxWidth: "600px", margin: "0 auto", backgroundColor: "#213448", borderRadius: "8px" }}>
+        <h2 style={{ color: "#ECEFCA", textAlign: "center", marginBottom: "2rem" }}>Upload Posts</h2>
+        <form onSubmit={handleSubmit} encType="multipart/form-data" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div>
+            <input
+              type="text"
+              placeholder="Post Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.8rem",
+                backgroundColor: "#547792",
+                color: "#ECEFCA",
+                border: "1px solid #94B4C1",
+                borderRadius: "4px",
+              }}
+            />
+          </div>
 
-        <div style={{ marginBottom: "1rem" }}>
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            style={{ width: "100%", padding: "0.5rem", height: "100px" }}
-          />
-        </div>
+          <div>
+            <textarea
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.8rem",
+                height: "120px",
+                backgroundColor: "#547792",
+                color: "#ECEFCA",
+                border: "1px solid #94B4C1",
+                borderRadius: "4px",
+                resize: "vertical",
+              }}
+            />
+          </div>
 
-        <div style={{ marginBottom: "1rem" }}>
-          <input
-            type="file"
-            name="posts"
-            multiple
-            onChange={handleImageChange}
-          />
-        </div>
+          <div>
+            <input
+              type="file"
+              name="posts"
+              multiple
+              onChange={handleImageChange}
+              style={{
+                backgroundColor: "#547792",
+                color: "#ECEFCA",
+                border: "1px solid #94B4C1",
+                borderRadius: "4px",
+                padding: "0.5rem",
+              }}
+            />
+          </div>
 
-        <button
-          type="submit"
-          style={{
-            padding: "0.5rem 1rem",
-            backgroundColor: "#8a2be2",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Upload
-        </button>
-      </form>
+          <div style={{ textAlign: "center" }}>
+            <button
+              type="submit"
+              style={{
+                padding: "0.8rem 1.5rem",
+                backgroundColor: isHover ? "#94B4C1" : "#547792",
+                color: "#ECEFCA",
+                border: "none",
+                cursor: "pointer",
+                borderRadius: "5px",
+                transition: "background-color 0.3s ease",
+              }}
+              onMouseEnter={() => setIsHover(true)}
+              onMouseLeave={() => setIsHover(false)}
+            >
+              Upload
+            </button>
+          </div>
+        </form>
 
-      {message && (
-        <p style={{ marginTop: "1rem", color: "green" }}>{message}</p>
-      )}
-    </div>
+        {message && (
+          <p style={{ marginTop: "1.5rem", color: "#94B4C1", textAlign: "center" }}>{message}</p>
+        )}
+      </div>
+    </Layout>
   );
 };
 

@@ -54,12 +54,12 @@ const LoginScreen = () => {
       <div
         style={{
           minHeight: "100vh",
-          backgroundColor: "#0d1117",
+          backgroundColor: "#213448",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
-          color: "#ffffff",
+          color: "#ECEFCA",
           fontFamily: "Segoe UI, sans-serif",
         }}
       >
@@ -74,8 +74,8 @@ const LoginScreen = () => {
 
         <div
           style={{
-            backgroundColor: "#0d1117",
-            border: "1px solid #30363d",
+            backgroundColor: "#547792",
+            border: "1px solid #94B4C1",
             borderRadius: "6px",
             padding: "20px",
             width: "300px",
@@ -100,10 +100,10 @@ const LoginScreen = () => {
                 padding: "8px",
                 marginTop: "5px",
                 marginBottom: "15px",
-                border: "1px solid #30363d",
+                border: "1px solid #94B4C1",
                 borderRadius: "6px",
-                backgroundColor: "#0d1117",
-                color: "#c9d1d9",
+                backgroundColor: "#213448",
+                color: "#ECEFCA",
               }}
             />
 
@@ -121,7 +121,7 @@ const LoginScreen = () => {
                 href="#"
                 style={{
                   fontSize: "12px",
-                  color: "#58a6ff",
+                  color: "#94B4C1",
                   textDecoration: "none",
                 }}
               >
@@ -138,10 +138,10 @@ const LoginScreen = () => {
                 padding: "8px",
                 marginTop: "5px",
                 marginBottom: "15px",
-                border: "1px solid #30363d",
+                border: "1px solid #94B4C1",
                 borderRadius: "6px",
-                backgroundColor: "#0d1117",
-                color: "#c9d1d9",
+                backgroundColor: "#213448",
+                color: "#ECEFCA",
               }}
             />
 
@@ -150,8 +150,8 @@ const LoginScreen = () => {
               style={{
                 width: "100%",
                 padding: "10px",
-                backgroundColor: "#238636",
-                color: "#fff",
+                backgroundColor: "#94B4C1",
+                color: "#213448",
                 border: "none",
                 borderRadius: "6px",
                 fontSize: "16px",
@@ -198,7 +198,7 @@ const LoginScreen = () => {
                 width: "100%",
                 padding: "10px",
                 backgroundColor: "#4285F4",
-                color: "#fff",
+                color: "#ECEFCA",
                 border: "none",
                 borderRadius: "6px",
                 fontSize: "16px",
@@ -216,9 +216,9 @@ const LoginScreen = () => {
           style={{
             marginTop: "15px",
             padding: "12px 20px",
-            border: "1px solid #30363d",
+            border: "1px solid #94B4C1",
             borderRadius: "6px",
-            backgroundColor: "#0d1117",
+            backgroundColor: "#547792",
             fontSize: "14px",
           }}
         >
@@ -226,7 +226,7 @@ const LoginScreen = () => {
           <span
             onClick={handleRegister}
             style={{
-              color: "#58a6ff",
+              color: "#ECEFCA",
               cursor: "pointer",
               fontWeight: "600",
             }}
@@ -251,21 +251,21 @@ const LoginScreen = () => {
           style={{
             marginTop: "40px",
             fontSize: "12px",
-            color: "#8b949e",
+            color: "#94B4C1",
             display: "flex",
             gap: "15px",
           }}
         >
-          <a href="#" style={{ color: "#8b949e", textDecoration: "none" }}>
+          <a href="#" style={{ color: "#94B4C1", textDecoration: "none" }}>
             Terms
           </a>
-          <a href="#" style={{ color: "#8b949e", textDecoration: "none" }}>
+          <a href="#" style={{ color: "#94B4C1", textDecoration: "none" }}>
             Privacy
           </a>
-          <a href="#" style={{ color: "#8b949e", textDecoration: "none" }}>
+          <a href="#" style={{ color: "#94B4C1", textDecoration: "none" }}>
             Security
           </a>
-          <a href="#" style={{ color: "#8b949e", textDecoration: "none" }}>
+          <a href="#" style={{ color: "#94B4C1", textDecoration: "none" }}>
             Contact GitHub
           </a>
         </div>
@@ -276,7 +276,7 @@ const LoginScreen = () => {
             bottom: "10px",
             right: "10px",
             fontSize: "13px",
-            color: "#8b949e",
+            color: "#94B4C1",
           }}
         >
           {serverStatus}
