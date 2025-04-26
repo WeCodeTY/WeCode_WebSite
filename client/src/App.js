@@ -13,6 +13,12 @@ import "./App.css";
 import UploadPosts from "./Rooms/UploadPosts";
 import SolvedProblemsList from "./screens/solvedproblemslist";
 import AdminDashboard from "./screens/adminDashboard";
+import AboutScreen from "./screens/AboutScreen";
+import DevopsScreen from "./screens/devopsScreen";
+import WebDevScreen from "./screens/WebDevScreen";
+import WebDevProjectsScreen from "./screens/webdevprojectsScreen";
+import DevopsProjectsScreen from "./screens/devopsprojectsScreen";
+import DsaCoursesScreen from "./screens/dsacoursesScreen";
 
 function App() {
   return (
@@ -32,6 +38,12 @@ function App() {
         <Route path="/customroom/:publicRoomId/:privateRoomId" element={<CustomRoom />} />
         <Route path="/solvedproblemslist" element={<SolvedProblemsList />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/about" element={<AboutScreen />} />
+        <Route path="/webdev" element={<WebDevScreen />} />
+        <Route path="/devops" element={<DevopsScreen />} />
+        <Route path="/webdevprojects" element={<WebDevProjectsScreen />} />
+        <Route path="/devopsprojects" element={<DevopsProjectsScreen />} />
+        <Route path="/dsacourses" element={<DsaCoursesScreen />} />
       </Routes>
     </Router>
   );

@@ -18,6 +18,7 @@ const Navbar = () => {
   const [joinRoomId, setJoinRoomId] = React.useState("");
   const [showJoinModal, setShowJoinModal] = React.useState(false);
   const [userPoints, setUserPoints] = useState(0);
+  const [showCoursesMenu, setShowCoursesMenu] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isDsaDashboard = location.pathname.startsWith("/dsadashboard");
@@ -45,12 +46,12 @@ const Navbar = () => {
   const handleNavigateTouser = () => {
     navigate("/userdetails");
   };
-  const NavigateDashboard = () => {
-    navigate("/dsadashboard");
-  };
 
   const NavigateFeed = () => {
     navigate("/Feed");
+  };
+  const NavigatedDSADashboard = () => {
+    navigate("/dsadashboard");
   };
 
   const handleCreateRoom = async () => {
@@ -102,6 +103,24 @@ const Navbar = () => {
   const handleNavigateToUploadPost = () => {
     navigate("/upload-post");
   };
+  const navigatetoabout = () => {
+    navigate("/about");
+  };
+  const NavigatetoWebDev = () => {
+    navigate("/webdev");
+  };
+  const NavigatetoWebDevprojects = () => {
+    navigate("/webdevprojects");
+  };
+  const navigatetodevops = () => {
+    navigate("/devops");
+  };
+  const navigatetodevopsprojects = () => {
+    navigate("/devopsprojects");
+  };
+  const NavigateDsaCourses = () => {
+    navigate("/dsacourses");
+  };
 
   return (
     <nav
@@ -146,19 +165,90 @@ const Navbar = () => {
         <span style={linkStyle} onClick={NavigateFeed}>
           Home
         </span>
-        <a href="#courses" style={linkStyle}>
-          Courses
-        </a>
-        <a href="#about" style={linkStyle}>
+        <div style={{ position: "relative" }}>
+          <span
+            style={{ ...linkStyle, cursor: "pointer" }}
+            onClick={() => setShowCoursesMenu((prev) => !prev)}
+          >
+            Courses ▼
+          </span>
+          {showCoursesMenu && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                backgroundColor: "rgba(33, 52, 72, 0.95)",
+                borderRadius: "8px",
+                padding: "10px",
+                minWidth: "150px",
+                zIndex: 20,
+                marginTop: "5px",
+              }}
+            >
+              <button
+                onClick={NavigateDsaCourses}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  padding: "8px 10px",
+                  background: "none",
+                  color: "#ECEFCA",
+                  border: "none",
+                  textAlign: "left",
+                  cursor: "pointer",
+                }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = "#1a1a1a")}
+                onMouseOut={(e) => (e.target.style.backgroundColor = "transparent")}
+              >
+                DSA Course
+              </button>
+              <button
+                onClick={NavigatetoWebDev}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  padding: "8px 10px",
+                  background: "none",
+                  color: "#ECEFCA",
+                  border: "none",
+                  textAlign: "left",
+                  cursor: "pointer",
+                }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = "#1a1a1a")}
+                onMouseOut={(e) => (e.target.style.backgroundColor = "transparent")}
+              >
+                Web Dev Course
+              </button>
+              <button
+                onClick={navigatetodevops}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  padding: "8px 10px",
+                  background: "none",
+                  color: "#ECEFCA",
+                  border: "none",
+                  textAlign: "left",
+                  cursor: "pointer",
+                }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = "#1a1a1a")}
+                onMouseOut={(e) => (e.target.style.backgroundColor = "transparent")}
+              >
+                DevOps Course
+              </button>
+            </div>
+          )}
+        </div>
+        <a href="#about" style={linkStyle} onClick={navigatetoabout}>
           About
         </a>
-        <a href="#webdev" style={linkStyle}>
+        <a href="#webdev" style={linkStyle} onClick={NavigatetoWebDevprojects}>
           Web Dev
         </a>
-        <a href="#dsa" style={linkStyle} onClick={NavigateDashboard}>
+        <a href="#dsa" style={linkStyle} onClick={NavigatedDSADashboard}>
           DSA
         </a>
-        <a href="#devops" style={linkStyle}>
+        <a href="#devops" style={linkStyle} onClick={navigatetodevopsprojects}>
           DevOps
         </a>
       </div>

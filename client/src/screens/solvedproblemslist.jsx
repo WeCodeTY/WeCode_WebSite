@@ -2,6 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Navbar from "../Layout1/Navbar";
+import Footer from "../Layout1/Footer";
 
 const SolvedProblemsList = () => {
   const [submittedQuestions, setSubmittedQuestions] = useState([]);
@@ -133,14 +135,23 @@ const SolvedProblemsList = () => {
   }
 
   return (
+
+    
+
     <div style={{
+      /* Navbar placed immediately after opening div */
+    }}>
+      <Navbar />
+      {/* Rest of the content */}
+      <div style={{
       padding: "2rem",
       backgroundColor: "#213448",
       borderRadius: "12px",
       color: "#ECEFCA",
       fontFamily: "Segoe UI, sans-serif",
       boxShadow: "0 4px 20px rgba(0,0,0,0.6)"
-    }}>
+      }}>
+       
       <h2 style={{
         fontSize: "1.5rem",
         fontWeight: 500,
@@ -418,6 +429,8 @@ const SolvedProblemsList = () => {
           <p style={{ color: "#ccc" }}>This list doesn't have any saved questions.</p>
         )}
       </div>
+      </div>
+      <Footer />
     </div>
   );
 };
