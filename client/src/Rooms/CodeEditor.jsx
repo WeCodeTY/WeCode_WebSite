@@ -1,3 +1,4 @@
+import * as monaco from "monaco-editor";
 import React, { useState, useRef, useEffect } from "react";
 import { debounce } from "lodash";
 import { useParams } from "react-router-dom";
