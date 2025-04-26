@@ -67,7 +67,11 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
     const handleIncomingCode = (incomingCode) => {
       const currentCode = editorRef.current?.getValue();
       if (incomingCode !== currentCode) {
+        const currentCursor = editorRef.current?.getPosition();
         editorRef.current?.setValue(incomingCode);
+        if (currentCursor) {
+          editorRef.current?.setPosition(currentCursor);
+        }
       }
     };
 
