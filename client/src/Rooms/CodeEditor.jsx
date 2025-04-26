@@ -72,13 +72,31 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
 
     // Handle code from others
     const handleIncomingCode = (incomingCode) => {
-      const currentCode = editorRef.current?.getValue();
-      if (incomingCode !== currentCode) {
-        const currentCursor = editorRef.current?.getPosition();
-        editorRef.current?.setValue(incomingCode);
-        if (currentCursor) {
-          editorRef.current?.setPosition(currentCursor);
-        }
+      if (!editorRef.current) return;
+
+      const editor = editorRef.current;
+      const currentCode = editor.getValue();
+      if (incomingCode === currentCode) return;
+
+      const model = editor.getModel();
+      if (!model) return;
+
+      const fullRange = model.getFullModelRange();
+      const currentSelection = editor.getSelection(); // Save current cursor position
+
+      model.pushEditOperations(
+        [],
+        [
+          {
+            range: fullRange,
+            text: incomingCode,
+          },
+        ],
+        () => null
+      );
+
+      if (currentSelection) {
+        editor.setSelection(currentSelection); // Restore the cursor position
       }
     };
 
