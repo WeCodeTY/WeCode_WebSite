@@ -145,81 +145,100 @@ const CustomRoom = () => {
         ) : null}
       </Box>
       {!isReadOnly && !fromNavbar && (
-        <Box display="flex" height="100vh" width="100%" p={4}>
+        <Box
+          display="flex"
+          flexDirection={{ base: "column", md: "row" }} // Stack on mobile, side-by-side on laptop
+          height="100vh"
+          width="100%"
+          p={4}
+        >
           {/* Left side - Room Info and Language Selector */}
-          <Box width="50%" pr={4} overflowY="auto" maxHeight="90vh">
-            <Text fontSize="2xl" fontWeight="bold" mb={4}>
+          <Box
+            width={{ base: "100%", md: "40%" }} // Full width on mobile, 40% on larger screens
+            pr={4}
+            overflowY="auto"
+            maxHeight="90vh"
+          >
+            <Text fontSize={{ base: "md", md: "2xl" }} fontWeight="bold" mb={{ base: 2, md: 4 }}>
               {question.title || "Custom Room"} - {publicRoomId}
             </Text>
-            <Text mb={2}>
+            <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
               <strong>Difficulty:</strong> {question.difficulty}
             </Text>
-            <Text mb={2}>
+            <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
               <strong>Statement:</strong> {question.statement}
             </Text>
-            <Text mb={2}>
+            <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
               <strong>Sample Input:</strong> {question.sampleInput}
             </Text>
-            <Text mb={2}>
+            <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
               <strong>Sample Output:</strong> {question.sampleOutput}
             </Text>
-            <Text mb={2}>
+            <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
               <strong>Constraints:</strong> {question.constraints}
             </Text>
           </Box>
 
           {/* Right side - Code Editor */}
-          <Box width="50%" height="30%" marginTop={"10px"}>
+          <Box
+            marginTop={{ base: "2", md: "10px" }}
+            width={{ base: "100%", md: "70%" }}  // Full width on mobile, 70% on larger screens
+            ml={{ md: "auto" }}  // Align CodeEditor to the right on larger screens
+          >
             <CodeEditor
               editorRef={editorRef}
               languageId={languageId}
               setLanguageId={setLanguageId}
-              initialCode={initialCode} // Updated to use local state
+              initialCode={initialCode}
             />
             <Button mt={4} colorScheme="blue" onClick={handleRunCode}>
               Run Code
             </Button>
             <Box mt={4}>
               <Text fontWeight="bold">Output:</Text>
-              <Code whiteSpace="pre-wrap">{output}</Code>
+              <Box overflowX="auto" maxHeight="150px">
+                <Code whiteSpace="pre-wrap">{output}</Code>
+              </Box>
             </Box>
             {testResults.length > 0 && (
               <Box mt={6}>
                 <Text fontWeight="bold" mb={2}>
                   Test Case Results:
                 </Text>
-                <Box
-                  as="table"
-                  width="100%"
-                  border="1px solid #ccc"
-                  borderRadius="md"
-                >
-                  <thead>
-                    <tr>
-                      <th>Input</th>
-                      <th>Expected</th>
-                      <th>Output</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {testResults.map((test, idx) => (
-                      <tr key={idx}>
-                        <td>
-                          <Code>{test.input}</Code>
-                        </td>
-                        <td>
-                          <Code>{test.expected}</Code>
-                        </td>
-                        <td>
-                          <Code>{test.output}</Code>
-                        </td>
-                        <td style={{ color: test.passed ? "green" : "red" }}>
-                          {test.passed ? "✅ Passed" : "❌ Failed"}
-                        </td>
+                <Box overflowX="auto">
+                  <Box
+                    as="table"
+                    width="100%"
+                    border="1px solid #ccc"
+                    borderRadius="md"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Input</th>
+                        <th>Expected</th>
+                        <th>Output</th>
+                        <th>Status</th>
                       </tr>
-                    ))}
-                  </tbody>
+                    </thead>
+                    <tbody>
+                      {testResults.map((test, idx) => (
+                        <tr key={idx}>
+                          <td>
+                            <Code>{test.input}</Code>
+                          </td>
+                          <td>
+                            <Code>{test.expected}</Code>
+                          </td>
+                          <td>
+                            <Code>{test.output}</Code>
+                          </td>
+                          <td style={{ color: test.passed ? "green" : "red" }}>
+                            {test.passed ? "✅ Passed" : "❌ Failed"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Box>
                 </Box>
               </Box>
             )}

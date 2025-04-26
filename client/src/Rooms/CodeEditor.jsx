@@ -120,31 +120,44 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
   }, [publicRoomId]);
 
   return (
-    <HStack align="start" spacing={4} p={4}>
-      <Box w="100%">
+    <HStack align="start" spacing={6} p={6} justify="center">
+      <Box 
+        width={{ base: "100%", md: "70%" }} 
+        borderRadius="md" 
+        boxShadow="xl" 
+        overflow="hidden"
+        ml={{ md: "auto" }} // Align the box to the right on larger screens
+      >
         <Editor
           height="75vh"
-          theme={theme}
+          theme={theme} 
           language={getLanguageName(languageId)}
           value={value}
           onMount={onMount}
           onChange={handleCodeChange}
           options={{
-            fontSize: 14,
-            minimap: { enabled: false },
-            wordWrap: "on",
-            scrollBeyondLastLine: false,
+            fontSize: 16, // Larger, readable font size
+            fontFamily: 'Fira Code, monospace', // Professional monospaced font
+            lineHeight: 1.5, // Better line spacing for readability
+            minimap: { enabled: false }, // Minimaps are often unnecessary for professional UIs
+            wordWrap: "on", // Ensures code wraps correctly within the editor
+            scrollBeyondLastLine: false, // Keeps the editor clean without unnecessary space at the end
+            renderWhitespace: "none", // Removes unnecessary whitespace in the editor
+            cursorBlinking: "smooth", // Smooth cursor blinking
           }}
         />
-
-        <div style={{ display: "flex", marginTop: "16px" }}>
+        <div style={{ display: "flex", marginTop: "20px" }}>
           <LanguageSelector language={getLanguageName(languageId)} onSelect={onSelect} />
           <button
             onClick={() => setTheme(theme === "vs-dark" ? "light" : "vs-dark")}
             style={{
-              marginLeft: "10px",
-              width: "30%",
-              height: "40px",
+              marginLeft: "16px",
+              padding: "8px 16px",
+              backgroundColor: "#4CAF50", // Professional green button
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
             }}
           >
             Change Theme

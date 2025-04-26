@@ -252,125 +252,127 @@ const Dashboard = () => {
         >
           DSA Questions
         </h2>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ background: "#213448" }}>
-              <th style={thStyle}>Topic</th>
-              <th style={thStyle}>Title</th>
-              <th style={thStyle}>Difficulty</th>
-              <th style={thStyle}>Revision</th>
-              <th style={thStyle}>Submitted</th>
-              <th style={thStyle}>Solve</th>
-              <th style={thStyle}>Join Room</th>
-              <th style={thStyle}>Private Room</th>
-              <th style={thStyle}>Join Private Room</th>
-            </tr>
-          </thead>
-          <tbody>
-            {questions.map((q, index) => (
-              <tr
-                key={index}
-                style={{
-                  transition: "transform 0.2s ease, background-color 0.2s ease",
-                  cursor: "pointer",
-                  color: "#213448",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "scale(1.01)";
-                  e.currentTarget.style.backgroundColor = "#94B4C1";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                  e.currentTarget.style.backgroundColor = "";
-                }}
-              >
-                <td style={tdStyle}>{q.Topic || "N/A"}</td>
-                <td style={tdStyle}>{q.Title}</td>
-                <td style={tdStyle}>{q.Difficulty}</td>
-                <td style={tdStyle}>
-                  <input
-                    type="checkbox"
-                    checked={q.Revision === "Yes"}
-                    onChange={() =>
-                      handleUpdateQuestion(index, "Revision", q.Revision)
-                    }
-                    style={{ cursor: "pointer", ...inputStyle }}
-                  />
-                </td>
-                <td style={tdStyle}>
-                  <input
-                    type="checkbox"
-                    checked={q.Important === "Yes"}
-                    onChange={() =>
-                      handleUpdateQuestion(index, "Important", q.Important)
-                    }
-                    style={{ cursor: "pointer", ...inputStyle }}
-                  />
-                </td>
-                <td style={tdStyle}>
-                  <button
-                    style={actionBtnStyle1}
-                    title="Submit Solution"
-                    onClick={() => handleSolvequestion(q)}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "#94B4C1")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "#547792")
-                    }
-                  >
-                    Submit
-                  </button>
-                </td>
-                <td style={tdStyle}>
-                  <button
-                    onClick={() => handleJoinQuestionRoom(q.Title)}
-                    style={buttonStyle}
-                    title="Join public room for this question"
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "#94B4C1")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "#547792")
-                    }
-                  >
-                    Join Room
-                  </button>
-                </td>
-                <td style={tdStyle}>
-                  <button
-                    onClick={() => handleCreateRoom(q)}
-                    style={buttonStyle}
-                    title="Create a private room"
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "#94B4C1")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "#547792")
-                    }
-                  >
-                    Create Room
-                  </button>
-                </td>
-                <td style={tdStyle}>
-                  <button
-                    onClick={() => handleJoinRoom(q)}
-                    style={buttonStyle}
-                    title="Join a private room"
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "#94B4C1")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "#547792")
-                    }
-                  >
-                    Join Private
-                  </button>
-                </td>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", minWidth: "900px", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#213448" }}>
+                <th style={thStyle}>Topic</th>
+                <th style={thStyle}>Title</th>
+                <th style={thStyle}>Difficulty</th>
+                <th style={thStyle}>Revision</th>
+                <th style={thStyle}>Submitted</th>
+                <th style={thStyle}>Solve</th>
+                <th style={thStyle}>Join Room</th>
+                <th style={thStyle}>Private Room</th>
+                <th style={thStyle}>Join Private Room</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {questions.map((q, index) => (
+                <tr
+                  key={index}
+                  style={{
+                    transition: "transform 0.2s ease, background-color 0.2s ease",
+                    cursor: "pointer",
+                    color: "#213448",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.01)";
+                    e.currentTarget.style.backgroundColor = "#94B4C1";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                    e.currentTarget.style.backgroundColor = "";
+                  }}
+                >
+                  <td style={tdStyle}>{q.Topic || "N/A"}</td>
+                  <td style={tdStyle}>{q.Title}</td>
+                  <td style={tdStyle}>{q.Difficulty}</td>
+                  <td style={tdStyle}>
+                    <input
+                      type="checkbox"
+                      checked={q.Revision === "Yes"}
+                      onChange={() =>
+                        handleUpdateQuestion(index, "Revision", q.Revision)
+                      }
+                      style={{ cursor: "pointer", ...inputStyle }}
+                    />
+                  </td>
+                  <td style={tdStyle}>
+                    <input
+                      type="checkbox"
+                      checked={q.Important === "Yes"}
+                      onChange={() =>
+                        handleUpdateQuestion(index, "Important", q.Important)
+                      }
+                      style={{ cursor: "pointer", ...inputStyle }}
+                    />
+                  </td>
+                  <td style={tdStyle}>
+                    <button
+                      style={actionBtnStyle1}
+                      title="Submit Solution"
+                      onClick={() => handleSolvequestion(q)}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#94B4C1")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#547792")
+                      }
+                    >
+                      Submit
+                    </button>
+                  </td>
+                  <td style={tdStyle}>
+                    <button
+                      onClick={() => handleJoinQuestionRoom(q.Title)}
+                      style={buttonStyle}
+                      title="Join public room for this question"
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#94B4C1")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#547792")
+                      }
+                    >
+                      Join Room
+                    </button>
+                  </td>
+                  <td style={tdStyle}>
+                    <button
+                      onClick={() => handleCreateRoom(q)}
+                      style={buttonStyle}
+                      title="Create a private room"
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#94B4C1")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#547792")
+                      }
+                    >
+                      Create Room
+                    </button>
+                  </td>
+                  <td style={tdStyle}>
+                    <button
+                      onClick={() => handleJoinRoom(q)}
+                      style={buttonStyle}
+                      title="Join a private room"
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#94B4C1")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#547792")
+                      }
+                    >
+                      Join Private
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </Layout>
   );
