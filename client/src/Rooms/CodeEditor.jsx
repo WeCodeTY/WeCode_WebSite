@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { debounce } from "lodash";
 import { useParams } from "react-router-dom";
 import { Box, HStack } from "@chakra-ui/react";
 import Editor from "@monaco-editor/react";
@@ -49,6 +50,12 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
 
   const [socketConnected, setSocketConnected] = useState(false);
 
+  const debouncedEmitCode = debounce((socket, privateRoomId, code) => {
+    if (privateRoomId && socket.connected) {
+      socket.emit("code-change", { privateRoomId, code });
+    }
+  }, 300);
+
   useEffect(() => {
     if (!privateRoomId) return;
 
@@ -86,9 +93,7 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
 
   const handleCodeChange = (val) => {
     setValue(val);
-    if (privateRoomId && socketConnected) {
-      socket.emit("code-change", { privateRoomId, code: val });
-    }
+    debouncedEmitCode(socket, privateRoomId, val);
   };
 
   useEffect(() => {
