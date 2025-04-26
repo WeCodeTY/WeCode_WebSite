@@ -1,6 +1,4 @@
-import * as monaco from "monaco-editor";
 import React, { useState, useRef, useEffect } from "react";
-import { debounce } from "lodash";
 import { useParams } from "react-router-dom";
 import { Box, HStack } from "@chakra-ui/react";
 import Editor from "@monaco-editor/react";
@@ -51,12 +49,6 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
 
   const [socketConnected, setSocketConnected] = useState(false);
 
-  const debouncedEmitCode = debounce((socket, privateRoomId, code) => {
-    if (privateRoomId && socket.connected) {
-      socket.emit("code-change", { privateRoomId, code });
-    }
-  }, 300);
-
   useEffect(() => {
     if (!privateRoomId) return;
 
@@ -72,30 +64,11 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
     }
 
     // Handle code from others
-    const handleIncomingCode = ({ diff, position, senderId }) => {
-      if (!editorRef.current || senderId === socket.id) return;
-
-      const editor = editorRef.current;
-      const model = editor.getModel();
-      if (!model) return;
-
-      const currentPosition = model.getPositionAt(position);
-
-      model.pushEditOperations(
-        [],
-        [
-          {
-            range: new monaco.Range(
-              currentPosition.lineNumber,
-              currentPosition.column,
-              currentPosition.lineNumber,
-              currentPosition.column
-            ),
-            text: diff,
-          },
-        ],
-        () => null
-      );
+    const handleIncomingCode = (incomingCode) => {
+      const currentCode = editorRef.current?.getValue();
+      if (incomingCode !== currentCode) {
+        editorRef.current?.setValue(incomingCode);
+      }
     };
 
     socket.on("code-change", handleIncomingCode);
@@ -107,42 +80,11 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
     };
   }, [privateRoomId]);
 
-  const handleCodeChange = (newCode) => {
-    if (!editorRef.current) return;
-
-    const editor = editorRef.current;
-    const previousCode = editor.getValue();
-
-    // Find inserted text (basic diffing: assume insertion at the end)
-    let diffText = "";
-    let position = 0;
-
-    for (let i = 0; i < Math.min(previousCode.length, newCode.length); i++) {
-      if (previousCode[i] !== newCode[i]) {
-        position = i;
-        diffText = newCode.slice(i);
-        break;
-      }
+  const handleCodeChange = (val) => {
+    setValue(val);
+    if (privateRoomId && socketConnected) {
+      socket.emit("code-change", { privateRoomId, code: val });
     }
-
-    if (previousCode.length > newCode.length) {
-      // Handle deletion (basic): entire remaining part deleted
-      position = newCode.length;
-      diffText = "";
-    } else if (previousCode === newCode) {
-      // No change
-      return;
-    } else if (diffText === "") {
-      // If no character mismatch found, the new text is appended
-      position = previousCode.length;
-      diffText = newCode.slice(previousCode.length);
-    }
-
-    if (privateRoomId && socket.connected) {
-      socket.emit("code-change", { privateRoomId, diff: diffText, position, senderId: socket.id });
-    }
-
-    setValue(newCode);
   };
 
   useEffect(() => {

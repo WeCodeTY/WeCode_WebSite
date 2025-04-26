@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { handleLogout } from "../utils/Logout";
-import Layout from "../Layout1/Layout";
-import Navbar from "../Layout1/Navbar";
+import { handleLogout } from "../../utils/Logout";
+import Layout from "../../Layout1/Layout";
+import Navbar from "../../Layout1/Navbar";
 import ReactECharts from "echarts-for-react";
 import * as echarts from 'echarts/core';
 import {

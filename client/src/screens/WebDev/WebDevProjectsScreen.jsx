@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Layout from "../Layout1/Layout";
-import Navbar from "../Layout1/Navbar";
+import Layout from "../../Layout1/Layout";
+import Navbar from "../../Layout1/Navbar";
 
 const WebDevProjectsScreen = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,15 +14,16 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript.",
       useCase: "Create a polished personal portfolio.",
       targetUsers: "5K+",
-      targetAudience: "Job seekers, developers."
+      targetAudience: "Job seekers, developers.",
     },
     {
       title: "Simple Calculator",
       hint: "A basic calculator with addition, subtraction, multiplication, and division.",
       requirements: "HTML, CSS, JavaScript.",
-      useCase: "Build a simple calculator to perform basic arithmetic operations.",
+      useCase:
+        "Build a simple calculator to perform basic arithmetic operations.",
       targetUsers: "20K+",
-      targetAudience: "General public, students."
+      targetAudience: "General public, students.",
     },
     {
       title: "To-Do List App",
@@ -30,15 +31,16 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript.",
       useCase: "Allow users to add, edit, and delete tasks.",
       targetUsers: "15K+",
-      targetAudience: "Students, working professionals."
+      targetAudience: "Students, working professionals.",
     },
     {
       title: "Temperature Converter",
       hint: "A tool to convert between Celsius and Fahrenheit.",
       requirements: "HTML, CSS, JavaScript.",
-      useCase: "Help users convert temperature values between Celsius and Fahrenheit.",
+      useCase:
+        "Help users convert temperature values between Celsius and Fahrenheit.",
       targetUsers: "10K+",
-      targetAudience: "General public, students."
+      targetAudience: "General public, students.",
     },
     {
       title: "Quiz App",
@@ -46,7 +48,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript.",
       useCase: "Build a simple quiz game with multiple-choice questions.",
       targetUsers: "30K+",
-      targetAudience: "Students, quiz lovers."
+      targetAudience: "Students, quiz lovers.",
     },
     {
       title: "Tic-Tac-Toe Game",
@@ -54,7 +56,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript.",
       useCase: "Allow two players to play Tic-Tac-Toe in the browser.",
       targetUsers: "20K+",
-      targetAudience: "General public, children."
+      targetAudience: "General public, children.",
     },
     {
       title: "Random Image Feed",
@@ -62,7 +64,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript, Image API.",
       useCase: "Display random images each time the page is refreshed.",
       targetUsers: "5K+",
-      targetAudience: "General public, creative individuals."
+      targetAudience: "General public, creative individuals.",
     },
     {
       title: "Simple Timer",
@@ -70,7 +72,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript.",
       useCase: "Create a simple countdown timer for user-defined intervals.",
       targetUsers: "10K+",
-      targetAudience: "Students, productivity enthusiasts."
+      targetAudience: "Students, productivity enthusiasts.",
     },
     {
       title: "Drawing App",
@@ -78,15 +80,16 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript (Canvas).",
       useCase: "Allow users to draw and save their creations.",
       targetUsers: "15K+",
-      targetAudience: "Artists, creatives."
+      targetAudience: "Artists, creatives.",
     },
     {
       title: "Alarm Clock",
       hint: "A basic alarm clock functionality.",
       requirements: "HTML, CSS, JavaScript.",
-      useCase: "Create an alarm clock that sets off a sound at a user-defined time.",
+      useCase:
+        "Create an alarm clock that sets off a sound at a user-defined time.",
       targetUsers: "20K+",
-      targetAudience: "General public."
+      targetAudience: "General public.",
     },
     {
       title: "Meme Generator",
@@ -94,7 +97,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript, Image APIs.",
       useCase: "Allow users to upload images, add text, and create memes.",
       targetUsers: "25K+",
-      targetAudience: "Social media users, meme creators."
+      targetAudience: "Social media users, meme creators.",
     },
     {
       title: "Online Form",
@@ -102,7 +105,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript.",
       useCase: "Allow users to submit input through a simple form.",
       targetUsers: "10K+",
-      targetAudience: "General public, businesses."
+      targetAudience: "General public, businesses.",
     },
     {
       title: "Simple Image Gallery",
@@ -110,15 +113,16 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript.",
       useCase: "Create an interactive image gallery with navigation.",
       targetUsers: "20K+",
-      targetAudience: "Photographers, image enthusiasts."
+      targetAudience: "Photographers, image enthusiasts.",
     },
     {
       title: "Password Strength Meter",
       hint: "A tool that provides feedback on password strength.",
       requirements: "HTML, CSS, JavaScript.",
-      useCase: "Help users create strong passwords by providing feedback on their input.",
+      useCase:
+        "Help users create strong passwords by providing feedback on their input.",
       targetUsers: "10K+",
-      targetAudience: "General public, developers."
+      targetAudience: "General public, developers.",
     },
     {
       title: "Custom Range Slider",
@@ -126,7 +130,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript.",
       useCase: "Allow users to select values within a specified range.",
       targetUsers: "5K+",
-      targetAudience: "Developers, UI designers."
+      targetAudience: "Developers, UI designers.",
     },
     {
       title: "Netflix Mobile Navigation",
@@ -134,7 +138,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript.",
       useCase: "Replicate Netflix's mobile navigation for learning purposes.",
       targetUsers: "30K+",
-      targetAudience: "Web developers, UI/UX enthusiasts."
+      targetAudience: "Web developers, UI/UX enthusiasts.",
     },
 
     // Intermediate Projects (More Complexity)
@@ -144,15 +148,16 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript, Local Storage or Firebase.",
       useCase: "Track personal expenses and visualize them with charts.",
       targetUsers: "50K+",
-      targetAudience: "Individuals, families, financial planners."
+      targetAudience: "Individuals, families, financial planners.",
     },
     {
       title: "E-commerce Website",
       hint: "A simple online store with product listing, checkout, and payment options.",
       requirements: "HTML, CSS, JavaScript, Node.js, Stripe API.",
-      useCase: "Create an online store to showcase products and accept payments.",
+      useCase:
+        "Create an online store to showcase products and accept payments.",
       targetUsers: "100K+",
-      targetAudience: "Shoppers, online retailers."
+      targetAudience: "Shoppers, online retailers.",
     },
     {
       title: "Library Management System",
@@ -160,7 +165,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript, MongoDB.",
       useCase: "Allow users to manage books, borrow, and return items.",
       targetUsers: "20K+",
-      targetAudience: "Libraries, schools."
+      targetAudience: "Libraries, schools.",
     },
     {
       title: "Online Chat Application",
@@ -168,7 +173,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Firebase, WebSockets.",
       useCase: "Allow real-time communication between users.",
       targetUsers: "30K+",
-      targetAudience: "Friends, communities."
+      targetAudience: "Friends, communities.",
     },
     {
       title: "Weather Forecasting App",
@@ -176,7 +181,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, OpenWeatherMap API.",
       useCase: "Display live weather information based on location.",
       targetUsers: "50K+",
-      targetAudience: "General public, travelers."
+      targetAudience: "General public, travelers.",
     },
     {
       title: "Restaurant Website",
@@ -184,15 +189,16 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript, Google Maps API.",
       useCase: "Showcase restaurant details and menu items.",
       targetUsers: "20K+",
-      targetAudience: "Restaurant owners, customers."
+      targetAudience: "Restaurant owners, customers.",
     },
     {
       title: "Online Code Editor",
       hint: "A web-based code editor with syntax highlighting and code completion.",
       requirements: "React, JavaScript, Monaco Editor, Node.js.",
-      useCase: "Create an online code editor with syntax highlighting and code completion.",
+      useCase:
+        "Create an online code editor with syntax highlighting and code completion.",
       targetUsers: "50K+",
-      targetAudience: "Developers, coders."
+      targetAudience: "Developers, coders.",
     },
     {
       title: "Chatbot App",
@@ -200,7 +206,7 @@ const WebDevProjectsScreen = () => {
       requirements: "HTML, CSS, JavaScript, Dialogflow API.",
       useCase: "Create an interactive chatbot for answering user questions.",
       targetUsers: "20K+",
-      targetAudience: "Businesses, customer service."
+      targetAudience: "Businesses, customer service.",
     },
 
     // Advanced Projects (Full-Stack, Frameworks)
@@ -208,9 +214,10 @@ const WebDevProjectsScreen = () => {
       title: "Online Learning Management System (LMS)",
       hint: "A platform for online courses, lessons, and assessments.",
       requirements: "React, Node.js, MongoDB, JWT for authentication.",
-      useCase: "Provide a platform for instructors and students to interact and learn.",
+      useCase:
+        "Provide a platform for instructors and students to interact and learn.",
       targetUsers: "100K+",
-      targetAudience: "Educators, students."
+      targetAudience: "Educators, students.",
     },
     {
       title: "E-commerce Platform with Advanced Features",
@@ -218,7 +225,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, MongoDB, Stripe/PayPal API.",
       useCase: "Create a complete e-commerce platform with advanced features.",
       targetUsers: "200K+",
-      targetAudience: "Shoppers, retailers."
+      targetAudience: "Shoppers, retailers.",
     },
     {
       title: "Blockchain-based Application",
@@ -226,7 +233,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, Solidity (Ethereum).",
       useCase: "Implement a decentralized app using blockchain technology.",
       targetUsers: "100K+",
-      targetAudience: "Tech enthusiasts, blockchain developers."
+      targetAudience: "Tech enthusiasts, blockchain developers.",
     },
     {
       title: "Virtual Reality Game",
@@ -234,7 +241,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, WebGL, Three.js.",
       useCase: "Create an interactive virtual reality game experience.",
       targetUsers: "50K+",
-      targetAudience: "Gamers, VR enthusiasts."
+      targetAudience: "Gamers, VR enthusiasts.",
     },
     {
       title: "Forum/Bulletin Board",
@@ -242,7 +249,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, MongoDB.",
       useCase: "Facilitate public discussions on various topics.",
       targetUsers: "40K+",
-      targetAudience: "Communities, hobbyists."
+      targetAudience: "Communities, hobbyists.",
     },
     {
       title: "Customer Relationship Manager (CRM)",
@@ -250,7 +257,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, MongoDB.",
       useCase: "Organize and analyze customer information for businesses.",
       targetUsers: "100K+",
-      targetAudience: "Sales teams, marketing teams."
+      targetAudience: "Sales teams, marketing teams.",
     },
     {
       title: "Resume Builder",
@@ -258,7 +265,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, JavaScript, HTML, CSS.",
       useCase: "Allow users to create a professional resume easily.",
       targetUsers: "25K+",
-      targetAudience: "Job seekers, students."
+      targetAudience: "Job seekers, students.",
     },
     {
       title: "Task Management System",
@@ -266,7 +273,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, MongoDB.",
       useCase: "Organize tasks, set deadlines, and track project progress.",
       targetUsers: "30K+",
-      targetAudience: "Teams, professionals."
+      targetAudience: "Teams, professionals.",
     },
     {
       title: "Blog Website",
@@ -274,7 +281,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, MongoDB.",
       useCase: "Allow users to write, edit, and share blog posts.",
       targetUsers: "50K+",
-      targetAudience: "Writers, bloggers."
+      targetAudience: "Writers, bloggers.",
     },
     {
       title: "Language Learning Platform",
@@ -282,7 +289,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, MongoDB.",
       useCase: "Help users learn new languages with interactive content.",
       targetUsers: "40K+",
-      targetAudience: "Students, language learners."
+      targetAudience: "Students, language learners.",
     },
     {
       title: "Smart Home Control System",
@@ -290,7 +297,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, IoT devices API.",
       useCase: "Control lights, thermostat, and security systems remotely.",
       targetUsers: "20K+",
-      targetAudience: "Homeowners, tech enthusiasts."
+      targetAudience: "Homeowners, tech enthusiasts.",
     },
     {
       title: "Stock Trading Simulator",
@@ -298,7 +305,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, Financial data API.",
       useCase: "Provide a realistic stock trading experience for learning.",
       targetUsers: "30K+",
-      targetAudience: "Students, finance enthusiasts."
+      targetAudience: "Students, finance enthusiasts.",
     },
     {
       title: "Real Estate Listing Site",
@@ -306,7 +313,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, Google Maps API.",
       useCase: "Help users find and list properties for sale or rent.",
       targetUsers: "50K+",
-      targetAudience: "Real estate agents, buyers, renters."
+      targetAudience: "Real estate agents, buyers, renters.",
     },
     {
       title: "Language Translation App",
@@ -314,7 +321,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Translation API (like Google Translate API).",
       useCase: "Help users translate text easily between languages.",
       targetUsers: "30K+",
-      targetAudience: "Travelers, language learners."
+      targetAudience: "Travelers, language learners.",
     },
     {
       title: "AI-powered Recommendation System",
@@ -322,7 +329,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, Machine Learning API.",
       useCase: "Deliver personalized recommendations to users.",
       targetUsers: "50K+",
-      targetAudience: "E-commerce platforms, media platforms."
+      targetAudience: "E-commerce platforms, media platforms.",
     },
     {
       title: "Dynamic DNS Service",
@@ -330,7 +337,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, Networking APIs.",
       useCase: "Allow users to update their IP addresses dynamically.",
       targetUsers: "20K+",
-      targetAudience: "Developers, network administrators."
+      targetAudience: "Developers, network administrators.",
     },
     {
       title: "Cloud Backup System",
@@ -338,7 +345,7 @@ const WebDevProjectsScreen = () => {
       requirements: "React, Node.js, AWS S3/Cloud Storage APIs.",
       useCase: "Safely backup important files and data to the cloud.",
       targetUsers: "50K+",
-      targetAudience: "General public, businesses."
+      targetAudience: "General public, businesses.",
     },
     {
       title: "API Rate Limiter",
@@ -346,7 +353,7 @@ const WebDevProjectsScreen = () => {
       requirements: "Node.js, Redis.",
       useCase: "Protect APIs by limiting request rates.",
       targetUsers: "30K+",
-      targetAudience: "Developers, SaaS businesses."
+      targetAudience: "Developers, SaaS businesses.",
     },
     {
       title: "Custom CI/CD Server",
@@ -354,8 +361,8 @@ const WebDevProjectsScreen = () => {
       requirements: "Node.js, GitHub/GitLab APIs, Docker.",
       useCase: "Automate building, testing, and deploying software projects.",
       targetUsers: "20K+",
-      targetAudience: "Software teams, DevOps engineers."
-    }
+      targetAudience: "Software teams, DevOps engineers.",
+    },
   ];
 
   const handleClickProject = (project) => {
@@ -376,7 +383,13 @@ const WebDevProjectsScreen = () => {
 
         <section style={{ marginTop: "20px" }}>
           <h2>Full Stack Projects</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "20px",
+            }}
+          >
             {projectData.map((project, index) => (
               <div
                 key={index}
@@ -387,11 +400,13 @@ const WebDevProjectsScreen = () => {
                   borderRadius: "10px",
                   boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
                   transition: "transform 0.3s, box-shadow 0.3s",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 <h3 style={{ color: "#ECEFCA" }}>{project.title}</h3>
-                <p style={{ color: "#94B4C1" }}><strong>Hint:</strong> {project.hint}</p>
+                <p style={{ color: "#94B4C1" }}>
+                  <strong>Hint:</strong> {project.hint}
+                </p>
               </div>
             ))}
           </div>
@@ -410,7 +425,7 @@ const WebDevProjectsScreen = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              zIndex: 1000
+              zIndex: 1000,
             }}
             onClick={handleCloseModal}
           >
@@ -423,16 +438,27 @@ const WebDevProjectsScreen = () => {
                 minWidth: "300px",
                 color: "#ECEFCA",
                 cursor: "auto",
-                boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.3)" // Add a stronger shadow to the modal
+                boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.3)", // Add a stronger shadow to the modal
               }}
               onClick={(e) => e.stopPropagation()}
             >
               <h3>{selectedProject.title}</h3>
-              <p><strong>Hint:</strong> {selectedProject.hint}</p>
-              <p><strong>Requirements:</strong> {selectedProject.requirements}</p>
-              <p><strong>Use Case:</strong> {selectedProject.useCase}</p>
-              <p><strong>Target Users:</strong> {selectedProject.targetUsers}</p>
-              <p><strong>Target Audience:</strong> {selectedProject.targetAudience}</p>
+              <p>
+                <strong>Hint:</strong> {selectedProject.hint}
+              </p>
+              <p>
+                <strong>Requirements:</strong> {selectedProject.requirements}
+              </p>
+              <p>
+                <strong>Use Case:</strong> {selectedProject.useCase}
+              </p>
+              <p>
+                <strong>Target Users:</strong> {selectedProject.targetUsers}
+              </p>
+              <p>
+                <strong>Target Audience:</strong>{" "}
+                {selectedProject.targetAudience}
+              </p>
               <button
                 onClick={handleCloseModal}
                 style={{
@@ -442,7 +468,7 @@ const WebDevProjectsScreen = () => {
                   border: "none",
                   borderRadius: "5px",
                   color: "white",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 Close

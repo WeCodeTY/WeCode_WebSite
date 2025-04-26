@@ -2,23 +2,23 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import Dashboard from "./screens/DSAdashboard";
-import UserDetails from "./screens/UserDetails";
+import Dashboard from "./screens/DSA/DsaDashboard";
+import UserDetails from "./screens/UserDetails/UserDetails";
 import CustomRoom from "./screens/CustomRoom";
-import Livechatroom from "./screens/livechatroom";
+import Livechatroom from "./screens/LiveChatRoom";
 import FollowDashboard from "./screens/FollowDashboard";
-import UserUpdateDetails from "./screens/UsersUpdateDetails";
+import UserUpdateDetails from "./screens/UserDetails/UsersUpdateDetails";
 import Feed from "./screens/Feed";
 import "./App.css";
 import UploadPosts from "./screens/UploadPosts";
 import SolvedProblemsList from "./screens/solvedproblemslist";
-import AdminDashboard from "./screens/adminDashboard";
+import AdminDashboard from "./screens/AdminDashboard";
 import AboutScreen from "./screens/AboutScreen";
-import DevopsScreen from "./screens/devopsScreen";
-import WebDevScreen from "./screens/WebDevScreen";
-import WebDevProjectsScreen from "./screens/webdevprojectsScreen";
-import DevopsProjectsScreen from "./screens/devopsprojectsScreen";
-import DsaCoursesScreen from "./screens/dsacoursesScreen";
+import DevopsScreen from "./screens/DevOps/DevOpsScreen";
+import WebDevScreen from "./screens/WebDev/WebDevScreen";
+import WebDevProjectsScreen from "./screens/WebDev/WebDevProjectsScreen";
+import DevopsProjectsScreen from "./screens/DevOps/DevOpsProjectsScreen";
+import DsaCoursesScreen from "./screens/DSA/DsaCoursesScreen";
 
 function App() {
   return (

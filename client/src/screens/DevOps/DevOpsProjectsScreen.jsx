@@ -1,8 +1,6 @@
-
-
 import React, { useState } from "react";
-import Layout from "../Layout1/Layout";
-import Navbar from "../Layout1/Navbar";
+import Layout from "../../Layout1/Layout";
+import Navbar from "../../Layout1/Navbar";
 
 const DevopsProjectsScreen = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,7 +13,7 @@ const DevopsProjectsScreen = () => {
       requirements: "Jenkins, GitHub, Docker.",
       useCase: "Automate building, testing, and deploying applications.",
       targetUsers: "50K+",
-      targetAudience: "DevOps engineers, developers."
+      targetAudience: "DevOps engineers, developers.",
     },
     {
       title: "Infrastructure as Code with Terraform",
@@ -23,7 +21,7 @@ const DevopsProjectsScreen = () => {
       requirements: "Terraform, AWS/GCP/Azure.",
       useCase: "Automate infrastructure provisioning and management.",
       targetUsers: "40K+",
-      targetAudience: "Cloud engineers, DevOps teams."
+      targetAudience: "Cloud engineers, DevOps teams.",
     },
     {
       title: "Kubernetes Cluster Setup",
@@ -31,7 +29,7 @@ const DevopsProjectsScreen = () => {
       requirements: "Kubernetes, Docker, Helm.",
       useCase: "Orchestrate containerized applications efficiently.",
       targetUsers: "60K+",
-      targetAudience: "Cloud developers, infrastructure teams."
+      targetAudience: "Cloud developers, infrastructure teams.",
     },
     {
       title: "Monitoring System with Prometheus and Grafana",
@@ -39,7 +37,7 @@ const DevopsProjectsScreen = () => {
       requirements: "Prometheus, Grafana, Node Exporter.",
       useCase: "Improve system observability and monitoring.",
       targetUsers: "30K+",
-      targetAudience: "System admins, DevOps teams."
+      targetAudience: "System admins, DevOps teams.",
     },
     {
       title: "Logging with ELK Stack",
@@ -47,7 +45,7 @@ const DevopsProjectsScreen = () => {
       requirements: "ELK Stack, Filebeat, Logstash.",
       useCase: "Aggregate and analyze logs from multiple sources.",
       targetUsers: "30K+",
-      targetAudience: "Sysadmins, security teams."
+      targetAudience: "Sysadmins, security teams.",
     },
     {
       title: "Containerized Application Deployment",
@@ -55,7 +53,7 @@ const DevopsProjectsScreen = () => {
       requirements: "Docker, Node.js/React/MongoDB stack.",
       useCase: "Simplify deployment using containers.",
       targetUsers: "50K+",
-      targetAudience: "Developers, DevOps engineers."
+      targetAudience: "Developers, DevOps engineers.",
     },
     {
       title: "Load Balancer Setup with NGINX",
@@ -63,7 +61,7 @@ const DevopsProjectsScreen = () => {
       requirements: "NGINX, Docker, Kubernetes (optional).",
       useCase: "Distribute traffic evenly across multiple servers.",
       targetUsers: "20K+",
-      targetAudience: "Cloud engineers, SREs."
+      targetAudience: "Cloud engineers, SREs.",
     },
     {
       title: "Serverless Application with AWS Lambda",
@@ -71,7 +69,7 @@ const DevopsProjectsScreen = () => {
       requirements: "AWS Lambda, API Gateway.",
       useCase: "Create scalable event-driven applications.",
       targetUsers: "30K+",
-      targetAudience: "Developers, architects."
+      targetAudience: "Developers, architects.",
     },
     {
       title: "Disaster Recovery Plan Setup",
@@ -79,7 +77,7 @@ const DevopsProjectsScreen = () => {
       requirements: "AWS/GCP Backup Services, Shell Scripting.",
       useCase: "Ensure high availability and data recovery.",
       targetUsers: "10K+",
-      targetAudience: "System admins, enterprises."
+      targetAudience: "System admins, enterprises.",
     },
     {
       title: "Self-Healing Systems",
@@ -87,7 +85,7 @@ const DevopsProjectsScreen = () => {
       requirements: "Kubernetes, Monitoring Tools, Scripting.",
       useCase: "Minimize downtime and manual intervention.",
       targetUsers: "20K+",
-      targetAudience: "DevOps teams, reliability engineers."
+      targetAudience: "DevOps teams, reliability engineers.",
     },
     {
       title: "Jenkins HA Setup On AWS",
@@ -95,15 +93,16 @@ const DevopsProjectsScreen = () => {
       requirements: "Jenkins, AWS EC2, Load Balancer, Auto-scaling Groups.",
       useCase: "Maintain continuous integration service availability.",
       targetUsers: "30K+",
-      targetAudience: "DevOps engineers, cloud architects."
+      targetAudience: "DevOps engineers, cloud architects.",
     },
     {
       title: "Implementing Service Discovery Using Consul",
       hint: "Deploy Consul to allow dynamic service discovery and health checks.",
       requirements: "Consul, Docker, Kubernetes.",
-      useCase: "Enable reliable service-to-service communication in microservices architecture.",
+      useCase:
+        "Enable reliable service-to-service communication in microservices architecture.",
       targetUsers: "20K+",
-      targetAudience: "Backend developers, cloud engineers."
+      targetAudience: "Backend developers, cloud engineers.",
     },
     {
       title: "Deploying a Scalable Java Application on AWS",
@@ -111,15 +110,16 @@ const DevopsProjectsScreen = () => {
       requirements: "AWS EC2, RDS, Elastic Load Balancer, Auto-scaling.",
       useCase: "Build scalable and resilient cloud applications.",
       targetUsers: "40K+",
-      targetAudience: "Java developers, cloud architects."
+      targetAudience: "Java developers, cloud architects.",
     },
     {
       title: "Deploy Prometheus Observability stack using Docker Compose",
       hint: "Set up Prometheus, Grafana, and Alertmanager using Docker Compose.",
-      requirements: "Docker, Docker Compose, Prometheus, Grafana, Alertmanager.",
+      requirements:
+        "Docker, Docker Compose, Prometheus, Grafana, Alertmanager.",
       useCase: "Monitor application metrics and trigger alerts.",
       targetUsers: "25K+",
-      targetAudience: "DevOps teams, site reliability engineers."
+      targetAudience: "DevOps teams, site reliability engineers.",
     },
     {
       title: "Design and Automate AWS VPC Creation Using Terraform",
@@ -127,7 +127,7 @@ const DevopsProjectsScreen = () => {
       requirements: "Terraform, AWS.",
       useCase: "Provision scalable cloud networking infrastructure.",
       targetUsers: "30K+",
-      targetAudience: "Cloud engineers, DevOps architects."
+      targetAudience: "Cloud engineers, DevOps architects.",
     },
     {
       title: "AWS Client to Site VPN Setup",
@@ -135,7 +135,7 @@ const DevopsProjectsScreen = () => {
       requirements: "AWS VPN, EC2 instances, VPN Client software.",
       useCase: "Enable secure remote access to AWS resources.",
       targetUsers: "20K+",
-      targetAudience: "System admins, enterprises."
+      targetAudience: "System admins, enterprises.",
     },
     {
       title: "Self-Hosted Pritunl VPN Setup on AWS",
@@ -143,9 +143,8 @@ const DevopsProjectsScreen = () => {
       requirements: "Pritunl, AWS EC2, SSL Certificates.",
       useCase: "Build a scalable and secure VPN infrastructure.",
       targetUsers: "15K+",
-      targetAudience: "Small businesses, security teams."
+      targetAudience: "Small businesses, security teams.",
     },
-    
   ];
 
   const handleClickProject = (project) => {
@@ -165,7 +164,13 @@ const DevopsProjectsScreen = () => {
         <h1>DevOps Project Ideas</h1>
 
         <section style={{ marginTop: "20px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "20px",
+            }}
+          >
             {projectData.map((project, index) => (
               <div
                 key={index}
@@ -176,11 +181,13 @@ const DevopsProjectsScreen = () => {
                   borderRadius: "10px",
                   boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
                   transition: "transform 0.3s, box-shadow 0.3s",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 <h3 style={{ color: "#ECEFCA" }}>{project.title}</h3>
-                <p style={{ color: "#94B4C1" }}><strong>Hint:</strong> {project.hint}</p>
+                <p style={{ color: "#94B4C1" }}>
+                  <strong>Hint:</strong> {project.hint}
+                </p>
               </div>
             ))}
           </div>
@@ -199,7 +206,7 @@ const DevopsProjectsScreen = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              zIndex: 1000
+              zIndex: 1000,
             }}
             onClick={handleCloseModal}
           >
@@ -211,16 +218,27 @@ const DevopsProjectsScreen = () => {
                 maxWidth: "80%",
                 minWidth: "300px",
                 color: "#ECEFCA",
-                cursor: "auto"
+                cursor: "auto",
               }}
               onClick={(e) => e.stopPropagation()}
             >
               <h3>{selectedProject.title}</h3>
-              <p><strong>Hint:</strong> {selectedProject.hint}</p>
-              <p><strong>Requirements:</strong> {selectedProject.requirements}</p>
-              <p><strong>Use Case:</strong> {selectedProject.useCase}</p>
-              <p><strong>Target Users:</strong> {selectedProject.targetUsers}</p>
-              <p><strong>Target Audience:</strong> {selectedProject.targetAudience}</p>
+              <p>
+                <strong>Hint:</strong> {selectedProject.hint}
+              </p>
+              <p>
+                <strong>Requirements:</strong> {selectedProject.requirements}
+              </p>
+              <p>
+                <strong>Use Case:</strong> {selectedProject.useCase}
+              </p>
+              <p>
+                <strong>Target Users:</strong> {selectedProject.targetUsers}
+              </p>
+              <p>
+                <strong>Target Audience:</strong>{" "}
+                {selectedProject.targetAudience}
+              </p>
               <button
                 onClick={handleCloseModal}
                 style={{
@@ -230,7 +248,7 @@ const DevopsProjectsScreen = () => {
                   border: "none",
                   borderRadius: "5px",
                   color: "white",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 Close

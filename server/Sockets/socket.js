@@ -19,13 +19,8 @@ const setupSocket = (server) => {
       console.log(`🟢 Socket ${socket.id} joined room: ${roomId}`);
     });
 
-    socket.on("code-change", ({ privateRoomId, diff, position, senderId }) => {
-      if (!privateRoomId) {
-        console.warn("⚠️ No privateRoomId provided for code-change");
-        return;
-      }
-
-      socket.to(privateRoomId).emit("code-change", { diff, position, senderId });
+    socket.on("code-change", ({ privateRoomId, code }) => {
+      socket.to(privateRoomId).emit("code-change", code);
     });
 
     socket.on("join-public-room", (publicroomID) => {

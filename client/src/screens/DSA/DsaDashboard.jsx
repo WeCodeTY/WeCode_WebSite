@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import { useNavigate } from "react-router-dom";
-import quoteList from "../utils/quotes.js";
-import { handleLogout } from "../utils/Logout.js";
-import Layout from "../Layout1/Layout.jsx";
-import Navbar from "../Layout1/Navbar.jsx";
-import { createroom, joinroom } from "../Rooms/room.jsx";
+import quoteList from "../../utils/quotes.js";
+import { handleLogout } from "../../utils/Logout.js";
+import Layout from "../../Layout1/Layout.jsx";
+import Navbar from "../../Layout1/Navbar.jsx";
+import { createroom, joinroom } from "../../Rooms/room.jsx";
 import { io } from "socket.io-client";
 
 const socket = io(process.env.REACT_APP_SOCKET_URL);
@@ -43,12 +43,15 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchQuestionsFromBackend = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_GET_ALL_QUESTIONS, {
-          withCredentials: true
-        });
+        const response = await axios.get(
+          process.env.REACT_APP_GET_ALL_QUESTIONS,
+          {
+            withCredentials: true,
+          }
+        );
         const data = response.data.questions;
 
-        const cleanedData = data.map(q => ({
+        const cleanedData = data.map((q) => ({
           Topic: q.topic || "Miscellaneous",
           Title: q.title,
           Difficulty: q.difficulty,
@@ -90,31 +93,33 @@ const Dashboard = () => {
       const privateRoomId = response.data.roomId;
 
       navigate(`/customroom/${roomId}/${privateRoomId}`, {
-        state: { question: roomData, ...customState }
+        state: { question: roomData, ...customState },
       });
     } catch (error) {
       console.error("❌ Failed to create private room:", error);
     }
-  }
+  };
 
   const handleJoinRoom = async (question) => {
-    const privateRoomId = prompt(`Enter private room ID for "${question.Title}"`);
+    const privateRoomId = prompt(
+      `Enter private room ID for "${question.Title}"`
+    );
     console.log("Private Room ID:", privateRoomId);
-    
+
     if (!privateRoomId) return;
-  
+
     try {
       await axios.post(
         process.env.REACT_APP_ROOM_JOIN,
         { roomId: privateRoomId },
         { withCredentials: true }
       );
-  
+
       console.log("✅ Joined Room:", privateRoomId);
-  
+
       const publicRoomId = slugify(question.Title);
       console.log("Navigating to room...");
-navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
+      navigate(`/customroom/${publicRoomId}/${privateRoomId}`, {
         state: {
           question: {
             title: question.Title,
@@ -125,12 +130,11 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
             constraints: question.Constraints,
           },
         },
-});
+      });
     } catch (error) {
       const errMsg = error?.response?.data?.message;
-  
+
       console.log("❌ Room join failed:", errMsg);
-      
     }
   };
 
@@ -141,7 +145,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
       const response = await axios.post(
         process.env.REACT_APP_UPDATE_QUESTION_URI,
         {
-          title : updatedQuestions[index].Topic,
+          title: updatedQuestions[index].Topic,
           questionId: updatedQuestions[index].Title,
           field,
           value: newValue,
@@ -213,7 +217,7 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
 
   const handleSolvequestion = (question) => {
     handleCreateRoom(question, { hideRoomId: true });
-  } 
+  };
 
   return (
     <Layout style={{ boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)" }}>
@@ -224,12 +228,30 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
         onDashboard={handleNavigateToDashboard}
       />
 
-      <h1 style={{ textAlign: "center", fontSize: "3rem", color: "#213448", marginTop: "140px", marginBottom: "30px", fontWeight: "700" }}>
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "3rem",
+          color: "#213448",
+          marginTop: "140px",
+          marginBottom: "30px",
+          fontWeight: "700",
+        }}
+      >
         {quote}
       </h1>
 
       <div style={tableContainerStyle}>
-        <h2 style={{ color: "#213448", textAlign: "center", marginBottom: "20px", fontWeight: "700" }}>DSA Questions</h2>
+        <h2
+          style={{
+            color: "#213448",
+            textAlign: "center",
+            marginBottom: "20px",
+            fontWeight: "700",
+          }}
+        >
+          DSA Questions
+        </h2>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ background: "#213448" }}>
@@ -269,7 +291,9 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                   <input
                     type="checkbox"
                     checked={q.Revision === "Yes"}
-                    onChange={() => handleUpdateQuestion(index, "Revision", q.Revision)}
+                    onChange={() =>
+                      handleUpdateQuestion(index, "Revision", q.Revision)
+                    }
                     style={{ cursor: "pointer", ...inputStyle }}
                   />
                 </td>
@@ -277,7 +301,9 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                   <input
                     type="checkbox"
                     checked={q.Important === "Yes"}
-                    onChange={() => handleUpdateQuestion(index, "Important", q.Important)}
+                    onChange={() =>
+                      handleUpdateQuestion(index, "Important", q.Important)
+                    }
                     style={{ cursor: "pointer", ...inputStyle }}
                   />
                 </td>
@@ -286,30 +312,42 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                     style={actionBtnStyle1}
                     title="Submit Solution"
                     onClick={() => handleSolvequestion(q)}
-                    onMouseEnter={e => e.currentTarget.style.background = "#94B4C1"}
-                    onMouseLeave={e => e.currentTarget.style.background = "#547792"}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = "#94B4C1")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "#547792")
+                    }
                   >
                     Submit
                   </button>
                 </td>
                 <td style={tdStyle}>
-                  <button 
-                    onClick={() => handleJoinQuestionRoom(q.Title)} 
-                    style={buttonStyle} 
+                  <button
+                    onClick={() => handleJoinQuestionRoom(q.Title)}
+                    style={buttonStyle}
                     title="Join public room for this question"
-                    onMouseEnter={e => e.currentTarget.style.background = "#94B4C1"}
-                    onMouseLeave={e => e.currentTarget.style.background = "#547792"}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = "#94B4C1")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "#547792")
+                    }
                   >
                     Join Room
                   </button>
                 </td>
                 <td style={tdStyle}>
-                  <button 
-                    onClick={() => handleCreateRoom(q)} 
-                    style={buttonStyle} 
+                  <button
+                    onClick={() => handleCreateRoom(q)}
+                    style={buttonStyle}
                     title="Create a private room"
-                    onMouseEnter={e => e.currentTarget.style.background = "#94B4C1"}
-                    onMouseLeave={e => e.currentTarget.style.background = "#547792"}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = "#94B4C1")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "#547792")
+                    }
                   >
                     Create Room
                   </button>
@@ -319,8 +357,12 @@ navigate(`/customroom/${publicRoomId}/${privateRoomId}` , {
                     onClick={() => handleJoinRoom(q)}
                     style={buttonStyle}
                     title="Join a private room"
-                    onMouseEnter={e => e.currentTarget.style.background = "#94B4C1"}
-                    onMouseLeave={e => e.currentTarget.style.background = "#547792"}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = "#94B4C1")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "#547792")
+                    }
                   >
                     Join Private
                   </button>
@@ -345,7 +387,7 @@ const buttonStyle = {
   fontWeight: "600",
   cursor: "pointer",
   transition: "all 0.3s ease",
-  boxShadow: "0 2px 10px rgba(84, 119, 146, 0.3)", 
+  boxShadow: "0 2px 10px rgba(84, 119, 146, 0.3)",
 };
 
 const inputStyle = {
