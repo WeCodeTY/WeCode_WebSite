@@ -71,33 +71,30 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
     }
 
     // Handle code from others
-    const handleIncomingCode = (incomingCode) => {
-      if (!editorRef.current) return;
+    const handleIncomingCode = ({ diff, position, senderId }) => {
+      if (!editorRef.current || senderId === socket.id) return;
 
       const editor = editorRef.current;
-      const currentCode = editor.getValue();
-      if (incomingCode === currentCode) return;
-
       const model = editor.getModel();
       if (!model) return;
 
-      const fullRange = model.getFullModelRange();
-      const currentSelection = editor.getSelection(); // Save current cursor position
+      const currentPosition = model.getPositionAt(position);
 
       model.pushEditOperations(
         [],
         [
           {
-            range: fullRange,
-            text: incomingCode,
+            range: new monaco.Range(
+              currentPosition.lineNumber,
+              currentPosition.column,
+              currentPosition.lineNumber,
+              currentPosition.column
+            ),
+            text: diff,
           },
         ],
         () => null
       );
-
-      if (currentSelection) {
-        editor.setSelection(currentSelection); // Restore the cursor position
-      }
     };
 
     socket.on("code-change", handleIncomingCode);
@@ -109,9 +106,42 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
     };
   }, [privateRoomId]);
 
-  const handleCodeChange = (val) => {
-    setValue(val);
-    debouncedEmitCode(socket, privateRoomId, val);
+  const handleCodeChange = (newCode) => {
+    if (!editorRef.current) return;
+
+    const editor = editorRef.current;
+    const previousCode = editor.getValue();
+
+    // Find inserted text (basic diffing: assume insertion at the end)
+    let diffText = "";
+    let position = 0;
+
+    for (let i = 0; i < Math.min(previousCode.length, newCode.length); i++) {
+      if (previousCode[i] !== newCode[i]) {
+        position = i;
+        diffText = newCode.slice(i);
+        break;
+      }
+    }
+
+    if (previousCode.length > newCode.length) {
+      // Handle deletion (basic): entire remaining part deleted
+      position = newCode.length;
+      diffText = "";
+    } else if (previousCode === newCode) {
+      // No change
+      return;
+    } else if (diffText === "") {
+      // If no character mismatch found, the new text is appended
+      position = previousCode.length;
+      diffText = newCode.slice(previousCode.length);
+    }
+
+    if (privateRoomId && socket.connected) {
+      socket.emit("code-change", { privateRoomId, diff: diffText, position, senderId: socket.id });
+    }
+
+    setValue(newCode);
   };
 
   useEffect(() => {
