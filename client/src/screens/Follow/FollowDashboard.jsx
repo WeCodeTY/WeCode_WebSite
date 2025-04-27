@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import debounce from "lodash.debounce";
-import Layout from "../Layout1/Layout.jsx";
+import Layout from "../../Layout1/Layout.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 
 const FollowDashboard = () => {

@@ -2,8 +2,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import Navbar from "../Layout1/Navbar";
-import Footer from "../Layout1/Footer";
+import Layout from "../../Layout1/Layout";
+import Navbar from "../../Layout1/Navbar";
+import Footer from "../../Layout1/Footer";
 
 const SolvedProblemsList = () => {
   const [submittedQuestions, setSubmittedQuestions] = useState([]);

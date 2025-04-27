@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Layout from "../Layout1/Layout.jsx";
+import Layout from "../../Layout1/Layout.jsx";
 
 const UploadPosts = () => {
   const [title, setTitle] = useState("");

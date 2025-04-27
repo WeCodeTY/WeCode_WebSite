@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import * as XLSX from 'xlsx';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const AdminDashboard = () => {
@@ -17,6 +18,8 @@ const AdminDashboard = () => {
     sampleOutput: '',
     constraints: ''
   });
+  const [excelProblems, setExcelProblems] = useState([]);
+const [uploadingExcel, setUploadingExcel] = useState(false);
 
   const [action, setAction] = useState('add');
 
@@ -99,6 +102,49 @@ const AdminDashboard = () => {
       [name]: type === 'checkbox' ? checked : value
     });
   };
+
+  // Excel Question upload
+  const handleExcelFileUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const data = new Uint8Array(evt.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      setExcelProblems(jsonData);
+    };
+    reader.readAsArrayBuffer(file);
+  };
+  const uploadExcelProblems = async () => {
+    if (excelProblems.length === 0) {
+      alert('Please upload an Excel file first!');
+      return;
+    }
+    setUploadingExcel(true);
+    try {
+      for (let problem of excelProblems) {
+        await axios.post(process.env.REACT_APP_Admin_questions_add, {
+          topic: problem.topic,
+          title: problem.title,
+          difficulty: problem.difficulty,
+          leetcodeLink: problem.leetcode_link,
+          problemStatement: problem.problem_statement,
+          inputFormat: problem.input,
+          outputFormat: problem.output,
+          constraints: problem.constraints,
+        });
+      }
+      alert('All Excel problems uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading Excel problems:', error);
+      alert('Error uploading some problems.');
+    } finally {
+      setUploadingExcel(false);
+    }
+  };
+
+  // Manual Question add
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -232,6 +278,7 @@ const AdminDashboard = () => {
       </div>
     );
   };
+  
 
   // Sidebar modularization
   const Sidebar = () => {
@@ -286,6 +333,7 @@ const AdminDashboard = () => {
       </div>
     );
   };
+  
 
   // Main content modularization
   const MainContent = () => (
@@ -654,7 +702,29 @@ const AdminDashboard = () => {
           </div>
         </AnimatedFormContainer>
       )}
+      <div className="mt-8">
+  <h2 className="text-xl font-bold mb-4">Upload Problems via Excel</h2>
+  <input
+    type="file"
+    accept=".xlsx, .xls"
+    onChange={handleExcelFileUpload}
+    className="mb-4"
+  />
+  {excelProblems.length > 0 && (
+    <div className="mb-4">
+      <p className="mb-2">Problems Ready: {excelProblems.length}</p>
+      <button
+        onClick={uploadExcelProblems}
+        disabled={uploadingExcel}
+        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+      >
+        {uploadingExcel ? 'Uploading...' : 'Upload All Problems'}
+      </button>
     </div>
+  )}
+</div>
+    </div>
+
   );
 
   // Main layout with Sidebar and MainContent as fragments

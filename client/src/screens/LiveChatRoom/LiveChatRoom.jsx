@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
-import Layout from "../Layout1/Layout.jsx";
+import Layout from "../../Layout1/Layout";
+import Navbar from "../../Layout1/Navbar";
 
 // Function to get a fun random name from API
 const fetchRandomName = async () => {

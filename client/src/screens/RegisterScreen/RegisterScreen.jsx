@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { loginWithGoogle } from "../utils/FireBase";
+import { loginWithGoogle } from "../../utils/FireBase";
 
 const RegisterUserScreen = () => {
   const navigate = useNavigate();

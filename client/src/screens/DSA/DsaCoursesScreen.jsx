@@ -503,8 +503,9 @@ const DsaCoursesScreen = () => {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: "20px",
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", // Dynamic grid based on screen size
+              gap: "20px", // Add gap between grid items to prevent overlap
+              marginTop: "20px",
             }}
           >
             {videoData.map((video, index) => (
@@ -512,17 +513,47 @@ const DsaCoursesScreen = () => {
                 key={index}
                 onClick={() => handleClickVideo(video)}
                 style={{
-                  backgroundColor: "#213448",
+                  border: "1px solid #547792",
+                  borderRadius: "15px",
                   padding: "20px",
-                  borderRadius: "10px",
-                  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-                  transition: "transform 0.3s, box-shadow 0.3s",
+                  width: "100%", // Full width of the grid cell
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
+                  backgroundColor: "#94B4C1",
+                  textAlign: "center",
+                  transition:
+                    "transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease",
+                  opacity: 0.9,
                   cursor: "pointer",
                 }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.1)";
+                  e.target.style.boxShadow = "0px 6px 16px rgba(0, 0, 0, 0.3)";
+                  e.target.style.opacity = 1;
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1)";
+                  e.target.style.boxShadow = "0px 4px 12px rgba(0, 0, 0, 0.2)";
+                  e.target.style.opacity = 0.9;
+                }}
               >
-                <h3 style={{ color: "#ECEFCA" }}>{video.title}</h3>
-                <p style={{ color: "#94B4C1" }}>Uploaded: {video.uploaded}</p>
-                <p style={{ color: "#94B4C1" }}>Views: {video.views}</p>
+                <h3
+                  style={{
+                    fontSize: "16px",
+                    marginBottom: "10px",
+                    overflowWrap: "break-word",
+                    textAlign: "center",
+                    maxHeight: "80px",
+                    overflowY: "auto",
+                    color: "#213448",
+                  }}
+                >
+                  {video.title}
+                </h3>
+
+                <p style={{ color: "#213448" }}>
+                  Uploaded: {video.uploaded}
+                </p>
+                <p style={{ color: "#213448" }}>Views: {video.views}</p>
               </div>
             ))}
           </div>

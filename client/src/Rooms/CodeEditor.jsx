@@ -119,15 +119,27 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
     fetchDefaultCode();
   }, [publicRoomId]);
 
-  return (
-    <HStack align="start" spacing={6} p={6} justify="center">
-      <Box 
-        width={{ base: "100%", md: "70%" }} 
-        borderRadius="md" 
-        boxShadow="xl" 
-        overflow="hidden"
-        ml={{ md: "auto" }} // Align the box to the right on larger screens
-      >
+return (
+  
+  
+     <Box
+      width={{ base: "80%", md: "60%" }}  // 100% on mobile, 80% on larger screens
+      height="75vh"
+      bg="gray.800"
+      borderRadius="md"
+      boxShadow="xl"
+      overflow="hidden"
+      display="flex"
+      justifyContent={{ base: "center", md: "flex-end" }}  // Align to center on mobile, right on larger screens
+  >
+     <div>
+          <LanguageSelector language={getLanguageName(languageId)} onSelect={onSelect} />
+          <button
+            onClick={() => setTheme(theme === "vs-dark" ? "light" : "vs-dark")}
+          >
+            Change Theme
+          </button>
+        </div>
         <Editor
           height="75vh"
           theme={theme} 
@@ -146,26 +158,11 @@ const CodeEditor = ({ editorRef, languageId, setLanguageId, defaultLanguageId = 
             cursorBlinking: "smooth", // Smooth cursor blinking
           }}
         />
-        <div style={{ display: "flex", marginTop: "20px" }}>
-          <LanguageSelector language={getLanguageName(languageId)} onSelect={onSelect} />
-          <button
-            onClick={() => setTheme(theme === "vs-dark" ? "light" : "vs-dark")}
-            style={{
-              marginLeft: "16px",
-              padding: "8px 16px",
-              backgroundColor: "#4CAF50", // Professional green button
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
-            Change Theme
-          </button>
-        </div>
+       
       </Box>
-    </HStack>
-  );
+   
+    
+)
 };
 
 export default CodeEditor;

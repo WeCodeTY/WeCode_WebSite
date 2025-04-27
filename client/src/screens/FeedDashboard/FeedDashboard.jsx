@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Layout from "../Layout1/Layout.jsx";
-import Footer from "../Layout1/Footer.jsx";
+import Layout from "../../Layout1/Layout";
+import Navbar from "../../Layout1/Navbar";
 import { formatDistanceToNow } from 'date-fns';
 
 const Feed = () => {

@@ -5,7 +5,7 @@ import { handleLogout } from "../utils/Logout.js";
 import { createroom, joinroom } from "../Rooms/room.jsx";
 import { io } from "socket.io-client";
 import axios from "axios";
-import solvedproblemslist from "../screens/solvedproblemslist.jsx";
+import solvedproblemslist from '../screens/solvedproblemslist/solvedproblemslist';
 const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const linkStyle = {
