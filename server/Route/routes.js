@@ -10,6 +10,8 @@ const {
   allusers,
   allgoogleusers,
   alluserssignedin,
+  deleteuser,
+
 
   
 } = require("../controllers/Route.controller");
@@ -52,7 +54,6 @@ router.get("/", (req, res) => {
 });
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-
 router.post("/questions_update", verifyToken, updateQuestion);
 router.get("/fetch_dashboard", verifyToken, fetchquestion);
 router.get("/solvedquestions" , verifyToken, getAllUserQuestions);
@@ -86,8 +87,13 @@ router.get("/alluserssignedin", verifyToken, alluserssignedin);
 router.get("/allgoogleusers", verifyToken, allgoogleusers);
 router.get("/allusers", verifyToken, allusers);
 router.get("/userpoints", verifyToken, userpointsview);
+router.post("/deleteuser", verifyToken, deleteuser);
 
 router.post("/logout", verifyToken, logoutUser);
 router.post("/auth/google", googleAuth);
+
+
+
+
 
 module.exports = router; // Export router

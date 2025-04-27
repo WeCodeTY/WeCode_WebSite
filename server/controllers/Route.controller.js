@@ -3,6 +3,7 @@ const ActivityLog = require("../models/activitylog.model");
 const path = require("path");
 const xlsx = require("xlsx");
 const admin = require("firebase-admin");
+const { log } = require("console");
 require("dotenv").config();
 
 if (!admin.apps.length) {
@@ -196,6 +197,28 @@ const allusers = async (req, res) => {
     return res.status(500).json({ message: "An error occurred.", error });
   }
 }
+const deleteuser = async (req, res) => {
+  try {
+    const { name } = req.body; // Get the name from the request body
+
+    if (!name) {
+      return res.status(400).json({ message: "User name is required." });
+    }
+    // Attempt to delete the user by name
+    const result = await User.deleteOne({ name });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    return res.status(200).json({ message: "User deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return res.status(500).json({ message: "An error occurred.", error });
+  }
+}
+
+
 const allgoogleusers = async (req, res) => {
   try {
     const users = await User.find({ isGoogleUser: true });
@@ -333,4 +356,6 @@ module.exports = {
   allgoogleusers,
   allusers,
   alluserssignedin,
+  deleteuser,
+
 };
