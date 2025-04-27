@@ -121,23 +121,27 @@ const [uploadingExcel, setUploadingExcel] = useState(false);
       alert('Please upload an Excel file first!');
       return;
     }
+  
     setUploadingExcel(true);
+  
     try {
+      // Make the request with credentials (cookies)
       for (let problem of excelProblems) {
+        
         await axios.post(process.env.REACT_APP_Admin_questions_add, {
           topic: problem.topic,
           title: problem.title,
           difficulty: problem.difficulty,
-          leetcodeLink: problem.leetcode_link,
-          problemStatement: problem.problem_statement,
-          inputFormat: problem.input,
-          outputFormat: problem.output,
-          constraints: problem.constraints,
-        });
+          link: problem.link,                        
+          problemStatement: problem.problemStatement, 
+          sampleInput: problem.sampleInput,           
+          sampleOutput: problem.sampleOutput,         
+          constraints: problem.constraints,           
+        }, { withCredentials: true });
       }
       alert('All Excel problems uploaded successfully!');
     } catch (error) {
-      console.error('Error uploading Excel problems:', error);
+      console.error('Error uploading Excel problems:', error.response || error);
       alert('Error uploading some problems.');
     } finally {
       setUploadingExcel(false);
