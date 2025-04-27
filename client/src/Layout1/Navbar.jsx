@@ -182,9 +182,9 @@ const Navbar = () => {
               background: "transparent",
               border: "none",
               color: "#ECEFCA",
-              fontSize: "2rem",
+              fontSize: "3rem",
               cursor: "pointer",
-              marginRight: "10px",
+              marginRight: "50px",
             }}
           >
             ☰
@@ -193,16 +193,71 @@ const Navbar = () => {
             <div
               style={{
                 position: "absolute",
+                
                 top: "70px",
                 right: 0,
                 backgroundColor: "#213448",
                 borderRadius: "8px",
                 padding: "15px",
-                minWidth: "180px",
+                minWidth: "200px",
                 boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
                 zIndex: 20,
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
               }}
             >
+              <span style={{ color: "#ECEFCA", fontWeight: "bold", marginBottom: "5px" }}>
+                Points: {userPoints}
+              </span>
+              {/* Show Create Room and Join Room only when on DSA Dashboard */}
+              {isDsaDashboard && (
+                <div style={{ display: "flex", gap: "10px", marginBottom: "5px" }}>
+                  <button
+                    onClick={handleCreateRoom}
+                    style={{
+                      flex: 1,
+                      padding: "8px 0",
+                      color: "#ECEFCA",
+                      backgroundColor: "#547792",
+                      border: "none",
+                      borderRadius: "6px",
+                      fontWeight: "500",
+                      cursor: "pointer",
+                      boxShadow: "0 2px 8px rgba(84, 119, 146, 0.4)",
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseOver={(e) => (e.target.style.backgroundColor = "#94B4C1")}
+                    onMouseOut={(e) => (e.target.style.backgroundColor = "#547792")}
+                  >
+                    Create Room
+                  </button>
+                  <button
+                    onClick={() => setShowJoinModal(true)}
+                    style={{
+                      flex: 1,
+                      padding: "8px 0",
+                      color: "#ECEFCA",
+                      backgroundColor: "#547792",
+                      border: "none",
+                      borderRadius: "6px",
+                      fontWeight: "500",
+                      cursor: "pointer",
+                      boxShadow: "0 2px 8px rgba(84, 119, 146, 0.4)",
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseOver={(e) => (e.target.style.backgroundColor = "#94B4C1")}
+                    onMouseOut={(e) => (e.target.style.backgroundColor = "#547792")}
+                  >
+                    Join Room
+                  </button>
+                </div>
+              )}
+              <span style={linkStyle} onClick={handleNavigateTouser}>User Details</span>
+              <span style={linkStyle} onClick={handleNavigateToFollowDashboard}>Follow Dashboard</span>
+              <span style={linkStyle} onClick={handleNavigateToUploadPost}>Upload Post</span>
+              <span style={linkStyle} onClick={handleproblemsolved}>Problem Solved</span>
+              <span style={linkStyle} onClick={handleLogoutClick}>Logout</span>
               <span style={{ ...linkStyle, display: "block", marginBottom: "10px" }} onClick={NavigateFeed}>Home</span>
               <span style={{ ...linkStyle, display: "block", marginBottom: "10px" }} onClick={NavigateDsaCourses}>DSA Course</span>
               <span style={{ ...linkStyle, display: "block", marginBottom: "10px" }} onClick={NavigatetoWebDev}>Web Dev Course</span>
@@ -315,15 +370,9 @@ const Navbar = () => {
           </a>
         </div>
       )}
-      {isDsaDashboard && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            marginRight: "10px",
-          }}
-        >
+      {/* Show Create Room and Join Room only when on DSA Dashboard and on desktop */}
+      {!isMobile && isDsaDashboard && (
+        <div style={{ display: "flex", gap: "10px", marginRight: "10px" }}>
           <button
             onClick={handleCreateRoom}
             style={{
@@ -363,157 +412,160 @@ const Navbar = () => {
         </div>
       )}
 
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <span style={{ color: "#ECEFCA", fontWeight: "bold", marginRight: "10px" }}>
-          Points: {userPoints}
-        </span>
-        <div style={{ position: "relative" }}>
-          <button
-            onClick={handleToggleMenu}
-            style={{
-              background: "rgba(255,255,255,0.1)",
-              padding: "15px 30px",
-              backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(9, 21, 125, 0.6))`,
-              borderRadius: "50%",
-              color: "#ECEFCA",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
-              cursor: "pointer",
-              backdropFilter: "blur(5px)",
-              marginRight: "40px",
-            }}
-          >
-            Profile ▼
-          </button>
-
-          {showmenu && (
-            <div
+      {/* Only show Profile menu and points on desktop */}
+      {!isMobile && (
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ color: "#ECEFCA", fontWeight: "bold", marginRight: "10px" }}>
+            Points: {userPoints}
+          </span>
+          <div style={{ position: "relative" }}>
+            <button
+              onClick={handleToggleMenu}
               style={{
-                position: "absolute",
-                top: "110%",
-                right: 0,
-                backgroundColor: "rgba(33, 52, 72, 0.95)",
+                background: "rgba(255,255,255,0.1)",
+                padding: "15px 30px",
+                backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(9, 21, 125, 0.6))`,
+                borderRadius: "50%",
+                color: "#ECEFCA",
                 border: "1px solid rgba(255, 255, 255, 0.2)",
-                borderRadius: "8px",
-                padding: "10px",
-                minWidth: "160px",
-                zIndex: 20,
+                cursor: "pointer",
+                backdropFilter: "blur(5px)",
+                marginRight: "40px",
               }}
             >
-              <button
-                onClick={handleNavigateTouser}
-                style={{
-                  padding: "10px",
-                  color: "#ECEFCA",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  textAlign: "left",
-                  width: "100%",
-                  cursor: "pointer",
-                  transition: "background 0.2s",
-                  borderRadius: "4px",
-                }}
-                onMouseOver={(e) =>
-                  (e.target.style.backgroundColor = "#1a1a1a")
-                }
-                onMouseOut={(e) =>
-                  (e.target.style.backgroundColor = "transparent")
-                }
-              >
-                User Details
-              </button>
-              <button
-                onClick={handleNavigateToFollowDashboard}
-                style={{
-                  padding: "10px",
-                  color: "#ECEFCA",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  textAlign: "left",
-                  width: "100%",
-                  cursor: "pointer",
-                  transition: "background 0.2s",
-                  borderRadius: "4px",
-                }}
-                onMouseOver={(e) =>
-                  (e.target.style.backgroundColor = "#1a1a1a")
-                }
-                onMouseOut={(e) =>
-                  (e.target.style.backgroundColor = "transparent")
-                }
-              >
-                Follow Dashboard
-              </button>
-              <button
-                onClick={handleNavigateToUploadPost}
-                style={{
-                  padding: "10px",
-                  color: "#ECEFCA",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  textAlign: "left",
-                  width: "100%",
-                  cursor: "pointer",
-                  transition: "background 0.2s",
-                  borderRadius: "4px",
-                }}
-                onMouseOver={(e) =>
-                  (e.target.style.backgroundColor = "#1a1a1a")
-                }
-                onMouseOut={(e) =>
-                  (e.target.style.backgroundColor = "transparent")
-                }
-              >
-                Upload Post
-              </button>
+              Profile ▼
+            </button>
 
-              <button
-                onClick={handleproblemsolved}
+            {showmenu && (
+              <div
                 style={{
+                  position: "absolute",
+                  top: "110%",
+                  right: 0,
+                  backgroundColor: "rgba(33, 52, 72, 0.95)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  borderRadius: "8px",
                   padding: "10px",
-                  color: "#ECEFCA",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  textAlign: "left",
-                  width: "100%",
-                  cursor: "pointer",
-                  transition: "background 0.2s",
-                  borderRadius: "4px",
+                  minWidth: "160px",
+                  zIndex: 20,
                 }}
-                onMouseOver={(e) =>
-                  (e.target.style.backgroundColor = "#1a1a1a")
-                }
-                onMouseOut={(e) =>
-                  (e.target.style.backgroundColor = "transparent")
-                }
               >
-                Problem Solved
-              </button>
-              <button
-                onClick={handleLogoutClick}
-                style={{
-                  padding: "10px",
-                  color: "#ECEFCA",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  textAlign: "left",
-                  width: "100%",
-                  cursor: "pointer",
-                  transition: "background 0.2s",
-                  borderRadius: "4px",
-                }}
-                onMouseOver={(e) =>
-                  (e.target.style.backgroundColor = "#1a1a1a")
-                }
-                onMouseOut={(e) =>
-                  (e.target.style.backgroundColor = "transparent")
-                }
-              >
-                Logout
-              </button>
-            </div>
-          )}
+                <button
+                  onClick={handleNavigateTouser}
+                  style={{
+                    padding: "10px",
+                    color: "#ECEFCA",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    textAlign: "left",
+                    width: "100%",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
+                    borderRadius: "4px",
+                  }}
+                  onMouseOver={(e) =>
+                    (e.target.style.backgroundColor = "#1a1a1a")
+                  }
+                  onMouseOut={(e) =>
+                    (e.target.style.backgroundColor = "transparent")
+                  }
+                >
+                  User Details
+                </button>
+                <button
+                  onClick={handleNavigateToFollowDashboard}
+                  style={{
+                    padding: "10px",
+                    color: "#ECEFCA",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    textAlign: "left",
+                    width: "100%",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
+                    borderRadius: "4px",
+                  }}
+                  onMouseOver={(e) =>
+                    (e.target.style.backgroundColor = "#1a1a1a")
+                  }
+                  onMouseOut={(e) =>
+                    (e.target.style.backgroundColor = "transparent")
+                  }
+                >
+                  Follow Dashboard
+                </button>
+                <button
+                  onClick={handleNavigateToUploadPost}
+                  style={{
+                    padding: "10px",
+                    color: "#ECEFCA",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    textAlign: "left",
+                    width: "100%",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
+                    borderRadius: "4px",
+                  }}
+                  onMouseOver={(e) =>
+                    (e.target.style.backgroundColor = "#1a1a1a")
+                  }
+                  onMouseOut={(e) =>
+                    (e.target.style.backgroundColor = "transparent")
+                  }
+                >
+                  Upload Post
+                </button>
+
+                <button
+                  onClick={handleproblemsolved}
+                  style={{
+                    padding: "10px",
+                    color: "#ECEFCA",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    textAlign: "left",
+                    width: "100%",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
+                    borderRadius: "4px",
+                  }}
+                  onMouseOver={(e) =>
+                    (e.target.style.backgroundColor = "#1a1a1a")
+                  }
+                  onMouseOut={(e) =>
+                    (e.target.style.backgroundColor = "transparent")
+                  }
+                >
+                  Problem Solved
+                </button>
+                <button
+                  onClick={handleLogoutClick}
+                  style={{
+                    padding: "10px",
+                    color: "#ECEFCA",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    textAlign: "left",
+                    width: "100%",
+                    cursor: "pointer",
+                    transition: "background 0.2s",
+                    borderRadius: "4px",
+                  }}
+                  onMouseOver={(e) =>
+                    (e.target.style.backgroundColor = "#1a1a1a")
+                  }
+                  onMouseOut={(e) =>
+                    (e.target.style.backgroundColor = "transparent")
+                  }
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       {isDsaDashboard && showJoinModal && (
         <div
           style={{

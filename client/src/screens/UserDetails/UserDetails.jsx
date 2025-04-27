@@ -135,15 +135,48 @@ const UserDetails = () => {
         onDashboard={handleNavigateToDashboard}
       />
 
-      <div style={{ padding: "2rem", backgroundColor: "#213448", color: "#ECEFCA", marginBottom: "2rem", fontFamily: "sans-serif", display: "flex", justifyContent: "center" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "3rem", maxWidth: "900px", width: "100%", backgroundColor: "#213448", padding: "2rem", borderRadius: "10px", boxShadow: "0 4px 12px rgba(0,0,0,0.4)" }}>
+      <div
+        style={{
+          padding: "2rem",
+          backgroundColor: "#213448",
+          color: "#ECEFCA",
+          marginBottom: "2rem",
+          fontFamily: "sans-serif",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "2rem",
+            flexWrap: "wrap",
+            width: "90%",
+            maxWidth: "900px",
+            backgroundColor: "#213448",
+            padding: "2rem",
+            borderRadius: "10px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+          }}
+        >
           <img
-            src={profileImage && profileImage.trim() !== "" ? profileImage : `https://api.dicebear.com/7.x/micah/svg?seed=${name}`}
+            src={
+              profileImage && profileImage.trim() !== ""
+                ? profileImage
+                : `https://api.dicebear.com/7.x/micah/svg?seed=${name}`
+            }
             alt="Profile"
-            style={{ borderRadius: "50%", width: "150px", height: "150px", objectFit: "cover", border: "3px solid #94B4C1" }}
+            style={{
+              borderRadius: "50%",
+              width: "120px",
+              height: "120px",
+              objectFit: "cover",
+              border: "3px solid #94B4C1",
+            }}
           />
           <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
               <h2 style={{ fontSize: "2rem", fontWeight: "bold", color: "#94B4C1" }}>{name}</h2>
               <button
                 onClick={() => navigate("/userupdatedetails")}
@@ -163,12 +196,14 @@ const UserDetails = () => {
                 Edit Profile
               </button>
             </div>
-            <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}><strong>Email:</strong> {email}</p>
-            <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-              <strong style={{ cursor: "pointer" }} onClick={toggleFollowersPopup}>Followers: {followersCount}</strong>
-              &nbsp;&nbsp;|&nbsp;&nbsp;
-              <strong style={{ cursor: "pointer" }} onClick={toggleFollowingPopup}>Following: {followingCount}</strong>
-            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
+              <p style={{ fontSize: "1rem", marginBottom: "0" }}><strong>Email:</strong> {email}</p>
+              <p style={{ fontSize: "1rem", marginBottom: "0" }}>
+                <strong style={{ cursor: "pointer" }} onClick={toggleFollowersPopup}>Followers: {followersCount}</strong>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <strong style={{ cursor: "pointer" }} onClick={toggleFollowingPopup}>Following: {followingCount}</strong>
+              </p>
+            </div>
             <p style={{ marginTop: "0.5rem", lineHeight: "1.4" }}>{bio}</p>
           </div>
         </div>
@@ -235,11 +270,14 @@ const UserDetails = () => {
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            overflowY: "auto",
+            flexDirection: "row",
+            flexWrap: "wrap",
             gap: "1.5rem",
-            maxHeight: "400px",
+            maxHeight: "800px",
+            overflowY: "auto",
             paddingRight: "10px",
+            width: "90%",
+            margin: "0 auto",
           }}
         >
           {userPosts.map((item, idx) => (
@@ -252,6 +290,11 @@ const UserDetails = () => {
                 color: "#ECEFCA",
                 boxShadow: "0 2px 8px rgba(33,52,72,0.3)",
                 transition: "transform 0.2s ease",
+                flexBasis: "calc(50% - 1rem)",
+                minWidth: "260px",
+                maxWidth: "420px",
+                flexGrow: 1,
+                boxSizing: "border-box",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
               onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -345,19 +388,22 @@ const UserDetails = () => {
                   .map((d) => [d.day, d.value])
               }))
             }}
-          style={{ height: "100px", minWidth: "1200px" }}
+            style={{ height: "100px", minWidth: "1200px" }}
           />
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            padding: '1rem',
-            width: '1000px', // Increased width
-            margin: '0 auto',
-            marginLeft: '1rem'
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              padding: '1rem',
+              width: '100%',
+              margin: '0 auto',
+              marginLeft: '1rem',
+              boxSizing: 'border-box',
+            }}
+          >
             {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((month, idx) => (
-            <div key={idx} style={{ flex: "0 9 auto", textAlign: "center", color: "#ECEFCA", fontSize: "0.75rem" }}>{month}</div>
+              <div key={idx} style={{ flex: "0 9 auto", textAlign: "center", color: "#ECEFCA", fontSize: "0.75rem" }}>{month}</div>
             ))}
           </div>
         </div>
