@@ -1,4 +1,4 @@
-const Room = require("../models/room.model");
+const Room = require("../models/Room.model");
 const Post = require("../models/post.model"); // Add this import
 const User = require("../models/user.model");
 const Follow = require("../models/Follow.model");
@@ -342,7 +342,7 @@ const createRoom = async (req, res) => {
     }
 
     // Example schema: { name: String, createdBy: ObjectId (User), participants: [] }
-    const Room = require("../models/room.model");
+   
     const newRoom = new Room({
       name: roomName,
       createdBy: req.user._id,
