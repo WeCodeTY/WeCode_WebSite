@@ -232,7 +232,7 @@ const googleAuth = async (req, res) => {
   const { idToken } = req.body;
 
   try {
-    console.log("Received idToken:", idToken);
+    
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const { email, name, picture } = decodedToken;
 

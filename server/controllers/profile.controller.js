@@ -134,7 +134,7 @@ const activityLog = async (req, res) => {
       loginObj[key] = value;
     });
     
-    console.log("Raw logins:", user.activitylog.logins);
+    
     
     if (Object.keys(loginObj).length === 0) {
       console.warn("No login data found in response.");
@@ -142,7 +142,7 @@ const activityLog = async (req, res) => {
       console.log("Login data keys:", Object.keys(loginObj));
     }
     const formatted = Object.entries(loginObj).map(([day, value]) => ({ day, value }));
-    console.log("Fetched activity data:", formatted);
+    
 
     return res.status(200).json({
       message: "Activity log fetched successfully.",
