@@ -40,6 +40,10 @@ const Users = () => {
 
   // Delete a single user by name
   const handleDeleteUser = async (userName) => {
+    if (!userName) {
+      alert('User name is missing. Cannot delete.');
+      return;
+    }
     try {
       const response = await axios.post(
         process.env.REACT_APP_DELETE_USER, 
@@ -102,7 +106,8 @@ const Users = () => {
                 <td style={styles.tableData}>Active</td>
                 <td style={styles.tableData}>
                   <button
-                    onClick={() => handleDeleteUser(name)}
+                    data-username={name}
+                    onClick={(e) => handleDeleteUser(e.target.dataset.username)}
                     style={styles.deleteButton}
                   >
                     Delete
