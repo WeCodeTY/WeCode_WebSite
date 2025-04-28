@@ -173,6 +173,9 @@ const LoginScreen = () => {
                   const result = await loginWithGoogle();
                   const idToken = await result.user.getIdToken();
 
+                  
+
+
                   const response = await axios.post(
                     `${process.env.REACT_APP_GOOGLE_AUTH_URI}`,
                     { idToken },

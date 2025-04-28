@@ -20,4 +20,7 @@ const roomSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Room", roomSchema);
+// Check if the model is already defined
+const Room = mongoose.models.Room || mongoose.model("Room", roomSchema);
+
+module.exports = Room;

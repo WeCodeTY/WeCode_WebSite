@@ -8,8 +8,9 @@ const customListSchema = mongoose.Schema({
   questions: [{
     type: String
   }],
-  userEmail: {
-    type: String,
+  user: {   // <-- Correct
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true
   }
 }, { timestamps: true });

@@ -1,4 +1,9 @@
+const Room = require("../models/room.model");
+const Post = require("../models/post.model"); // Add this import
 const User = require("../models/user.model");
+const Follow = require("../models/Follow.model");
+const Question = require("../models/adminquestions.model");
+const CustomList = require("../models/customList.model");
 const ActivityLog = require("../models/activitylog.model");
 const path = require("path");
 const xlsx = require("xlsx");
@@ -74,14 +79,12 @@ if (adminEmails.includes(user.email)) {
 
     // ✅ Log login activity
     const today = new Date().toISOString().split("T")[0];
-    console.log("Logging activity for:", email);
-    let activityLog = await ActivityLog.findOne({ email });
+    let activityLog = await ActivityLog.findOne({ user: user._id });
     if (!activityLog) {
-      activityLog = new ActivityLog({ email, logins: { [today]: 1 } });
+      activityLog = new ActivityLog({ user: user._id, logins: { [today]: 1 } });
     } else {
       activityLog.logins.set(today, (activityLog.logins.get(today) || 0) + 1);
     }
-    console.log("Activity log before save:", activityLog);
     await activityLog.save();
     
     if (!user.activitylog || !user.activitylog.equals(activityLog._id)) {
@@ -199,24 +202,32 @@ const allusers = async (req, res) => {
 }
 const deleteuser = async (req, res) => {
   try {
-    const { name } = req.body; // Get the name from the request body
+    const { userId } = req.body; // Get the userId from the request body
 
-    if (!name) {
-      return res.status(400).json({ message: "User name is required." });
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
     }
-    // Attempt to delete the user by name
-    const result = await User.deleteOne({ name });
+
+    // Delete all records related to the user
+    await Room.deleteMany({ participants: userId });
+    await Post.deleteMany({ user: userId });
+    await Follow.deleteMany({ $or: [{ followerId: userId }, { followingId: userId }] });
+    await CustomList.deleteMany({ user: userId });
+    await ActivityLog.deleteMany({ user: userId });
+
+    // Finally, delete the user
+    const result = await User.deleteOne({ _id: userId });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    return res.status(200).json({ message: "User deleted successfully." });
+    return res.status(200).json({ message: "User and related data deleted successfully." });
   } catch (error) {
     console.error("Error deleting user:", error);
     return res.status(500).json({ message: "An error occurred.", error });
   }
-}
+};
 
 
 const allgoogleusers = async (req, res) => {
@@ -234,6 +245,8 @@ const googleAuth = async (req, res) => {
   try {
     
     const decodedToken = await admin.auth().verifyIdToken(idToken);
+    
+    
     const { email, name, picture } = decodedToken;
 
     let user = await User.findOne({ email });
@@ -255,6 +268,8 @@ const googleAuth = async (req, res) => {
     }
 
     const adminEmails = process.env.adminEmails.split(",").map(email => email.trim());
+    console.log(admin);
+    
 if (adminEmails.includes(user.email)) {
   user.role = "admin";
 } else {
@@ -268,14 +283,12 @@ if (adminEmails.includes(user.email)) {
     await user.save();
     
     const today = new Date().toISOString().split("T")[0];
-    console.log("Logging activity for:", email);
-    let activityLog = await ActivityLog.findOne({ email });
+    let activityLog = await ActivityLog.findOne({ user: user._id });
     if (!activityLog) {
-      activityLog = new ActivityLog({ email, logins: { [today]: 1 } });
+      activityLog = new ActivityLog({ user: user._id, logins: { [today]: 1 } });
     } else {
       activityLog.logins.set(today, (activityLog.logins.get(today) || 0) + 1);
     }
-    console.log("Activity log before save:", activityLog);
     await activityLog.save();
     
     if (!user.activitylog || !user.activitylog.equals(activityLog._id)) {
@@ -344,6 +357,15 @@ const createRoom = async (req, res) => {
   }
 };
 
+const allactivitylogs = async (req, res) => {
+  try {
+    const activityLogs = await ActivityLog.find();
+    return res.status(200).json({ activityLogs });
+  } catch (error) {
+    return res.status(500).json({ message: "An error occurred.", error });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -357,5 +379,6 @@ module.exports = {
   allusers,
   alluserssignedin,
   deleteuser,
-
+  allactivitylogs,
+  
 };

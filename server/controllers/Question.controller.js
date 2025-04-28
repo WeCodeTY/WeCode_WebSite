@@ -138,7 +138,7 @@ const createcustomList = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        const customlist = new CustomList({ name: listname, questions: [], userEmail: req.user.email });
+        const customlist = new CustomList({ name: listname, questions: [], user: req.user._id });
         await customlist.save();
         user.customLists.push(customlist._id);
         await user.save();
@@ -155,7 +155,7 @@ const allcustomlists = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        const customLists = await CustomList.find({ userEmail: req.user.email });
+        const customLists = await CustomList.find({ user: req.user._id });
         return res.status(200).json({ customLists });
     } catch (error) {
         return res.status(500).json({ message: "An error occurred.", error });
@@ -226,7 +226,6 @@ const deletecustomlist = async (req, res) => {
 const deletequestionfromcustomlist = async (req, res) => {
     try {
         const { listId, questionId } = req.body;
-        console.log("Deleting from list:", listId, "question:", questionId);
         const user = await User.findOne({ email: req.user.email });
         if (!user) {
             return res.status(404).json({ message: "User not found." });

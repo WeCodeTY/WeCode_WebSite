@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 
 const activityLogSchema = new mongoose.Schema({
-  email: {
-    type: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
-    unique: true
+    
   },
   logins: {
     type: Map,

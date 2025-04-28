@@ -25,7 +25,7 @@ const Users = () => {
         totalUsers: totalUsers.length,
         googleUsers: googleUsers.length,
         signedInUsers: signedInUsers.length,
-        userNames: totalUsers.map(user => user.name)
+        userNames: totalUsers.map(user => ({ name: user.name, id: user._id }))
       });
       setLoading(false);
     } catch (err) {
@@ -38,20 +38,20 @@ const Users = () => {
     fetchUserStats();
   }, []);
 
-  // Delete a single user by name
-  const handleDeleteUser = async (userName) => {
-    if (!userName) {
-      alert('User name is missing. Cannot delete.');
+  // Delete a single user by ID
+  const handleDeleteUser = async (userId) => {
+    if (!userId) {
+      alert('User ID is missing. Cannot delete.');
       return;
     }
     try {
       const response = await axios.post(
         process.env.REACT_APP_DELETE_USER, 
-        { name: userName },
+        { userId },
         { withCredentials: true }
       );
       if (response.status === 200) {
-        alert(`${userName} has been deleted.`);
+        alert(`User has been deleted.`);
         fetchUserStats(); // Refresh user stats after deletion
       }
     } catch (error) {
@@ -96,18 +96,19 @@ const Users = () => {
             </tr>
           </thead>
           <tbody>
-            {userStats.userNames.map((name, index) => (
+            {userStats.userNames.map((user, index) => (
               <tr
                 key={index}
                 style={styles.tableRow}
                 className="user-table-row"
               >
-                <td style={styles.tableData}>{name}</td>
+                <td style={styles.tableData}>{user.name}</td>
                 <td style={styles.tableData}>Active</td>
                 <td style={styles.tableData}>
                   <button
-                    data-username={name}
-                    onClick={(e) => handleDeleteUser(e.target.dataset.username)}
+                    data-username={user.name}
+                    data-userid={user.id}
+                    onClick={(e) => handleDeleteUser(e.target.dataset.userid)}
                     style={styles.deleteButton}
                   >
                     Delete
