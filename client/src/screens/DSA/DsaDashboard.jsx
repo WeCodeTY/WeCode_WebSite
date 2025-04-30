@@ -6,10 +6,10 @@ import quoteList from "../../utils/quotes.js";
 import { handleLogout } from "../../utils/Logout.js";
 import Layout from "../../Layout1/Layout.jsx";
 import Navbar from "../../Layout1/Navbar.jsx";
-import { createroom, joinroom } from "../../Rooms/room.jsx";
-import { io } from "socket.io-client";
+import socket from "../../sockets/socket.js";
+// import { io } from "socket.io-client";
 
-const socket = io(process.env.REACT_APP_SOCKET_URL);
+// const socket = io(process.env.REACT_APP_SOCET_URL);
 
 const Dashboard = () => {
   const [questions, setQuestions] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { io } from "socket.io-client";
+import socket from "../../sockets/socket";
 import { useParams } from "react-router-dom";
 import Layout from "../../Layout1/Layout";
 import Navbar from "../../Layout1/Navbar";
@@ -19,7 +19,7 @@ const fetchRandomName = async () => {
 
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
-const socket = io(process.env.REACT_APP_SOCKET_URL); // Your socket URL
+// const socket = io(process.env.REACT_APP_SOCKET_URL); // Your socket URL
 
 function ChatRoom() {
   const { publicroomID } = useParams();

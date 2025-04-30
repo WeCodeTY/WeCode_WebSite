@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import socket from "./sockets/socket";
 import HomeScreen from "./screens/HomeScreen/HomeScreen";
 import LoginScreen from "./screens/LoginScreen/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen/RegisterScreen";
@@ -21,6 +23,19 @@ import DevopsProjectsScreen from "./screens/DevOps/DevOpsProjectsScreen";
 import DsaCoursesScreen from "./screens/DSA/DsaCoursesScreen";
 
 function App() {
+  useEffect(() => {
+    socket.on("forceLogout", () => {
+      alert("Your account was deleted. Please log in again.");
+      document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      window.location.href = "/login";
+    });
+
+    return () => {
+      socket.off("forceLogout");
+    };
+  }, []);
+
   return (
     <Router>
       <Routes>
@@ -35,10 +50,7 @@ function App() {
         <Route path="/room/:roomId" element={<CustomRoom />} />
         <Route path="/questionroom/:publicroomID" element={<Livechatroom />} />
         <Route path="/Feed" element={<Feed />} />
-        <Route
-          path="/customroom/:publicRoomId/:privateRoomId"
-          element={<CustomRoom />}
-        />
+        <Route path="/customroom/:publicRoomId/:privateRoomId" element={<CustomRoom />} />
         <Route path="/solvedproblemslist" element={<SolvedProblemsList />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/about" element={<AboutScreen />} />

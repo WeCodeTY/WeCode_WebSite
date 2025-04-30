@@ -5,7 +5,7 @@ const db = require("./config/db");
 const cors = require("cors");
 const routes = require("./Route/routes");
 const cookieparser = require("cookie-parser");
-const setupSocket = require("./Sockets/socket");
+const { setupSocket } = require("./Sockets/socket");
 const http = require("http");
 
 

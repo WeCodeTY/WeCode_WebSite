@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import socket from '../../sockets/socket';
 
 const Users = () => {
   const [userStats, setUserStats] = useState({
@@ -52,6 +53,7 @@ const Users = () => {
       );
       if (response.status === 200) {
         alert(`User has been deleted.`);
+        socket.emit("forceLogout", userId);
         fetchUserStats(); // Refresh user stats after deletion
       }
     } catch (error) {

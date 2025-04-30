@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../../utils/FireBase";
+import socket from "../../sockets/socket";
 
 const LoginScreen = () => {
   const [message, setMessage] = useState("");
@@ -33,12 +34,14 @@ const LoginScreen = () => {
       );
       setMessage(response.data.message);
 
-      const { role } = response.data;  // Get role from the response
+      const { role , id } = response.data;  // Get role from the response
+      socket.emit("registerUser", id);
       if (role === "admin") {
         navigate("/admin-dashboard");  // Redirect to admin dashboard
       } else {
         navigate("/Feed");  // Redirect to user dashboard
       }
+      
     } catch (error) {
       console.error(error);
       setMessage(error.response?.data?.message || "Login failed.");
@@ -184,6 +187,8 @@ const LoginScreen = () => {
                   
                   setMessage("Login successful");
                   const { role } = response.data;  // Get role from the response
+                  const { id } = response.data;
+                  socket.emit("registerUser", id);
                   if (role === "admin") {
                     navigate("/admin-dashboard");  // Redirect to admin dashboard
                   } else {

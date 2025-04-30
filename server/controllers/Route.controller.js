@@ -9,6 +9,8 @@ const path = require("path");
 const xlsx = require("xlsx");
 const admin = require("firebase-admin");
 const { log } = require("console");
+const { default: socket } = require("../../client/src/sockets/socket");
+const { getIO, userSocketMap } = require("../Sockets/socket");
 require("dotenv").config();
 
 if (!admin.apps.length) {
@@ -103,7 +105,7 @@ if (adminEmails.includes(user.email)) {
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
       .status(200)
-      .json({ message: "Login successful.", role: user.role });
+      .json({ message: "Login successful.", role: user.role, id : user._id });
 
   } catch (error) {
     console.error(error);
@@ -222,6 +224,17 @@ const deleteuser = async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
+    // 🔥 Force logout the user if connected
+    const io = getIO();
+    const targetSocketId = userSocketMap.get(userId);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit("forceLogout");
+      console.log(`🚨 Forced logout for user ${userId}`);
+    } else {
+      console.log(`⚠️ User ${userId} not connected.`);
+    }
+
+
     return res.status(200).json({ message: "User and related data deleted successfully." });
   } catch (error) {
     console.error("Error deleting user:", error);
@@ -268,7 +281,7 @@ const googleAuth = async (req, res) => {
     }
 
     const adminEmails = process.env.adminEmails.split(",").map(email => email.trim());
-    console.log(admin);
+
     
 if (adminEmails.includes(user.email)) {
   user.role = "admin";
@@ -306,7 +319,7 @@ if (adminEmails.includes(user.email)) {
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
       .status(200)
-      .json({ message: "Google login successful.", role: user.role });
+      .json({ message: "Google login successful.", role: user.role , id: user._id });
 
   } catch (error) {
     console.error("Firebase Auth Error:", error.message, error.stack);

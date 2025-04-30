@@ -4,13 +4,14 @@ import { Box, HStack } from "@chakra-ui/react";
 import Editor from "@monaco-editor/react";
 import LanguageSelector from "./LanguageSelector";
 import { CODE_SNIPPETS } from "../constants";
-import { io } from "socket.io-client";
+import socket from "../sockets/socket";
+// import { io } from "socket.io-client";
 
-// Global socket instance (only created once)
-const socket = io(process.env.REACT_APP_SOCKET_URL, {
-  withCredentials: true,
-  autoConnect: false, // Connect manually
-});
+// // Global socket instance (only created once)
+// const socket = io(process.env.REACT_APP_SOCKET_URL, {
+//   withCredentials: true,
+//   autoConnect: false, // Connect manually
+// });
 
 const getLanguageName = (id) => {
   switch (id) {
