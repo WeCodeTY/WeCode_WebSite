@@ -11,6 +11,9 @@ const {
   allgoogleusers,
   alluserssignedin,
   deleteuser,
+  forgotPassword,
+  verifyotp,
+  updateuserpassword,
 
 
   
@@ -88,7 +91,9 @@ router.get("/allgoogleusers", verifyToken, allgoogleusers);
 router.get("/allusers", verifyToken, allusers);
 router.get("/userpoints", verifyToken, userpointsview);
 router.post("/deleteuser", verifyToken, deleteuser);
-
+router.post("/forgot-password", forgotPassword);
+router.post("/verify-otp", verifyotp);
+router.post("/updatepassword", updateuserpassword);
 router.post("/logout", verifyToken, logoutUser);
 router.post("/auth/google", googleAuth);
 

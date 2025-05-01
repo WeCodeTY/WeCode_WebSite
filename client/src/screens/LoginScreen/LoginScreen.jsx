@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../../utils/FireBase";
 import socket from "../../sockets/socket";
+import ResetModal from "./ResetModal";
 
 const LoginScreen = () => {
   const [message, setMessage] = useState("");
@@ -10,6 +11,7 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [serverStatus, setServerStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);  // Add this line
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -126,7 +128,9 @@ const LoginScreen = () => {
                   fontSize: "12px",
                   color: "#94B4C1",
                   textDecoration: "none",
+                  cursor: "pointer",
                 }}
+                onClick={() => setShowResetModal(true)}
               >
                 Forgot password?
               </a>
@@ -290,6 +294,8 @@ const LoginScreen = () => {
           {serverStatus}
         </div>
       </div>
+      {/* Reset Modal */}
+      <ResetModal show={showResetModal} onClose={() => setShowResetModal(false)} />
     </>
   );
 };

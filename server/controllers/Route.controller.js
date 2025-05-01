@@ -11,6 +11,7 @@ const admin = require("firebase-admin");
 const { log } = require("console");
 const { default: socket } = require("../../client/src/sockets/socket");
 const { getIO, userSocketMap } = require("../Sockets/socket");
+const sendEmail = require("../middleware/emailverify");  // Correct relative path // Make sure to implement this utility
 require("dotenv").config();
 
 if (!admin.apps.length) {
@@ -379,6 +380,100 @@ const allactivitylogs = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    if (!email) {
+      return res.status(400).json({ message: "Email is required." });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Generate a reset token or OTP (can be a random token for reset link)
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();  // Example OTP generation
+
+    // Send OTP to the user's email (use your email service like Gmail, Mailgun, etc.)
+    await sendEmail(email, "Password Reset OTP", `Your OTP is: ${otp}`);
+
+    // Store OTP and expiration time in the database
+    user.otp = Number(otp);
+    user.otpExpiration = Date.now() + 10 * 60 * 1000;  // 10 minutes expiration
+    await user.save();
+
+    res.status(200).json({ message: "OTP sent to your email." });
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    res.status(500).json({ message: "Failed to send OTP." });
+  }
+};
+
+const verifyotp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Email and OTP are required." });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (!user.otp || !user.otpExpiration) {
+      return res.status(400).json({ message: "No OTP request found. Please request a new OTP." });
+    }
+
+    if (user.otp !== Number(otp)) {
+      return res.status(400).json({ message: "Invalid OTP." });
+    }
+
+    if (user.otpExpiration < Date.now()) {
+      return res.status(400).json({ message: "OTP has expired." });
+    }
+
+    // Clear OTP after successful verification
+    user.otp = null;
+    user.otpExpiration = null;
+    await user.save();
+
+    res.status(200).json({ message: "OTP verified successfully." });
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    res.status(500).json({ message: "Failed to verify OTP." });
+  }
+};
+
+const updateuserpassword = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required." });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Update password only if provided (bcrypt will handle the hashing in the pre-save hook)
+    if (password) {
+      user.password = password;  // Just assign the new password, bcrypt will handle hashing
+    }
+
+    await user.save();
+    res.status(200).json({ message: "Password updated successfully." });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).json({ message: "Failed to update password." });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -393,5 +488,7 @@ module.exports = {
   alluserssignedin,
   deleteuser,
   allactivitylogs,
-  
+  forgotPassword,
+  verifyotp,
+  updateuserpassword
 };

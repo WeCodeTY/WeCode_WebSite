@@ -77,22 +77,32 @@ const AddQuestion = () => {
     setUploadingExcel(true);
 
     try {
+      let successCount = 0;
+      let failedCount = 0;
+
       for (let problem of excelProblems) {
-        await axios.post(process.env.REACT_APP_Admin_questions_add, {
-          topic: problem.topic,
-          title: problem.title,
-          difficulty: problem.difficulty,
-          link: problem.link,
-          problemStatement: problem.problemStatement,
-          sampleInput: problem.sampleInput,
-          sampleOutput: problem.sampleOutput,
-          constraints: problem.constraints
-        }, { withCredentials: true });
+        try {
+          await axios.post(process.env.REACT_APP_Admin_questions_add, {
+            topic: problem.topic,
+            title: problem.title,
+            difficulty: problem.difficulty,
+            link: problem.link,
+            problemStatement: problem.problemStatement,
+            sampleInput: problem.sampleInput,
+            sampleOutput: problem.sampleOutput,
+            constraints: problem.constraints
+          }, { withCredentials: true });
+          successCount++;
+        } catch (error) {
+          console.warn(`❌ Failed to upload "${problem.title}":`, error?.response?.data || error.message);
+          failedCount++;
+        }
       }
-      alert('All Excel problems uploaded successfully!');
+
+      
     } catch (error) {
-      console.error('Error uploading Excel problems:', error.response || error);
-      alert('Error uploading some problems.');
+      console.error('Unexpected error during bulk upload:', error);
+      alert('Unexpected error during upload.');
     } finally {
       setUploadingExcel(false);
     }

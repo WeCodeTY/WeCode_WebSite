@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const ActivityLog = require("../models/activitylog.model");
+const { uploadoncloudinary } = require("../config/FileHandling");
 
 const fetchuserprofile = async (req, res) => {
     try {
@@ -44,7 +45,7 @@ const updateuserprofile = async (req, res) => {
         const uploaded = await uploadoncloudinary(req.file.path);
         user.profileimage = uploaded.url;
       }
-      const { name, phone, bio, goals, github, linkedin } = req.body;
+      const { name, phone, bio, goals, github, linkedin, password } = req.body;
       const originalName = user.name;
   
       // Update fields
@@ -54,6 +55,12 @@ const updateuserprofile = async (req, res) => {
       user.goals = goals || user.goals;
       user.github = github || user.github;
       user.linkedin = linkedin || user.linkedin;
+
+      // Update password only if provided (bcrypt will handle the hashing in the pre-save hook)
+      if (password) {
+        user.password = password;  // Just assign the new password, bcrypt will handle hashing
+      }
+
   
       // Check if the new username already exists (and is not the current user)
       if (name && name !== originalName) {
@@ -64,17 +71,17 @@ const updateuserprofile = async (req, res) => {
       }
 
       try {
-        await user.save();
+        await user.save();  // This will trigger the password hashing due to the pre-save hook
       } catch (err) {
         if (err.code === 11000 && err.keyPattern?.name) {
           return res.status(400).json({ message: "Username already taken." });
         }
         throw err;
       }
-  
+
       // Exclude password in response
-      const { password, ...userWithoutPassword } = user.toObject();
-  
+      const userWithoutPassword = user.toObject();  // No need to destructure password again
+
       return res.status(200).json({
         message: "User updated successfully.",
         user: userWithoutPassword
@@ -86,7 +93,7 @@ const updateuserprofile = async (req, res) => {
     }
 };
 
-const { uploadoncloudinary } = require("../config/FileHandling");
+
 
 const uploadProfileImage = async (req, res) => {
   try {

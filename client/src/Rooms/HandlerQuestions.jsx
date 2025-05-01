@@ -19,7 +19,7 @@ const genericHandler = (functionName, argCount) => (inputStr, code) => {
 const problemHandlers = {
   "two sum": (inputStr, code) => {
     if (!inputStr || typeof inputStr !== "string") {
-      throw new Error("Invalid input for Two Sum");
+      throw new Error("Expected input of type string for Two Sum, but got: " + typeof inputStr);
     }
 
     const match = inputStr.match(/nums\s*=\s*(\[[^\]]+\])\s*,\s*target\s*=\s*(\d+)/);
@@ -27,7 +27,7 @@ const problemHandlers = {
       throw new Error("Invalid or malformed input: " + inputStr);
     }
 
-    const nums = match[1];
+    const nums = JSON.parse(match[1]);
     const target = match[2];
 
     return `
@@ -36,24 +36,24 @@ const problemHandlers = {
       console.log(result);
     `;
   },
-  "longest substring without repeating chars": (inputStr, code) => {
-    if (!inputStr || typeof inputStr !== "string") {
-      throw new Error("Expected plain string input for Longest Substring");
+  "longest substring without repeating characters": (inputStr, code) => {
+    if (!inputStr || typeof inputStr !== "string" || inputStr.length === 0) {
+      console.warn("⚠️ Skipping test: missing or empty input string:", inputStr);
+      throw new Error("Missing or invalid input string for 'Longest Substring Without Repeating Characters'. Received: " + inputStr);
     }
-    const str = JSON.stringify(inputStr);
+
     return `
-      ${code}
-      const result = lengthOfLongestSubstring(${str});
-      console.log(result);
+      ${code} // User's code
+      console.log(lengthOfLongestSubstring("${inputStr}")); // Avoid declaring 'result'
     `;
   },
   "merge intervals": (inputStr, code) => {
     if (!inputStr || typeof inputStr !== "string") {
-      throw new Error("Invalid input for Merge Intervals");
+      throw new Error("Invalid input for Merge Intervals, expected string");
     }
     const match = inputStr.match(/intervals\s*=\s*(\[[^\]]*\])/);
     if (!match) throw new Error("Invalid input for Merge Intervals");
-    const intervals = match[1];
+    const intervals = JSON.parse(match[1]);
     return `
       ${code}
       const result = mergeIntervals(${intervals});
@@ -62,7 +62,7 @@ const problemHandlers = {
   },
   "word ladder": (inputStr, code) => {
     if (!inputStr || typeof inputStr !== "string") {
-      throw new Error("Invalid input for Word Ladder");
+      throw new Error("Invalid input for Word Ladder, expected string");
     }
     const match = inputStr.match(/beginWord\s*=\s*['"](.*?)['"],\s*endWord\s*=\s*['"](.*?)['"],\s*wordList\s*=\s*(\[.*\])/);
     if (!match) throw new Error("Invalid input for Word Ladder");
@@ -79,11 +79,11 @@ const problemHandlers = {
     }
     const match = inputStr.match(/root\s*=\s*(\[.*\])/);
     if (!match) throw new Error("Invalid input for Binary Tree Level Order Traversal");
-    const root = match[1];
+    const root = JSON.parse(match[1]);
     return `
       ${code}
       function buildTree(nodes) {
-        if (!nodes.length || nodes[0] === null) return null;
+        if (!Array.isArray(nodes) || nodes.length === 0 || nodes[0] === null) return null;
         const root = { val: nodes[0], left: null, right: null };
         const queue = [root];
         let i = 1;
