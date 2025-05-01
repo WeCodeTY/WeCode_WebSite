@@ -9,7 +9,7 @@ const path = require("path");
 const xlsx = require("xlsx");
 const admin = require("firebase-admin");
 const { log } = require("console");
-const { default: socket } = require("../../client/src/sockets/socket");
+
 const { getIO, userSocketMap } = require("../Sockets/socket");
 const sendEmail = require("../middleware/emailverify");  // Correct relative path // Make sure to implement this utility
 require("dotenv").config();
