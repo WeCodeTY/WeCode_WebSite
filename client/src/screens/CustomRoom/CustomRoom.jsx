@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import CodeEditor from "../../Rooms/CodeEditor";
-import { runCodeWithJudge0 } from "../../utils/judge0";
-import { problemHandlers } from "../../Rooms/HandlerQuestions";
 import Layout from "../../Layout1/Layout";
 import { Box, Text, Button, Code, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from "@chakra-ui/react";
 import axios from "axios";
@@ -19,8 +17,6 @@ const CustomRoom = () => {
 
   const [output, setOutput] = useState("");
   const [languageId, setLanguageId] = useState(63); // Default to JavaScript
-  const [testCases, setTestCases] = useState([]);
-  const [testResults, setTestResults] = useState([]);
   const [initialCode, setInitialCode] = useState(`console.log("Hello, World!");`);
   const [isMobile, setIsMobile] = useState(false);  // Mobile check state
   const [isEditorOpen, setIsEditorOpen] = useState(false); // Track if editor modal is open
@@ -82,74 +78,43 @@ const CustomRoom = () => {
 
   const handleRunCode = async () => {
     let code = editorRef.current?.getValue();
-    if (!code || !question?.title) {
+    const title = question?.title || publicRoomId?.replace(/-/g, " ");
+
+    if (!code || !title) {
       setOutput("Editor is empty or no question loaded.");
       return;
     }
 
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_TESTCASE_API}/${question.title}`
-      );
-      const testCasesFromAPI = res.data;
-      setTestCases(testCasesFromAPI);
+      const res = await axios.post(`${process.env.REACT_APP_CODE_SUBMIT}`, {
+        code,
+        language: languageId,
+        title,
+      },{
+        withCredentials: true,
+      });
 
-      const results = [];
+      // Format test results output
+      const results = res.data.testResults;
 
-      for (const test of testCasesFromAPI) {
-        const inputStr = test.Input;
+      if (results && Array.isArray(results)) {
+        const formattedOutput = results.map((result, idx) => {
+          return (
+            `Test Case ${idx + 1}:\n` +
+            `Input: ${result.input}\n` +
+            `Expected: ${result.expectedOutput}\n` +
+            `Actual: ${result.actualOutput}\n` 
+            
+          );
+        }).join("\n-------------------\n");
 
-        const title = question.title?.toLowerCase();
-        const handlerKey = Object.keys(problemHandlers).find((key) =>
-          title.includes(key)
-        );
-
-        if (!handlerKey) {
-          console.warn("⚠️ No handler found for title:", title);
-          continue;
-        }
-
-        let fullCode = "";
-        try {
-          if (!inputStr || typeof inputStr !== "string")
-            throw new Error("Missing input string");
-          fullCode = problemHandlers[handlerKey](inputStr, code);
-        } catch (err) {
-          console.warn("⚠️ Error while preparing code:", err.message);
-          continue;
-        }
-
-        const result = await runCodeWithJudge0({
-          source_code: fullCode,
-          language_id: languageId,
-          stdin: "",
-        });
-
-        const output =
-          result.stdout?.trim() || result.stderr?.trim() || "No output";
-        const expected = test["Expected Output"].toString().trim();
-
-        let passed = false;
-        try {
-          const parsedOutput = JSON.stringify(eval(output));
-          const parsedExpected = JSON.stringify(eval(expected));
-          passed = parsedOutput === parsedExpected;
-        } catch (err) {
-          console.warn("⚠️ Could not parse output/expected:", output, expected);
-        }
-
-        results.push({
-          input: test.Input,
-          expected,
-          output,
-          passed,
-        });
+        setOutput(formattedOutput);
+      } else {
+        setOutput("No test results received.");
       }
-
-      setTestResults(results);
-    } catch (error) {
-      setOutput("Error running code.");
-      console.error(error);
+    } catch (err) {
+      console.error("Error submitting code:", err);
+      setOutput("Error submitting code to backend.");
     }
   };
 
@@ -241,14 +206,23 @@ const CustomRoom = () => {
               order={{ base: 3, md: 2 }}
               mb={{ base: 4, md: 0 }}
             >
-              <Button mt={{ base: 4, md: 0 }} colorScheme="blue" onClick={handleRunCode}>
+              <Box mt={4}>
+                <Text fontWeight="bold">Select Language:</Text>
+                <select value={languageId} onChange={(e) => setLanguageId(Number(e.target.value))}>
+                  <option value={63}>JavaScript</option>
+                  <option value={62}>Java</option>
+                  <option value={52}>C++</option>
+                  <option value={71}>Python</option>
+                </select>
+              </Box>
+              <Button mt={4} colorScheme="blue" onClick={handleRunCode}>
                 Run Code
               </Button>
               <Box mt={4} width="100%">
-                <Text fontWeight="bold">Output:</Text>
-                <Box overflowX="auto" maxHeight="150px">
-                  <Code whiteSpace="pre-wrap">{output}</Code>
-                </Box>
+                  <Text fontWeight="bold">Output:</Text>
+                  <Box overflowX="auto" maxHeight="150px">
+                      <Code whiteSpace="pre-wrap">{output}</Code>
+                  </Box>
               </Box>
             </Box>
 

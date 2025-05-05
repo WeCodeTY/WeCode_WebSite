@@ -13,6 +13,9 @@ import socket from "../../sockets/socket.js";
 
 const Dashboard = () => {
   const [questions, setQuestions] = useState([]);
+  const [sortedQuestions, setSortedQuestions] = useState([]);
+  const [titles, setTitles] = useState([]);
+  const [topics, setTopics] = useState([]);
   const [quote, setQuote] = useState("");
   const [showmenu, setshowmenu] = useState(false);
   const [joinRoomId, setJoinRoomId] = useState("");
@@ -64,7 +67,13 @@ const Dashboard = () => {
           Constraints: q.constraints,
         }));
 
-        setQuestions(cleanedData);
+        const sortedData = cleanedData.sort((a, b) => a.Difficulty.localeCompare(b.Difficulty));
+        setQuestions(sortedData);
+        setSortedQuestions(sortedData);
+        setTitles(sortedData.map(q => q.Title));
+        // Extract unique topics for topic buttons
+        const uniqueTopics = Array.from(new Set(sortedData.map(q => q.Topic)));
+        setTopics(uniqueTopics);
         fetchResponse();
       } catch (error) {
         console.error("Error fetching questions from backend:", error);
@@ -87,8 +96,12 @@ const Dashboard = () => {
     };
 
     try {
+      const token = localStorage.getItem('authToken');
       const response = await axios.get(process.env.REACT_APP_ROOM_CREATE, {
         withCredentials: true,
+        headers: {
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
       });
       const privateRoomId = response.data.roomId;
 
@@ -219,6 +232,14 @@ const Dashboard = () => {
     handleCreateRoom(question, { hideRoomId: true });
   };
 
+  const handleTitleClick = (topic) => {
+    // Filter questions to only show those with the selected topic
+    const filteredQuestions = questions.filter(q => q.Topic === topic);
+
+    // Set the filtered questions as the sorted questions
+    setSortedQuestions(filteredQuestions);
+  };
+
   return (
     <Layout style={{ boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)" }}>
       <Navbar
@@ -240,6 +261,33 @@ const Dashboard = () => {
       >
         {quote}
       </h1>
+
+      <div style={{ marginBottom: "20px", textAlign: "center" }}>
+        <div style={{ display: "inline-block", background: "#ECEFCA", borderRadius: "12px", padding: "10px 20px", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
+          {topics.map((topic, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleTitleClick(topic)}
+              style={{
+                margin: "0 5px",
+                padding: "8px 15px",
+                borderRadius: "8px",
+                border: "none",
+                backgroundColor: "#547792",
+                color: "#fff",
+                cursor: "pointer",
+                fontWeight: "600",
+                transition: "background-color 0.3s ease",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = "#94B4C1")}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = "#547792")}
+              title={`Sort by ${topic}`}
+            >
+              {topic}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div style={tableContainerStyle}>
         <h2
@@ -268,7 +316,7 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {questions.map((q, index) => (
+              {sortedQuestions.map((q, index) => (
                 <tr
                   key={index}
                   style={{

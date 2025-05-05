@@ -11,7 +11,8 @@ const AddQuestion = () => {
     problemStatement: '',
     sampleInput: '',
     sampleOutput: '',
-    constraints: ''
+    constraints: '',
+    testCases: '', // Add this line
   });
 
   const [excelProblems, setExcelProblems] = useState([]);
@@ -37,6 +38,7 @@ const AddQuestion = () => {
         sampleInput: formData.sampleInput,
         sampleOutput: formData.sampleOutput,
         constraints: formData.constraints,
+        testCases: JSON.parse(formData.testCases), // Parse the string into an array of objects
       }, { withCredentials: true });
       alert('Question added successfully!');
       setFormData({
@@ -47,7 +49,8 @@ const AddQuestion = () => {
         problemStatement: '',
         sampleInput: '',
         sampleOutput: '',
-        constraints: ''
+        constraints: '',
+        testCases: '',
       });
     } catch (err) {
       console.error('Error adding question:', err);
@@ -63,6 +66,16 @@ const AddQuestion = () => {
       const workbook = XLSX.read(data, { type: 'array' });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      jsonData.forEach((problem) => {
+        if (problem.testCases) {
+          try {
+            problem.testCases = JSON.parse(problem.testCases);
+          } catch (error) {
+            problem.testCases = [];
+            console.warn(`Failed to parse testCases for "${problem.title}": ${error.message}`);
+          }
+        }
+      });
       setExcelProblems(jsonData);
     };
     reader.readAsArrayBuffer(file);
@@ -77,10 +90,25 @@ const AddQuestion = () => {
     setUploadingExcel(true);
 
     try {
-      let successCount = 0;
-      let failedCount = 0;
-
+      const result = {
+        success: 0,
+        failed: 0,
+      };
       for (let problem of excelProblems) {
+        if (typeof problem.testCases === 'string') {
+          try {
+            problem.testCases = JSON.parse(problem.testCases);
+          } catch (e) {
+            alert(`Invalid JSON in testCases for "${problem.title}"`);
+            result.failed++;
+            continue;
+          }
+        }
+        if (problem.testCases && !Array.isArray(problem.testCases)) {
+          alert(`Invalid testCases format for problem "${problem.title}". Skipping upload for this problem.`);
+          result.failed++;
+          continue;
+        }
         try {
           await axios.post(process.env.REACT_APP_Admin_questions_add, {
             topic: problem.topic,
@@ -90,16 +118,17 @@ const AddQuestion = () => {
             problemStatement: problem.problemStatement,
             sampleInput: problem.sampleInput,
             sampleOutput: problem.sampleOutput,
-            constraints: problem.constraints
+            constraints: problem.constraints,
+            testCases: problem.testCases || [],
           }, { withCredentials: true });
-          successCount++;
+          result.success++;
         } catch (error) {
           console.warn(`❌ Failed to upload "${problem.title}":`, error?.response?.data || error.message);
-          failedCount++;
+          result.failed++;
         }
       }
 
-      
+      alert(`Upload Complete: ${result.success} success, ${result.failed} failed`);
     } catch (error) {
       console.error('Unexpected error during bulk upload:', error);
       alert('Unexpected error during upload.');
@@ -201,6 +230,17 @@ const AddQuestion = () => {
             value={formData.constraints}
             onChange={handleChange}
             placeholder="Constraints"
+            style={styles.textarea}
+            required
+          />
+        </div>
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Test Cases</label>
+          <textarea
+            name="testCases"
+            value={formData.testCases}
+            onChange={handleChange}
+            placeholder='Test cases in format: [{"input": "2 7 11 15\\n9", "expectedOutput": "0 1"}, {"input": "3 2 4\\n6", "expectedOutput": "1 2"}]'
             style={styles.textarea}
             required
           />

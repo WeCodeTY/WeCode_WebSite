@@ -7,7 +7,7 @@ const Problem = require("../models/adminquestions.model");
 // Admin add question
 const adminquestionadd = async (req, res) => {
     try {
-        const { topic, title, difficulty, revision, important, link, problemStatement, sampleInput, sampleOutput, constraints } = req.body;
+        const { topic, title, difficulty, revision, important, link, problemStatement, sampleInput, sampleOutput, constraints, testCases } = req.body;
         const existingQuestion = await Problem.findOne({ title });
         if (existingQuestion) {
             return res.status(400).json({ message: "Question already exists." });
@@ -22,7 +22,8 @@ const adminquestionadd = async (req, res) => {
             problemStatement,
             sampleInput,
             sampleOutput,
-            constraints
+            constraints,
+            testCases
         });
         await newQuestion.save();
         return res.status(200).json({ message: "Question added successfully." });

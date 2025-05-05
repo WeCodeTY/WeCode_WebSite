@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
 const ResetModal = ({ show, onClose }) => {
   const [emailForReset, setEmailForReset] = useState("");
   const [message, setMessage] = useState("");
@@ -14,10 +15,12 @@ const ResetModal = ({ show, onClose }) => {
 
   const handleForgotPassword = async () => {
     try {
+      console.log("Email for reset:", emailForReset);
+      
       const response = await axios.post(
-        process.env.REACT_APP_FORGOT_PASSWORD_URI,
-        { email: emailForReset },
-        { withCredentials: true }
+        "http://localhost:2000/forgotpass",
+        { email: emailForReset }
+        
       );
       setMessage(response.data.message);
       setShowOtpInput(true); // Show OTP input on success
@@ -31,8 +34,7 @@ const ResetModal = ({ show, onClose }) => {
     try {
       const response = await axios.post(
         process.env.REACT_APP_VERIFY_OTP_URI, // Make sure this endpoint exists in your backend
-        { email: emailForReset, otp },
-        { withCredentials: true }
+        { email: emailForReset, otp }
       );
       setMessage(response.data.message);
 

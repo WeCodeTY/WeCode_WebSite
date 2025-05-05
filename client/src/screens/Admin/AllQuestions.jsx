@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const AllQuestions = () => {
   const [questionsList, setQuestionsList] = useState([]);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -24,10 +25,38 @@ const AllQuestions = () => {
       ) : (
         <div style={styles.questionsList}>
           {questionsList.map((question, index) => (
-            <div key={index} style={styles.questionCard}>
+            <div
+              key={index}
+              style={styles.questionCard}
+              onClick={() =>
+                setSelectedQuestion(
+                  selectedQuestion?.title === question.title ? null : question
+                )
+              }
+            >
               <strong style={styles.questionTitle}>{question.topic}</strong> - {question.title}
             </div>
           ))}
+        </div>
+      )}
+      {selectedQuestion && (
+        <div style={styles.detailsCard}>
+          <h3>{selectedQuestion.title}</h3>
+          <p><strong>Topic:</strong> {selectedQuestion.topic}</p>
+          <p><strong>Difficulty:</strong> {selectedQuestion.difficulty}</p>
+          <p><strong>Problem Statement:</strong> {selectedQuestion.problemStatement}</p>
+          <p><strong>Constraints:</strong> {selectedQuestion.constraints}</p>
+          <p><strong>Sample Input:</strong> {selectedQuestion.sampleInput}</p>
+          <p><strong>Sample Output:</strong> {selectedQuestion.sampleOutput}</p>
+          <p><strong>Test Cases:</strong></p>
+          <ul>
+            {selectedQuestion.testCases.map((tc, idx) => (
+              <li key={idx}>
+                <strong>Input:</strong> {tc.input} <br />
+                <strong>Expected Outputs:</strong> {tc.expectedOutput.join(", ")}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
@@ -69,9 +98,18 @@ const styles = {
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
     display: 'flex',
     justifyContent: 'space-between',
+    cursor: 'pointer',
   },
   questionTitle: {
     fontWeight: 'bold',
+  },
+  detailsCard: {
+    backgroundColor: '#FFFFFF',
+    color: '#213448',
+    padding: '20px',
+    borderRadius: '8px',
+    marginTop: '20px',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
   },
 };
 
