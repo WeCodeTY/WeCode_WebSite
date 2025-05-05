@@ -15,9 +15,10 @@ const layoutStyle = {
 
 const Layout = ({ children }) => {
   return (
+    
     <div style={layoutStyle}>
-      <Navbar />
       {children}
+      <Navbar />
       <Footer />
     </div>
   );
