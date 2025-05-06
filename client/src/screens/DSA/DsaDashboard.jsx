@@ -266,8 +266,9 @@ const Dashboard = () => {
         className="sort-by-container"
         style={{
           marginBottom: "20px",
-          textAlign: "center",
+          textAlign: "left",
           position: "relative",
+          marginLeft: "40px",
         }}
       >
         <button
@@ -283,7 +284,7 @@ const Dashboard = () => {
             fontSize: "14px",
             fontWeight: "bold",
             color: "#213448",
-            marginLeft: "16px",
+            marginLeft: "0px",
             boxShadow: "0 2px 10px rgba(33,52,72,0.15)",
             transition: "background-color 0.3s",
           }}
@@ -299,8 +300,6 @@ const Dashboard = () => {
               position: "absolute",
               top: "calc(100% + 8px)", // Places dropdown below button
               left: 0,
-              right: 0,
-              margin: "0 auto",
               zIndex: 100,
               background: "#fff",
               border: "1px solid #94B4C1",
