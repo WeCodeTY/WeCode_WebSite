@@ -17,13 +17,7 @@ const AboutScreen = () => {
       github: "https://github.com/Tanushh18",
       image: "/tanush-photo.jpeg",
     },
-    {
-      name: "Yashasvi Indora",
-      role: "Lead Frontend Developer & UI/UX Expert",
-      bio: "A creative mind with a knack for crafting intuitive user experiences, Yashasvi brings the WeCode platform to life.",
-      github: "#",
-      image: "/path-to-yashasvi-photo.jpg",
-    },
+    
   ];
 
   return (

@@ -18,6 +18,7 @@ const CustomRoom = () => {
   const isReadOnly = location.state?.isReadOnly || false;
   const fromNavbar = location.state?.fromNavbar || false;
   const hideRoomId = location.state?.hideRoomId;
+  const hideVideoTitle = location.state?.hideVideoTitle || false;
 
   const [output, setOutput] = useState("");
   const [languageId, setLanguageId] = useState(63); // Default to JavaScript
@@ -168,156 +169,170 @@ const CustomRoom = () => {
 
   return (
     <Layout>
-      <Box width="100%" textAlign="center" mt={6}>
-        {publicRoomId ? (
-          <Text fontSize="lg" fontWeight="semibold" color="white">
-            Public Room ID: {publicRoomId || "N/A"}
-            {!hideRoomId && <> || Private Room ID: {privateRoomId || "N/A"}</>}
-          </Text>
-        ) : roomId ? (
-          <Text fontSize="lg" fontWeight="semibold" color="white">
-            Room ID: {roomId}
-          </Text>
-        ) : null}
-      </Box>
-      {(publicRoomId || roomId) && (
-        <>
-          <VideoConferencing
-            ref={videoRoomRef}
-            roomId={publicRoomId || roomId}
-            identity={localStorage.getItem("userId") || "guest"}
-          />
-          <Box textAlign="center" mt={4}>
-            <Button colorScheme="red" onClick={handleEndCall}>
-              End Call
-            </Button>
+      <Box position="relative">
+        <Box width="100%" display="flex" alignItems="center" justifyContent="space-between" mt={6} px={4}>
+          <Box flex="1" />
+          <Box flex="1" textAlign="center">
+            <Text fontSize="lg" fontWeight="semibold" color="white">
+              Room ID: {publicRoomId || privateRoomId || roomId || "N/A"}
+            </Text>
           </Box>
-        </>
-      )}
-      {!isReadOnly && !fromNavbar && (
-        <>
-          {/* Modal for Code Editor */}
-          <Modal isOpen={isEditorOpen} onClose={() => setIsEditorOpen(false)}>
-            <ModalOverlay />
-            <ModalContent marginTop="50px">
-              <ModalHeader>Code Editor</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Box maxHeight="400px" overflowY="auto">
-                  <CodeEditor
-                    editorRef={editorRef}
-                    languageId={languageId}
-                    setLanguageId={setLanguageId}
-                    initialCode={initialCode}
-                    height="100%"  // Keep default height
-                  />
-                </Box>
-                <Button
-                  colorScheme="red"
-                  mt={4}
-                  onClick={() => setIsEditorOpen(false)}
-                  width="100%"
-                >
-                  Close Editor
-                </Button>
-              </ModalBody>
-            </ModalContent>
-          </Modal>
-          <Box
-            marginTop={{ base: "50px", md: "10px" }}
-            width="100%"
-            display="flex"
-            flexDirection={{ base: "column", md: "row" }}
-            gap={4}
-          >
-            {/* Left side - Question Details */}
-            <Box
-              width="40%"
-              pr={4}
-              overflowY="auto"
-              maxHeight={{ base: "auto", md: "90vh" }}
-              order={{ base: 2, md: 1 }}
-            >
-              {/* Question details */}
-              <Text fontSize={{ base: "md", md: "2xl" }} fontWeight="bold" mb={{ base: 2, md: 4 }}>
-                {question.title || "Custom Room"} - {publicRoomId}
-              </Text>
-              <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                <strong>Difficulty:</strong> {question.difficulty}
-              </Text>
-              <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                <strong>Statement:</strong> {question.statement}
-              </Text>
-              <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                <strong>Sample Input:</strong> {question.sampleInput}
-              </Text>
-              <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                <strong>Sample Output:</strong> {question.sampleOutput}
-              </Text>
-              <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                <strong>Constraints:</strong> {question.constraints}
-              </Text>
-            </Box>
-
-            {/* Buttons and Output */}
-            <Box
-              flex={{ base: "none", md: "0.5" }}
-              display="flex"
-              flexDirection="column"
-              alignItems={{ base: "center", md: "flex-start" }}
-              order={{ base: 3, md: 2 }}
-              mb={{ base: 4, md: 0 }}
-            >
-              <Box mt={4}>
-                <Text fontWeight="bold">Select Language:</Text>
-                <select value={languageId} onChange={(e) => setLanguageId(Number(e.target.value))}>
-                  <option value={63}>JavaScript</option>
-                  <option value={62}>Java</option>
-                  <option value={52}>C++</option>
-                  <option value={71}>Python</option>
-                </select>
-              </Box>
-              <Button mt={4} colorScheme="blue" onClick={handleRunCode}>
-                Run Code
-              </Button>
-              <Box mt={4} width="100%">
-                  <Text fontWeight="bold">Output:</Text>
-                  <Box overflowX="auto" maxHeight="150px">
-                      <Code whiteSpace="pre-wrap">{output}</Code>
-                  </Box>
-              </Box>
-            </Box>
-
-            {/* CodeEditor on larger screens */}
-            {!isMobile && (
-              <Box
-                width="60%"
-                marginLeft="150px"
-                display="flex"
-                flexDirection="column"
-                gap={5}
-                order={{ base: 3, md: 3 }}
+          <Box flex="1" textAlign="right">
+            {(privateRoomId || roomId) &&!hideVideoTitle && (
+              <Button
+                onClick={handleEndCall}
+                size="lg"
+                fontSize="1rem"
+                bg="red"
+                color="white"
+                _hover={{ bg: "red.700" }}
+                leftIcon={<span role="img" aria-label="call">📞</span>}
               >
-                <div style={{ width: "100%", minWidth: "300px" }}>
-                  <CodeEditor
-                    editorRef={editorRef}
-                    languageId={languageId}
-                    setLanguageId={setLanguageId}
-                    initialCode={initialCode}
-                  />
-                </div>
-              </Box>
-            )}
-
-            {/* Button to open the Code Editor modal on mobile */}
-            {isMobile && (
-              <Box display="flex" flexDirection="column" alignItems="center">
-                <Button onClick={() => setIsEditorOpen(true)}>Open Code Editor</Button>
-              </Box>
+                End Call
+              </Button>
             )}
           </Box>
-        </>
-      )}
+        </Box>
+        {!isReadOnly && !fromNavbar && (
+          <>
+            {/* Modal for Code Editor */}
+            <Modal isOpen={isEditorOpen} onClose={() => setIsEditorOpen(false)}>
+              <ModalOverlay />
+              <ModalContent marginTop="50px">
+                <ModalHeader>Code Editor</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Box maxHeight="400px" overflowY="auto">
+                    <CodeEditor
+                      editorRef={editorRef}
+                      languageId={languageId}
+                      setLanguageId={setLanguageId}
+                      initialCode={initialCode}
+                      height="100%"  // Keep default height
+                    />
+                  </Box>
+                  <Button
+                    colorScheme="red"
+                    mt={4}
+                    onClick={() => setIsEditorOpen(false)}
+                    width="100%"
+                  >
+                    Close Editor
+                  </Button>
+                </ModalBody>
+              </ModalContent>
+            </Modal>
+            <Box
+              marginTop={{ base: "50px", md: "10px" }}
+              width="100%"
+              display="flex"
+              flexDirection={{ base: "column", md: "row" }}
+              gap={4}
+            >
+              {/* Left side - Question Details */}
+              <Box
+                width="40%"
+                pr={4}
+                overflowY="auto"
+                maxHeight={{ base: "auto", md: "90vh" }}
+                order={{ base: 2, md: 1 }}
+              >
+                {/* Question details */}
+                <Text fontSize={{ base: "md", md: "2xl" }} fontWeight="bold" mb={{ base: 2, md: 4 }}>
+                  {question.title || "Custom Room"} - {publicRoomId}
+                </Text>
+                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
+                  <strong>Difficulty:</strong> {question.difficulty}
+                </Text>
+                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
+                  <strong>Statement:</strong> {question.statement}
+                </Text>
+                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
+                  <strong>Sample Input:</strong> {question.sampleInput}
+                </Text>
+                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
+                  <strong>Sample Output:</strong> {question.sampleOutput}
+                </Text>
+                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
+                  <strong>Constraints:</strong> {question.constraints}
+                </Text>
+                {  (
+                  <Box mt={6}>
+                    <VideoConferencing
+                      ref={videoRoomRef}
+                      roomId={publicRoomId || privateRoomId || roomId}
+                      identity={localStorage.getItem("userId") || "guest"}
+                    />
+                  </Box>
+                )}
+
+            
+              </Box>
+
+              {/* Buttons and Output */}
+              {!isMobile && (
+                <Box
+                  flex={{ base: "none", md: "0.5" }}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems={{ base: "center", md: "flex-start" }}
+                  order={{ base: 3, md: 2 }}
+                  mb={{ base: 4, md: 0 }}
+                >
+                  <Box mt={4}>
+                    <Text fontWeight="bold">Select Language:</Text>
+                    <select value={languageId} onChange={(e) => setLanguageId(Number(e.target.value))}>
+                      <option value={63}>JavaScript</option>
+                      <option value={62}>Java</option>
+                      <option value={52}>C++</option>
+                      <option value={71}>Python</option>
+                    </select>
+                  </Box>
+                  <Button mt={4} colorScheme="blue" onClick={handleRunCode}>
+                    Run Code
+                  </Button>
+                  <Box mt={4} width="100%">
+                      <Text fontWeight="bold">Output:</Text>
+                      <Box overflowX="auto" maxHeight="150px">
+                          <Code whiteSpace="pre-wrap">{output}</Code>
+                      </Box>
+                  </Box>
+                </Box>
+              )}
+
+              {/* CodeEditor on larger screens */}
+              {!isMobile && (
+                <Box
+                  width="60%"
+                  marginLeft="150px"
+                  display="flex"
+                  flexDirection="column"
+                  gap={5}
+                  order={{ base: 3, md: 3 }}
+                >
+                  <div style={{ width: "100%", minWidth: "300px" }}>
+                    <CodeEditor
+                      editorRef={editorRef}
+                      languageId={languageId}
+                      setLanguageId={setLanguageId}
+                      initialCode={initialCode}
+                    />
+                  </div>
+                </Box>
+              )}
+            </Box>
+          </>
+        )}
+            { fromNavbar && (
+                  <Box mt={6}>
+                    <VideoConferencing
+                      ref={videoRoomRef}
+                      roomId={publicRoomId || privateRoomId || roomId}
+                      identity={localStorage.getItem("userId") || "guest"}
+                    />
+                  </Box>
+                )}
+      </Box>
     </Layout>
   );
 };

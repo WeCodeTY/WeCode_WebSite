@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import Video from "twilio-video";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Button } from "@chakra-ui/react";
+import { MdVideocam, MdVideocamOff, MdMic, MdMicOff } from "react-icons/md";
 import axios from "axios";
 import socket from "../sockets/socket";
 import { useNavigate } from "react-router-dom";
 
 const VideoConferencing = ({ roomId, identity }) => {
+  console.log("VideoConferencing component rendered with roomId:", roomId);
   const localVideoRef = useRef(null);
   const [room, setRoom] = useState(null);
   const [remoteParticipants, setRemoteParticipants] = useState([]);
@@ -16,14 +18,28 @@ const VideoConferencing = ({ roomId, identity }) => {
 
   const handleToggleVideo = () => {
     if (!room) return;
+
     room.localParticipant.videoTracks.forEach(publication => {
       const track = publication.track;
+
       if (isVideoEnabled) {
         track.disable();
+        if (localVideoRef.current) {
+          localVideoRef.current.innerHTML = "";
+        }
       } else {
         track.enable();
+        if (localVideoRef.current) {
+          localVideoRef.current.innerHTML = "";
+          const videoElement = track.attach();
+          videoElement.style.width = "100%";
+          videoElement.style.height = "100%";
+          videoElement.style.objectFit = "contain";
+          localVideoRef.current.appendChild(videoElement);
+        }
       }
     });
+
     setIsVideoEnabled(prev => !prev);
   };
 
@@ -58,12 +74,14 @@ const VideoConferencing = ({ roomId, identity }) => {
   }, []);
 
   useEffect(() => {
-    if (!roomId) return;
+    if (!roomId || !identity) return;
+    if (!localVideoRef.current) return;
 
     const joinRoom = async () => {
       try {
-        console.log("Joining room:", roomId, "with identity:", identity);
-        const res = await axios.get( process.env.REACT_APP_VIDEO_TOKEN, {
+        console.log("Attempting to join Twilio room:", roomId, "with identity:", identity);
+        console.log("Connecting to Twilio with identity:", identity, "and roomId:", roomId);
+        const res = await axios.get(process.env.REACT_APP_VIDEO_TOKEN, {
           params: { identity, room: roomId },
         });
         const token = res.data.token;
@@ -75,25 +93,24 @@ const VideoConferencing = ({ roomId, identity }) => {
 
         const localTracks = await Video.createLocalTracks();
         localTracks.forEach((track) => {
-          const videoElement = track.attach();
-          videoElement.style.width = "100%";
-          videoElement.style.height = "100%";
-          videoElement.style.objectFit = "contain";
-          localVideoRef.current.appendChild(videoElement);
+          if (localVideoRef.current) {
+            const videoElement = track.attach();
+            videoElement.style.width = "100%";
+            videoElement.style.height = "100%";
+            videoElement.style.objectFit = "contain";
+            localVideoRef.current.appendChild(videoElement);
+          }
         });
 
-        // Add existing participants on join
         setRemoteParticipants(Array.from(room.participants.values()));
         console.log("Initial remote participants:", room.participants.size);
 
-        // Listen for future participants joining
         const handleParticipantConnected = (participant) => {
           console.log("Participant connected:", participant.identity);
           setRemoteParticipants((prev) => [...prev, participant]);
         };
         room.on("participantConnected", handleParticipantConnected);
 
-        // Remove participants on disconnect
         const handleParticipantDisconnected = (participant) => {
           console.log("Participant disconnected:", participant.identity);
           setRemoteParticipants((prev) => prev.filter((p) => p.sid !== participant.sid));
@@ -121,7 +138,7 @@ const VideoConferencing = ({ roomId, identity }) => {
         room.disconnect();
       }
     };
-  }, [roomId, identity]);
+  }, [roomId, identity, localVideoRef]);
 
   useEffect(() => {
     socket.emit("join-room", roomId);
@@ -158,12 +175,22 @@ const VideoConferencing = ({ roomId, identity }) => {
         <Text color="white" textAlign="center" mb={1}>Your Video</Text>
         <Box ref={localVideoRef} width="100%" height="180px" />
         <Box mt={1} display="flex" justifyContent="center" gap={2}>
-          <button onClick={handleToggleVideo} style={{ fontSize: "12px", padding: "2px 6px" }}>
+          <Button
+            size="sm"
+            colorScheme={isVideoEnabled ? "green" : "red"}
+            leftIcon={isVideoEnabled ? <MdVideocam /> : <MdVideocamOff />}
+            onClick={handleToggleVideo}
+          >
             {isVideoEnabled ? "Turn Off Video" : "Turn On Video"}
-          </button>
-          <button onClick={handleToggleAudio} style={{ fontSize: "12px", padding: "2px 6px" }}>
+          </Button>
+          <Button
+            size="sm"
+            colorScheme={isAudioEnabled ? "green" : "red"}
+            leftIcon={isAudioEnabled ? <MdMic /> : <MdMicOff />}
+            onClick={handleToggleAudio}
+          >
             {isAudioEnabled ? "Mute" : "Unmute"}
-          </button>
+          </Button>
         </Box>
       </Box>
       {remoteParticipants.map((participant) => (
