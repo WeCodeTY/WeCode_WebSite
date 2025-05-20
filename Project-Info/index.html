@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WeCode - Collaborative Coding Platform</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Reset and base */
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Roboto", sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: #e0e0e0;
+        font-size: 1rem;
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+      }
+      /* Glowing background animation */
+      body::before {
+        content: "";
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle at center,
+          rgba(255, 202, 40, 0.2),
+          transparent 60%
+        );
+        animation: moveBackground 20s linear infinite;
+        z-index: -1;
+        filter: blur(150px);
+      }
+      @keyframes moveBackground {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(50%, 50%);
+        }
+      }
+
+      header {
+        box-shadow: 0 4px 30px rgba(255, 202, 40, 0.6);
+        padding: 60px 20px 50px;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        text-align: center;
+        color: #ffca28;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        filter: drop-shadow(0 0 7px #ffc107);
+      }
+      header h1 {
+        font-size: 3rem;
+        margin-bottom: 0.2rem;
+        letter-spacing: 0.15rem;
+        font-weight: 900;
+        text-shadow: 0 0 7px #ffca28, 0 0 20px #ffca28, 0 0 30px #ffe082;
+      }
+      header p {
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin: 0.3rem 0;
+        letter-spacing: 0.04rem;
+        text-shadow: 0 0 3px #ffca28;
+      }
+      header a {
+        color: #fff176;
+        font-weight: 700;
+        text-decoration: none;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+      }
+      header a:hover {
+        color: #ffe082;
+        text-shadow: 0 0 8px #ffe082, 0 0 15px #ffe082;
+      }
+
+      nav {
+        background-color: #292929cc;
+        backdrop-filter: saturate(180%) blur(20px);
+        box-shadow: inset 0 -4px 8px rgba(255, 202, 40, 0.4);
+        padding: 10px 0;
+        position: sticky;
+        top: 118px;
+        z-index: 999;
+      }
+      nav .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        width: 20%;
+        min-width: 180px;
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #ffca28 transparent;
+      }
+      nav .container::-webkit-scrollbar {
+        height: 6px;
+      }
+      nav .container::-webkit-scrollbar-thumb {
+        background: #ffca28;
+        border-radius: 5px;
+      }
+      nav .container::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 1rem;
+        padding: 0;
+        margin: 0;
+      }
+      nav ul li {
+        white-space: nowrap;
+      }
+      nav a {
+        color: #ffca28;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 6px 14px;
+        border-radius: 25px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 4px #ffca28, 0 0 6px #ffca28;
+        display: inline-block;
+      }
+      nav a:hover,
+      nav a:focus,
+      nav a.active {
+        background: #ffca28;
+        color: #0d47a1;
+        border-color: #fff;
+        box-shadow: 0 0 12px #ffd740, 0 0 24px #ffd740;
+        text-shadow: none;
+      }
+
+      main.container {
+        max-width: 960px;
+        margin: 3rem auto 5rem;
+        padding: 0 20px;
+        position: relative;
+        z-index: 2;
+      }
+      main section {
+        background: #121212cc;
+        border-radius: 14px;
+        padding: 2.5rem 3rem;
+        box-shadow: inset 0 0 15px #ffca2822, 0 8px 40px rgba(255, 202, 40, 0.4);
+        margin-bottom: 4rem;
+        border: 1px solid #ffca2833;
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      main section:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: inset 0 0 30px #ffca30, 0 15px 50px rgba(255, 202, 40, 0.6);
+      }
+      main h2 {
+        font-size: 2.3rem;
+        margin-bottom: 1.2rem;
+        color: #ffca28;
+        border-left: 6px solid #ffca28;
+        padding-left: 16px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1rem;
+        text-shadow: 0 0 7px #ffca28;
+        user-select: none;
+      }
+      main h3 {
+        font-weight: 700;
+        margin-top: 1.8rem;
+        margin-bottom: 0.6rem;
+        color: #ffd740;
+        font-size: 1.5rem;
+        text-shadow: 0 0 6px #ffca28;
+        user-select: none;
+      }
+      main ul {
+        padding-left: 1.6rem;
+        margin-bottom: 0.7rem;
+        line-height: 1.6;
+        color: #ddd;
+      }
+      main ul ul {
+        margin-top: 0.4rem;
+      }
+      main ul li {
+        margin-bottom: 0.6rem;
+        position: relative;
+        padding-left: 1rem;
+      }
+      main ul li::before {
+        content: "◆";
+        position: absolute;
+        left: 0;
+        color: #ffd740;
+        font-weight: 900;
+        font-size: 1rem;
+        line-height: 1;
+        top: 0.2rem;
+        text-shadow: 0 0 4px #ffca28;
+      }
+      main p {
+        margin: 1.2rem 0;
+        font-size: 1.05rem;
+        color: #eee;
+        user-select: text;
+      }
+      footer {
+        text-align: center;
+        padding: 25px 0;
+        background: linear-gradient(135deg, #0d47a1, #1976d2);
+        color: #ffffff;
+        font-weight: 700;
+        letter-spacing: 0.08rem;
+        box-shadow: inset 0 3px 7px rgba(255, 202, 40, 0.6);
+        user-select: none;
+      }
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        header h1 {
+          font-size: 2.4rem;
+        }
+        nav .container {
+          width: 100%;
+          justify-content: center;
+          padding: 0 15px;
+        }
+        nav ul {
+          flex-wrap: wrap;
+          gap: 0.6rem;
+        }
+        main.container {
+          margin: 2rem auto 4rem;
+          padding: 0 12px;
+        }
+        section {
+          padding: 2rem;
+          margin-bottom: 3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>WeCode</h1>
+        <p>A Comprehensive Collaborative Coding Platform</p>
+        <p>
+          <strong>Project Link: </strong>
+          <a
+            href="https://wecode-coders.onrender.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="
+              color: #ffd740;
+              font-weight: 700;
+              text-shadow: 0 0 6px #ffca28;
+            "
+            >WeCode-coders</a
+          >
+        </p>
+        <p>
+          Contact:
+          <a href="mailto:tanushchawla16@gmail.com">tanushchawla16@gmail.com</a>
+        </p>
+      </div>
+    </header>
+
+    <nav>
+      <div class="container">
+        <ul>
+          <li><a href="#project-initialization">Project Initialization</a></li>
+          <li><a href="#user-authentication">User Authentication</a></li>
+          <li><a href="#collaborative-editor">Collaborative Editor</a></li>
+          <li><a href="#video-communication">Video &amp; Audio</a></li>
+          <li><a href="#dsa-content">DSA Content</a></li>
+          <li><a href="#leetcode-questions">LeetCode Questions</a></li>
+          <li>
+            <a href="#code-editor-integration">Code Editor Integration</a>
+          </li>
+          <li><a href="#session-management">Session Management</a></li>
+          <li><a href="#database-integration">Database Integration</a></li>
+          <li><a href="#deployment-testing">Deployment &amp; Testing</a></li>
+          <li><a href="#optional-improvements">Optional Improvements</a></li>
+          <li><a href="#social-features">Social Features</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section id="project-initialization">
+        <h2>🔍 Project Initialization</h2>
+        <ul>
+          <li>
+            Setup MERN Stack structure with frontend and backend directories.
+          </li>
+          <li>
+            Initialize npm and create-react-app for backend and frontend
+            respectively.
+          </li>
+          <li>
+            Install dependencies:
+            <ul>
+              <li>Backend: express, mongoose, cors, dotenv, socket.io, uuid</li>
+              <li>
+                Frontend: react-router-dom, axios, socket.io-client,
+                monaco-editor, firebase (Google Auth)
+              </li>
+            </ul>
+          </li>
+          <li>Configure environment variables for secure keys and tokens.</li>
+          <li>
+            Set up build scripts and development workflows to maximize
+            efficiency.
+          </li>
+        </ul>
+      </section>
+
+      <section id="user-authentication">
+        <h2>🔑 User Authentication</h2>
+        <ul>
+          <li>
+            Google OAuth integration using Firebase Authentication or
+            Passport.js for seamless login.
+          </li>
+          <li>
+            JWT-based secure sessions with user credentials stored in MongoDB.
+          </li>
+          <li>
+            Custom login and registration with bcrypt.js for password hashing
+            and session management.
+          </li>
+          <li>
+            Role-based access controls to distinguish hosts and viewers in
+            sessions.
+          </li>
+          <li>
+            Secure token refresh and session expiry for enhanced security.
+          </li>
+        </ul>
+      </section>
+
+      <section id="collaborative-editor">
+        <h2>🖥️ Real-Time Collaborative Code Editor</h2>
+        <ul>
+          <li>Monaco Editor or CodeMirror for rich coding experience.</li>
+          <li>
+            Socket.IO powered real-time keystroke syncing across multiple users.
+          </li>
+          <li>
+            Unique UUID for each coding session enabling easy sharing and
+            joining.
+          </li>
+          <li>
+            Multi-language support including C++, Java, Python, JavaScript.
+          </li>
+          <li>
+            Syntax highlighting, autocomplete, error checking &amp; linting.
+          </li>
+          <li>Periodic autosave to MongoDB for session state persistence.</li>
+          <li>Mobile-friendly design with toggleable editor visibility.</li>
+        </ul>
+      </section>
+
+      <section id="video-communication">
+        <h2>🎥 Video and Audio Communication</h2>
+        <ul>
+          <li>WebRTC based peer-to-peer streaming via Twilio APIs.</li>
+          <li>Real-time signaling through Socket.IO events.</li>
+          <li>Join video rooms via UUIDs with intuitive controls.</li>
+          <li>Adaptive streaming for varying network conditions.</li>
+          <li>Multi-browser support and testing for optimal performance.</li>
+        </ul>
+      </section>
+
+      <section id="dsa-content">
+        <h2>📖 DSA Content Integration</h2>
+        <ul>
+          <li>
+            Detailed topic-wise DSA notes covering core algorithms and data
+            structures.
+          </li>
+          <li>
+            Embedded YouTube educational videos with playlist integration.
+          </li>
+          <li>
+            Visual aids like diagrams and flowcharts for enhanced learning.
+          </li>
+          <li>Progress tracking for personalized study plans.</li>
+        </ul>
+      </section>
+
+      <section id="leetcode-questions">
+        <h2>💡 LeetCode Questions Selection</h2>
+        <ul>
+          <li>
+            Curated problems sorted by difficulty and topics with metadata and
+            constraints.
+          </li>
+          <li>Mark as complete or favorite problems to track progress.</li>
+          <li>Link problems to collaborative coding sessions with video.</li>
+          <li>
+            Smart recommendations based on user performance and interests.
+          </li>
+        </ul>
+      </section>
+
+      <section id="code-editor-integration">
+        <h2>💻 Code Editor Integration</h2>
+        <ul>
+          <li>
+            Monaco Editor with multi-language syntax highlighting and code
+            completion.
+          </li>
+          <li>
+            Backend code execution with Node.js sandboxing and real-time output.
+          </li>
+          <li>
+            Submit button copies code and opens LeetCode for official
+            submission.
+          </li>
+          <li>
+            Detailed test case results with inline output formatting and error
+            highlighting.
+          </li>
+          <li>
+            Code formatting and snippet insertion tools to speed development.
+          </li>
+        </ul>
+      </section>
+
+      <section id="session-management">
+        <h2>🔗 Real-Time Session Management</h2>
+        <ul>
+          <li>UUID-generated session links to invite collaborators easily.</li>
+          <li>
+            Persistent session state saved in MongoDB with participant tracking.
+          </li>
+          <li>
+            Resume session capability to continue interrupted work seamlessly.
+          </li>
+          <li>Read-only viewer mode with customized controls.</li>
+          <li>
+            Follow friends to get notified about their session activity and
+            invites.
+          </li>
+        </ul>
+      </section>
+
+      <section id="database-integration">
+        <h2>🛠️ Database Integration (MongoDB)</h2>
+        <ul>
+          <li>
+            Users, sessions, and content collections designed with strong schema
+            validation.
+          </li>
+          <li>Efficient, indexed queries for faster data retrieval.</li>
+          <li>
+            Environment variables and .env securely manage sensitive
+            information.
+          </li>
+          <li>
+            Throttled DB writes to balance performance and data consistency.
+          </li>
+        </ul>
+      </section>
+
+      <section id="deployment-testing">
+        <h2>🚀 Deployment and Testing</h2>
+        <ul>
+          <li>
+            CI/CD pipelines with GitHub Actions automating tests and
+            deployments.
+          </li>
+          <li>Backend hosted on Heroku and Render with HTTPS enforced.</li>
+          <li>
+            Frontend deployed on Vercel and Netlify with CDN caching for
+            performance.
+          </li>
+          <li>Automated cross-browser testing using Selenium &amp; Cypress.</li>
+          <li>
+            Latency &amp; real-time sync benchmarking for collaboration
+            reliability.
+          </li>
+          <li>Active user feedback collection for ongoing improvement.</li>
+        </ul>
+      </section>
+
+      <section id="optional-improvements">
+        <h2>⚙️ Optional Improvements (Upcoming Features)</h2>
+        <ul>
+          <li>
+            <strong>UX:</strong> Dark mode, autosave both local and cloud,
+            in-editor compilation &amp; run with Judge0 API.
+          </li>
+          <li>
+            <strong>Collaboration:</strong> Real-time chat, hand-raise &amp;
+            quick reactions, code review mode with inline comments.
+          </li>
+          <li>
+            <strong>Security:</strong> Privacy options
+            (public/private/invite-only), token expiry, sanitization safeguards.
+          </li>
+          <li>
+            <strong>Performance:</strong> Lazy loading heavy components, socket
+            event throttling, WebRTC bandwidth control.
+          </li>
+          <li>
+            <strong>Gamification:</strong> Leaderboards, badges, and GitHub
+            integration for code hosting.
+          </li>
+          <li>
+            <strong>Analytics:</strong> Usage and learning patterns analysis for
+            personalized growth.
+          </li>
+        </ul>
+      </section>
+
+      <section id="social-features">
+        <h2>👥 Social &amp; Community Features</h2>
+        <ul>
+          <li>
+            Customizable user profiles with avatars, bios, and preferred
+            languages.
+          </li>
+          <li>
+            Friend system to follow collaborators &amp; get live updates on
+            sessions.
+          </li>
+          <li>
+            Activity feed showing friends' coding sessions, achievements, and
+            new problems solved.
+          </li>
+          <li>Private messaging and group chats alongside video calls.</li>
+          <li>
+            Community leaderboard promoting motivation and healthy competition.
+          </li>
+          <li>
+            Mentorship matching connecting novices with experienced coders for
+            growth.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2023 Tanush Chawla | WeCode Project</p>
+    </footer>
+  </body>
+</html>
