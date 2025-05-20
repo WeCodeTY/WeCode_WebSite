@@ -1,3 +1,4 @@
+// const ProblemHandler = require("../models/adminquestionHandler.model.js"); // Adjust path as needed
 const User = require("../models/user.model");
 const CustomList = require("../models/customList.model");
 const Problem = require("../models/adminquestions.model");
@@ -263,7 +264,34 @@ const questiongraph = async (req, res) => {
         return res.status(500).json({ message: "An error occurred.", error });
     }
 }
+// const ProblemHandler = require("../models/adminquestionHandler.model.js"); // Adjust path as needed
 
+const saveProblemHandlers = async (req, res) => {
+    try {
+        const { title, javascript } = req.body;
+
+        // Check if handlers already exist for this problem
+        const existingHandler = await ProblemHandler.findOne({ title });
+        if (existingHandler) {
+            // Update existing handler if it exists
+            existingHandler.javascript = javascript;
+            await existingHandler.save();
+            return res.status(200).json({ message: "Problem handler updated successfully." });
+        }
+
+        // If no handler exists, create a new one
+        const newProblemHandler = new ProblemHandler({
+            title,
+            javascript
+        });
+
+        await newProblemHandler.save();
+        return res.status(200).json({ message: "Problem handler saved successfully." });
+    } catch (error) {
+        console.error("Error saving problem handlers:", error);
+        return res.status(500).json({ message: "Failed to save problem handlers." });
+    }
+};
 module.exports = {
     updateQuestion,
     fetchquestion,
@@ -278,5 +306,6 @@ module.exports = {
     adminquestionadd,
     getAllAdminQuestions,
     adminquestiondelete,
-    adminquestionupdate
+    adminquestionupdate,
+    saveProblemHandlers // Added function
 };
