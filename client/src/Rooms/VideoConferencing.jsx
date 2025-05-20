@@ -63,7 +63,7 @@ const VideoConferencing = ({ roomId, identity }) => {
     const joinRoom = async () => {
       try {
         console.log("Joining room:", roomId, "with identity:", identity);
-        const res = await axios.get(`http://localhost:2000/twilio/video-token`, {
+        const res = await axios.get( process.env.REACT_APP_VIDEO_TOKEN, {
           params: { identity, room: roomId },
         });
         const token = res.data.token;
