@@ -1,6 +1,8 @@
+import socket from "../../sockets/socket";
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import CodeEditor from "../../Rooms/CodeEditor";
+import VideoConferencing from "../../Rooms/VideoConferencing";
 import Layout from "../../Layout1/Layout";
 import { Box, Text, Button, Code, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from "@chakra-ui/react";
 import axios from "axios";
@@ -10,6 +12,8 @@ const CustomRoom = () => {
   const { roomId } = useParams();
   const location = useLocation();
   const { question = {} } = location.state || {};
+
+  console.log("CustomRoom rendered with room IDs:", { publicRoomId, privateRoomId, roomId });
 
   const isReadOnly = location.state?.isReadOnly || false;
   const fromNavbar = location.state?.fromNavbar || false;
@@ -22,6 +26,8 @@ const CustomRoom = () => {
   const [isEditorOpen, setIsEditorOpen] = useState(false); // Track if editor modal is open
 
   const editorRef = useRef(null);
+  const navigate = useNavigate();
+  const videoRoomRef = useRef(null);
 
   // Debounced resize event handler to prevent rapid layout recalculations
   useEffect(() => {
@@ -118,6 +124,48 @@ const CustomRoom = () => {
     }
   };
 
+  const handleEndCall = async () => {
+    console.log("handleEndCall called");
+    const currentRoomId = publicRoomId || roomId;
+    const identity = localStorage.getItem("userId") || "guest";
+
+    if (videoRoomRef.current && videoRoomRef.current.disconnectRoom) {
+      console.log("Disconnecting local video room");
+      videoRoomRef.current.disconnectRoom();
+    }
+
+    console.log("Emitting roomEnded event for room:", currentRoomId, "identity:", identity);
+    socket.emit("roomEnded", { roomId: currentRoomId, identity });
+
+    console.log("Calling backend API to end room");
+    try {
+      console.log("Posting to backend to end room with ID:", currentRoomId);
+      await axios.post(`${process.env.REACT_APP_CALL_ENDPOINT}`, { roomId: currentRoomId }, { withCredentials: true });
+      navigate("/dsaDashboard"); // Redirect to home or another page after ending call
+    } catch (error) {
+      console.error("Failed to end room:", error.message || error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Listening for roomEnded event");
+    socket.on("roomEnded", () => {
+      console.log("Received roomEnded event");
+      if (videoRoomRef.current && videoRoomRef.current.disconnectRoom) {
+        console.log("Disconnecting video room due to roomEnded event");
+        videoRoomRef.current.disconnectRoom();
+      }
+      alert("The host has ended the call.");
+      navigate("/dsaDashboard");
+    });
+    console.log("Setup complete for roomEnded listener");
+
+    return () => {
+      console.log("Cleaning up roomEnded listener");
+      socket.off("roomEnded");
+    };
+  }, []);
+
   return (
     <Layout>
       <Box width="100%" textAlign="center" mt={6}>
@@ -132,6 +180,20 @@ const CustomRoom = () => {
           </Text>
         ) : null}
       </Box>
+      {(publicRoomId || roomId) && (
+        <>
+          <VideoConferencing
+            ref={videoRoomRef}
+            roomId={publicRoomId || roomId}
+            identity={localStorage.getItem("userId") || "guest"}
+          />
+          <Box textAlign="center" mt={4}>
+            <Button colorScheme="red" onClick={handleEndCall}>
+              End Call
+            </Button>
+          </Box>
+        </>
+      )}
       {!isReadOnly && !fromNavbar && (
         <>
           {/* Modal for Code Editor */}

@@ -64,6 +64,12 @@ const setupSocket = (server) => {
         }
       }
     });
+
+    // Support for roomEnded event
+    socket.on("roomEnded", ({ roomId, identity }) => {
+      io.to(roomId).emit("roomEnded", { identity });
+      console.log(`📢 Broadcasted roomEnded to room ${roomId} by ${identity}`);
+    });
   });
 };
 

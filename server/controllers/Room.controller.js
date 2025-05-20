@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const Room = require("../models/Room.model");
 const User = require("../models/user.model");
-// const { server } = require("socket.io");
+const twilio = require("twilio");
 
 // ✅ Create a new room and store it in DB
 const CreateRoom = async (req, res) => {
@@ -61,6 +61,53 @@ const joinRoom = async (req, res) => {
   }
 };
 
-// Code editor real time changes
+// ✅ Generate Twilio Video Access Token
+const generateTwilioToken = (req, res) => {
+  const accountSid = process.env.TWILIO_ACCOUNT_SID;
+  const apiKeySid = process.env.TWILIO_API_KEY_SID;
+  const apiKeySecret = process.env.TWILIO_API_KEY_SECRET;
 
-module.exports = { CreateRoom, joinRoom };
+  const { identity, room } = req.query;
+
+  if (!identity || !room) {
+    return res.status(400).json({ message: "Missing identity or room parameter" });
+  }
+
+  const AccessToken = twilio.jwt.AccessToken;
+  const VideoGrant = AccessToken.VideoGrant;
+
+  const token = new AccessToken(accountSid, apiKeySid, apiKeySecret, { identity });
+
+  const videoGrant = new VideoGrant({ room });
+  token.addGrant(videoGrant);
+
+  return res.json({ token: token.toJwt() });
+};
+
+
+const endRoom = async (req, res) => {
+  try {
+    const { roomId } = req.body;
+    const room = await Room.findOne({ roomId });
+
+    if (!room) {
+      return res.status(404).json({ message: "Room not found." });
+    }
+
+    // Remove room from all users
+    await User.updateMany(
+      { rooms: room._id },
+      { $pull: { rooms: room._id } }
+    );
+
+    // Delete the room
+    await Room.deleteOne({ _id: room._id });
+
+    return res.status(200).json({ message: "Room ended and cleaned up successfully." });
+  } catch (error) {
+    console.error("Failed to end room:", error);
+    return res.status(500).json({ message: "Failed to end room", error });
+  }
+};
+
+module.exports = { CreateRoom, joinRoom, generateTwilioToken, endRoom };

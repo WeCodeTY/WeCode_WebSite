@@ -32,7 +32,8 @@ const {
   adminquestionadd,
   getAllAdminQuestions,
   adminquestiondelete,
-  adminquestionupdate
+  adminquestionupdate,
+  saveProblemHandlers
 } = require("../controllers/Question.controller"); // Import updateQuestion
 const {
   updateuserprofile,
@@ -40,7 +41,7 @@ const {
   userpointsview
 } = require("../controllers/profile.controller");
 
-const { CreateRoom , joinRoom } = require("../controllers/Room.controller");
+const { CreateRoom, joinRoom, generateTwilioToken, endRoom } = require("../controllers/Room.controller");
 
 const { verifyToken } = require("../middleware/auth");
 const { FollowUser ,CheckFollowing, FollowDashboard,SearchUser, UnfollowUser } = require("../controllers/Follow.controller");
@@ -97,7 +98,11 @@ router.post("/verifyotp", verifyotp);
 router.post("/updatepassword", updateuserpassword);
 router.post("/logout", verifyToken, logoutUser);
 router.post("/auth/google", googleAuth);
-router.post("/submitcode" ,verifyToken, submitSolution );
+router.post("/submitcode", verifyToken, submitSolution);
+router.post("/questionhandler" , verifyToken, saveProblemHandlers);
+
+router.get("/twilio/video-token", generateTwilioToken);
+router.post("/roomsend", verifyToken, endRoom);
 
 
 

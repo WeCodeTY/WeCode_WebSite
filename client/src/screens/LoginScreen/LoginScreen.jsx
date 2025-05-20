@@ -37,6 +37,7 @@ const LoginScreen = () => {
       setMessage(response.data.message);
 
       const { role , id } = response.data;  // Get role from the response
+      localStorage.setItem("userId", id);
       socket.emit("registerUser", id);
       if (role === "admin") {
         navigate("/admin-dashboard");  // Redirect to admin dashboard
@@ -192,6 +193,7 @@ const LoginScreen = () => {
                   setMessage("Login successful");
                   const { role } = response.data;  // Get role from the response
                   const { id } = response.data;
+                  localStorage.setItem("userId", id);
                   socket.emit("registerUser", id);
                   if (role === "admin") {
                     navigate("/admin-dashboard");  // Redirect to admin dashboard
