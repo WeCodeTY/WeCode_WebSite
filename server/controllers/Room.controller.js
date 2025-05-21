@@ -6,7 +6,9 @@ const twilio = require("twilio");
 // ✅ Create a new room and store it in DB
 const CreateRoom = async (req, res) => {
   try {
-    const roomId = uuidv4();
+    // Generate a roomId with a hyphen after the first 3 letters
+    const rawId = uuidv4().replace(/[^a-zA-Z]/g, '').slice(0, 8); // 8 letters
+    const roomId = `${rawId.slice(0, 3)}-${rawId.slice(3)}`; // total length = 9 (including 1 hyphen)
 
     const newRoom = new Room({
       roomId,
