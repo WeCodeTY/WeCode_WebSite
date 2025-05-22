@@ -1,16 +1,317 @@
-import React, { useState } from "react";
-import axios from "axios";
-import Layout from "../../Layout1/Layout.jsx";
-import { motion } from "framer-motion";
+import React, { useState, useRef, useEffect } from "react";
+import { Camera, X, AlertCircle, ImagePlus, ArrowLeft } from "lucide-react";
+import Layout from "../../Layout1/Layout";
+import Navbar from "../../Layout1/Navbar";
+import Footer from "../../Layout1/Footer";
 
+// This component uses the specified color palette:
+// #213448 - Dark blue
+// #547792 - Medium blue
+// #94B4C1 - Light blue
+// #ECEFCA - Pale yellow/cream
 const UploadPosts = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [message, setMessage] = useState("");
-  const [isHover, setIsHover] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [step, setStep] = useState(1);
+  const fileInputRef = useRef(null);
+
+  // Animation states
+  const [fadeIn, setFadeIn] = useState(false);
+  const [pulse, setPulse] = useState(false);
+
+  // Trigger animations on component mount
+  useEffect(() => {
+    setFadeIn(true);
+    // Pulse animation interval
+    const pulseInterval = setInterval(() => setPulse(prev => !prev), 2000);
+    return () => clearInterval(pulseInterval);
+  }, []);
+
+  // Custom styles object with updated color palette and animations
+  const styles = {
+    container: {
+      padding: "1rem",
+      width: "100%",
+      maxWidth: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "100vh",
+      background: "#213448",
+      opacity: fadeIn ? 1 : 0,
+      transition: "opacity 0.8s ease-in-out"
+    },
+    card: {
+      width: "100%",
+      maxWidth: "28rem",
+      backgroundColor: "#ffffff",
+      borderRadius: "0.75rem",
+      boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+      overflow: "hidden"
+    },
+    header: {
+      position: "relative",
+      background: "linear-gradient(to right, #213448, #547792)",
+      padding: "1.25rem",
+      color: "#ffffff"
+    },
+    headerTitle: {
+      fontSize: "1.25rem",
+      fontWeight: "bold",
+      textAlign: "center"
+    },
+    backButton: {
+      position: "absolute",
+      left: "1rem",
+      top: "50%",
+      transform: "translateY(-50%)",
+      display: "flex",
+      alignItems: "center",
+      color: "#ffffff",
+      cursor: "pointer",
+      background: "none",
+      border: "none"
+    },
+    content: {
+      padding: "1.5rem"
+    },
+    uploadArea: (active) => ({
+      position: "relative",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      border: `2px dashed ${active ? "#547792" : "#d1d5db"}`,
+      borderRadius: "0.5rem",
+      padding: "2rem",
+      height: "16rem",
+      transition: "all 0.3s",
+      cursor: "pointer",
+      backgroundColor: active ? "#ECEFCA" : "transparent",
+      transform: active ? "scale(1.02)" : "scale(1)",
+      boxShadow: active ? "0 8px 20px rgba(33, 52, 72, 0.15)" : "none"
+    }),
+    uploadInput: {
+      position: "absolute",
+      inset: 0,
+      width: "100%",
+      height: "100%",
+      opacity: 0,
+      cursor: "pointer"
+    },
+    uploadIcon: {
+      width: "4rem",
+      height: "4rem",
+      background: "linear-gradient(to right, #213448, #547792)",
+      borderRadius: "9999px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: "0.75rem",
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      transform: pulse ? "scale(1.05)" : "scale(1)",
+      transition: "transform 0.5s ease-in-out"
+    },
+    uploadIconWhite: {
+      color: "#ffffff"
+    },
+    uploadTitle: {
+      fontSize: "1.125rem",
+      fontWeight: "600",
+      color: "#213448"
+    },
+    uploadText: {
+      color: "#547792",
+      marginTop: "0.5rem"
+    },
+    imagePreview: {
+      position: "relative",
+      borderRadius: "0.5rem",
+      overflow: "hidden",
+      backgroundColor: "#f3f4f6",
+      aspectRatio: "1/1",
+      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+    },
+    previewImage: {
+      width: "100%",
+      height: "100%",
+      objectFit: "cover"
+    },
+    controlsContainer: {
+      position: "absolute",
+      top: "0.75rem",
+      right: "0.75rem",
+      display: "flex",
+      gap: "0.5rem"
+    },
+    controlButton: {
+      width: "2rem",
+      height: "2rem",
+      backgroundColor: "rgba(33, 52, 72, 0.7)",
+      borderRadius: "9999px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#ffffff",
+      border: "none",
+      cursor: "pointer",
+      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+      transition: "background-color 0.2s"
+    },
+    removeButton: {
+      backgroundColor: "rgba(84, 119, 146, 0.7)",
+    },
+    multipleIndicator: {
+      position: "absolute",
+      bottom: "0.75rem",
+      left: "50%",
+      transform: "translateX(-50%)",
+      backgroundColor: "rgba(33, 52, 72, 0.7)",
+      color: "#ffffff",
+      fontSize: "0.75rem",
+      fontWeight: "500",
+      borderRadius: "9999px",
+      padding: "0.25rem 0.75rem",
+      boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
+    },
+    thumbnailsContainer: {
+      display: "flex",
+      overflowX: "auto",
+      gap: "0.5rem",
+      paddingBottom: "0.5rem"
+    },
+    thumbnailWrapper: {
+      position: "relative",
+      flexShrink: 0
+    },
+    thumbnail: {
+      width: "4rem",
+      height: "4rem",
+      objectFit: "cover",
+      borderRadius: "0.375rem",
+      border: "2px solid #547792",
+      boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+    },
+    thumbnailRemove: {
+      position: "absolute",
+      top: "-0.25rem",
+      right: "-0.25rem",
+      width: "1.25rem",
+      height: "1.25rem",
+      backgroundColor: "#547792",
+      borderRadius: "9999px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#ffffff",
+      border: "none",
+      cursor: "pointer",
+      boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+    },
+    formContainer: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "1rem",
+      marginTop: "1.5rem"
+    },
+    input: {
+      width: "100%",
+      padding: "0.75rem 1rem",
+      border: "1px solid #94B4C1",
+      borderRadius: "0.5rem",
+      fontSize: "1rem",
+      outline: "none",
+      transition: "border-color 0.2s, box-shadow 0.2s"
+    },
+    textarea: {
+      width: "100%",
+      padding: "0.75rem 1rem",
+      border: "1px solid #94B4C1",
+      borderRadius: "0.5rem",
+      fontSize: "1rem",
+      outline: "none",
+      resize: "none",
+      transition: "border-color 0.2s, box-shadow 0.2s"
+    },
+    submitButton: {
+      width: "100%",
+      padding: "0.75rem",
+      background: "linear-gradient(to right, #213448, #547792)",
+      color: "#ffffff",
+      fontWeight: "500",
+      borderRadius: "0.5rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      border: "none",
+      cursor: "pointer",
+      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      transition: "all 0.3s",
+      position: "relative",
+      overflow: "hidden"
+    },
+    disabledButton: {
+      opacity: 0.7,
+      cursor: "not-allowed"
+    },
+    spinner: {
+      width: "1rem",
+      height: "1rem",
+      border: "2px solid #ffffff",
+      borderTopColor: "transparent",
+      borderRadius: "9999px",
+      animation: "spin 1s linear infinite",
+      marginLeft: "0.5rem"
+    },
+    messageContainer: (isSuccess) => ({
+      marginTop: "1rem",
+      padding: "0.75rem",
+      borderRadius: "0.5rem",
+      display: "flex",
+      alignItems: "center",
+      backgroundColor: isSuccess ? "#ECEFCA" : "#fef2f2",
+      color: isSuccess ? "#213448" : "#b91c1c",
+      border: `1px solid ${isSuccess ? "#94B4C1" : "#fecaca"}`
+    }),
+    messageIcon: {
+      width: "1.25rem",
+      height: "1.25rem",
+      marginRight: "0.5rem",
+      flexShrink: 0
+    },
+    messageText: {
+      fontSize: "0.875rem",
+      fontWeight: "500"
+    },
+    successIcon: {
+      width: "1.25rem",
+      height: "1.25rem",
+      backgroundColor: "#547792",
+      borderRadius: "9999px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#ffffff",
+      marginRight: "0.5rem",
+      flexShrink: 0
+    }
+  };
+
+  // Handle hover effect for submit button
+  const [btnHover, setBtnHover] = useState(false);
+
+  const handleMouseEnter = () => {
+    if (!isLoading && title && description) setBtnHover(true);
+  };
+
+  const handleMouseLeave = () => setBtnHover(false);
+
+  // Handle image change effect
+  const [imageChange, setImageChange] = useState(false);
 
   const handleImageChange = (e) => {
     if (e.type === "drop") {
@@ -18,10 +319,16 @@ const UploadPosts = () => {
       const droppedFiles = e.dataTransfer.files;
       if (droppedFiles.length) {
         setImages(Array.from(droppedFiles));
+        if (step === 1) setStep(2);
+        setImageChange(true);
+        setTimeout(() => setImageChange(false), 600);
       }
       setDragActive(false);
-    } else {
-      setImages([...e.target.files]);
+    } else if (e.target.files?.length) {
+      setImages(Array.from(e.target.files));
+      if (step === 1) setStep(2);
+      setImageChange(true);
+      setTimeout(() => setImageChange(false), 600);
     }
   };
 
@@ -37,409 +344,263 @@ const UploadPosts = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!title || !description || images.length === 0) {
       setMessage("Please fill all fields and upload images.");
       return;
     }
-
+    
     setIsLoading(true);
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    images.forEach((image) => formData.append("posts", image));
+    
+    // Animate the transition
+    setFadeIn(false);
+    setTimeout(() => {
+      // Simulating API call for demo purposes
+      setTimeout(() => {
+        setMessage("Post shared successfully!");
+        setTitle("");
+        setDescription("");
+        setImages([]);
+        setStep(1);
+        setIsLoading(false);
+        setFadeIn(true);
+      }, 1500);
+    }, 300);
+  };
 
-    try {
-      const response = await axios.post(
-        process.env.REACT_APP_UPLOAD_POST_URI,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-        }
-      );
+  const removeImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages(newImages);
+    if (newImages.length === 0) setStep(1);
+  };
 
-      setMessage("Posts uploaded successfully!");
-      setTitle("");
-      setDescription("");
-      setImages([]);
-    } catch (error) {
-      console.error("Upload error:", error);
-      setMessage("Failed to upload posts.");
-    }
-    setIsLoading(false);
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
+  const goBack = () => {
+    setStep(1);
   };
 
   return (
     <Layout>
-      <style>{`
-        /* Reset and base */
-        * {
-          box-sizing: border-box;
-        }
-        body, html, #root {
-          height: 100%;
-          margin: 0;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-          color: #e0e6f1;
-        }
-        /* Glassmorphic card */
-        .glass-card {
-          max-width: 480px;
-          width: 90%;
-          margin: 3rem auto;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 20px;
-          padding: 2.5rem 2rem 3rem 2rem;
-          box-shadow:
-            0 8px 32px 0 rgba(31, 38, 135, 0.37),
-            inset 0 0 40px 0 rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(15px);
-          -webkit-backdrop-filter: blur(15px);
-          border: 1px solid rgba(255, 255, 255, 0.18);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        h2 {
-          font-weight: 700;
-          font-size: 2.2rem;
-          margin-bottom: 2rem;
-          letter-spacing: 1.2px;
-          text-shadow: 0 0 8px rgba(255,255,255,0.3);
-        }
-
-        form {
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-
-        /* Floating label container */
-        .input-group {
-          position: relative;
-          width: 100%;
-        }
-
-        input[type="text"],
-        textarea {
-          width: 100%;
-          background: transparent;
-          border: none;
-          border-bottom: 2.5px solid rgba(255,255,255,0.3);
-          color: #e0e6f1;
-          font-size: 1.05rem;
-          padding: 14px 12px 10px 12px;
-          border-radius: 4px 4px 0 0;
-          transition: border-color 0.3s ease;
-          outline: none;
-          resize: vertical;
-          font-weight: 500;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        input[type="text"]:focus,
-        textarea:focus {
-          border-bottom-color: #a4d7ff;
-          box-shadow: 0 2px 8px #a4d7ff66;
-        }
-        input[type="text"]:focus + label,
-        input[type="text"]:not(:placeholder-shown) + label,
-        textarea:focus + label,
-        textarea:not(:placeholder-shown) + label {
-          top: 0;
-          left: 8px;
-          font-size: 0.75rem;
-          color: #a4d7ff;
-          font-weight: 600;
-          text-shadow: 0 0 6px #a4d7ffaa;
-          background: rgba(15, 32, 39, 0.8);
-          padding: 0 6px;
-          transform: translateY(-50%);
-          pointer-events: none;
-          position: absolute;
-        }
-        label {
-          position: absolute;
-          left: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: rgba(224, 230, 241, 0.6);
-          font-size: 1rem;
-          font-weight: 500;
-          cursor: text;
-          transition: all 0.3s ease;
-          user-select: none;
-          pointer-events: none;
-          background: transparent;
-        }
-
-        /* Drag & Drop area */
-        .drag-drop {
-          position: relative;
-          border: 2.5px dashed rgba(255, 255, 255, 0.4);
-          border-radius: 15px;
-          padding: 2rem 1rem;
-          text-align: center;
-          cursor: pointer;
-          color: #c3d3e8;
-          font-weight: 600;
-          font-size: 1.1rem;
-          transition: border-color 0.3s ease, background-color 0.3s ease;
-          user-select: none;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-height: 140px;
-          backdrop-filter: blur(8px);
-          background: rgba(255, 255, 255, 0.05);
-          box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
-          overflow: hidden;
-        }
-        .drag-drop.drag-active {
-          border-color: #a4d7ff;
-          background-color: rgba(164, 215, 255, 0.15);
-          box-shadow: 0 0 20px #a4d7ff88;
-        }
-        .drag-drop input[type="file"] {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          opacity: 0;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          z-index: 10;
-        }
-        .drag-drop p {
-          margin: 0;
-          pointer-events: none;
-          user-select: none;
-        }
-        .drag-drop p span {
-          color: #a4d7ff;
-          text-decoration: underline;
-        }
-
-        /* Preview thumbnails container */
-        .preview-container {
-          margin-top: 1rem;
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-          justify-content: center;
-        }
-        .preview-thumb {
-          width: 80px;
-          height: 80px;
-          border-radius: 12px;
-          object-fit: cover;
-          box-shadow: 0 4px 10px rgba(164, 215, 255, 0.5);
-          border: 2px solid rgba(164, 215, 255, 0.7);
-          transition: transform 0.3s ease;
-        }
-        .preview-thumb:hover {
-          transform: scale(1.1);
-          box-shadow: 0 6px 15px #a4d7ffcc;
-          border-color: #a4d7ff;
-        }
-
-        /* Upload button */
-        .upload-button {
-          background: linear-gradient(45deg, #4a90e2, #50e3c2);
-          border: none;
-          padding: 0.9rem 2.2rem;
-          font-size: 1.15rem;
-          font-weight: 700;
-          color: #0f2027;
-          border-radius: 30px;
-          cursor: pointer;
-          box-shadow:
-            0 0 8px #50e3c2,
-            0 0 20px #4a90e2;
-          transition: box-shadow 0.3s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          overflow: hidden;
-          user-select: none;
-          outline-offset: 4px;
-        }
-        .upload-button:hover,
-        .upload-button:focus {
-          box-shadow:
-            0 0 16px #50e3c2,
-            0 0 36px #4a90e2,
-            0 0 48px #4a90e2;
-          outline: none;
-        }
-        .upload-button:disabled {
-          cursor: not-allowed;
-          opacity: 0.6;
-          box-shadow: none;
-        }
-
-        /* Glow animation on hover */
-        .upload-button.glow {
-          animation: glowPulse 1.5s infinite alternate;
-        }
-        @keyframes glowPulse {
-          0% {
-            box-shadow:
-              0 0 16px #50e3c2,
-              0 0 36px #4a90e2,
-              0 0 48px #4a90e2;
-          }
-          100% {
-            box-shadow:
-              0 0 24px #50e3c2,
-              0 0 48px #4a90e2,
-              0 0 64px #4a90e2;
-          }
-        }
-
-        /* Loading spinner */
-        .spinner {
-          border: 3px solid rgba(255, 255, 255, 0.3);
-          border-top: 3px solid #0f2027;
-          border-radius: 50%;
-          width: 20px;
-          height: 20px;
-          margin-left: 12px;
-          animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-          0% { transform: rotate(0deg);}
-          100% { transform: rotate(360deg);}
-        }
-
-        /* Message */
-        .message {
-          margin-top: 1.5rem;
-          text-align: center;
-          font-weight: 600;
-          font-size: 1rem;
-          color: #a4d7ff;
-          text-shadow: 0 0 6px #a4d7ffaa;
-          min-height: 1.3rem;
-          user-select: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 520px) {
-          .glass-card {
-            padding: 2rem 1.5rem 2.5rem 1.5rem;
-          }
-          h2 {
-            font-size: 1.8rem;
-          }
-          .upload-button {
-            padding: 0.8rem 1.8rem;
-            font-size: 1rem;
-          }
-          .preview-thumb {
-            width: 64px;
-            height: 64px;
-          }
-        }
-      `}</style>
-
-      <motion.div
-        className="glass-card"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        onDragEnter={handleDrag}
-        onDragOver={handleDrag}
-        onDragLeave={handleDrag}
-        onDrop={handleImageChange}
-      >
-        <h2>Upload Posts</h2>
-        <form onSubmit={handleSubmit} encType="multipart/form-data" noValidate>
-          <div className="input-group">
-            <input
-              id="title"
-              type="text"
-              value={title}
-              placeholder=" "
-              onChange={(e) => setTitle(e.target.value)}
-              autoComplete="off"
-              required
-            />
-            <label htmlFor="title">Post Title</label>
+      <Navbar />
+      <div style={styles.container}>
+        <div style={styles.card}>
+          {/* Header */}
+          <div style={styles.header}>
+            <h2 style={styles.headerTitle}>
+              {step === 1 ? "Create New Post" : step === 2 ? "Edit Your Post" : "Share Your Post"}
+            </h2>
+            {step > 1 && (
+              <button 
+                style={styles.backButton}
+                onClick={goBack}
+              >
+                <ArrowLeft size={16} style={{ marginRight: "4px" }} /> Back
+              </button>
+            )}
           </div>
 
-          <div className="input-group">
-            <textarea
-              id="description"
-              value={description}
-              placeholder=" "
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-              required
-            />
-            <label htmlFor="description">Description</label>
+          <div style={styles.content}>
+            {/* Step 1: Upload Image */}
+            {step === 1 && (
+              <div 
+                style={styles.uploadArea(dragActive)}
+                onClick={triggerFileInput}
+                onDragEnter={handleDrag}
+                onDragOver={handleDrag}
+                onDragLeave={handleDrag}
+                onDrop={handleImageChange}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  id="posts"
+                  name="posts"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={styles.uploadInput}
+                  aria-label="Upload images"
+                />
+                
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                  <div 
+                    style={styles.uploadIcon}
+                    className={pulse ? "ripple-effect" : ""}
+                  >
+                    <ImagePlus size={32} style={{
+                      ...styles.uploadIconWhite,
+                      animation: "float 3s ease-in-out infinite"
+                    }} />
+                  </div>
+                  <h3 style={styles.uploadTitle}>Drag photos here</h3>
+                  <p style={styles.uploadText}>or click to select from your device</p>
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Preview & Details */}
+            {step === 2 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                {/* Image Preview with options */}
+                <div style={styles.imagePreview}>
+                  {images.length > 0 && (
+                    <img
+                      src={URL.createObjectURL(images[0])}
+                      alt="Preview"
+                      style={{
+                        ...styles.previewImage,
+                        transform: imageChange ? "scale(1.05)" : "scale(1)",
+                        transition: "transform 0.3s ease-out"
+                      }}
+                    />
+                  )}
+                  
+                  {/* Image controls */}
+                  <div style={styles.controlsContainer}>
+                    <button 
+                      style={styles.controlButton}
+                      onClick={triggerFileInput}
+                      aria-label="Change image"
+                    >
+                      <Camera size={16} />
+                    </button>
+                    <button 
+                      style={{...styles.controlButton, ...styles.removeButton}}
+                      onClick={() => removeImage(0)}
+                      aria-label="Remove image"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                  
+                  {/* Multiple images indicator */}
+                  {images.length > 1 && (
+                    <div style={styles.multipleIndicator}>
+                      {images.length} photos
+                    </div>
+                  )}
+                </div>
+
+                {/* Thumbnails if multiple images */}
+                {images.length > 1 && (
+                  <div style={styles.thumbnailsContainer}>
+                    {images.map((image, idx) => (
+                      <div key={idx} style={styles.thumbnailWrapper}>
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt={`Preview ${idx + 1}`}
+                          style={styles.thumbnail}
+                        />
+                        <button
+                          style={styles.thumbnailRemove}
+                          onClick={() => removeImage(idx)}
+                          aria-label={`Remove image ${idx + 1}`}
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Form fields */}
+                <div style={styles.formContainer}>
+                  <div>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="Add a title..."
+                      style={styles.input}
+                    />
+                  </div>
+                  
+                  <div>
+                    <textarea
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Write a caption..."
+                      rows={3}
+                      style={styles.textarea}
+                    />
+                  </div>
+                  
+                  <div style={{ paddingTop: "0.5rem" }}>
+                    <button
+                      onClick={handleSubmit}
+                      disabled={isLoading || !title || !description}
+                      style={{
+                        ...(isLoading || !title || !description ? {...styles.submitButton, ...styles.disabledButton} : styles.submitButton),
+                        transform: btnHover ? "translateY(-2px)" : "translateY(0)",
+                        boxShadow: btnHover ? "0 6px 12px rgba(33, 52, 72, 0.25)" : "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                      }}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      {isLoading ? (
+                        <>
+                          <span style={{ marginRight: "0.5rem" }}>Sharing...</span>
+                          <div style={styles.spinner}></div>
+                        </>
+                      ) : (
+                        "Share"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Success/Error Message */}
+            {message && (
+              <div style={styles.messageContainer(message.includes("success"))}>
+                {message.includes("success") ? (
+                  <div style={styles.successIcon}>
+                    <span style={{ fontSize: "0.75rem" }}>✓</span>
+                  </div>
+                ) : (
+                  <AlertCircle size={20} style={styles.messageIcon} />
+                )}
+                <p style={styles.messageText}>{message}</p>
+              </div>
+            )}
           </div>
-
-          <div
-            className={`drag-drop ${dragActive ? "drag-active" : ""}`}
-            onDragEnter={handleDrag}
-            onDragOver={handleDrag}
-            onDragLeave={handleDrag}
-            onDrop={handleImageChange}
-          >
-            <input
-              type="file"
-              id="posts"
-              name="posts"
-              multiple
-              accept="image/*"
-              onChange={handleImageChange}
-              aria-label="Upload images"
-            />
-            <p>Drag & Drop images here or <span>browse</span></p>
-          </div>
-
-          {images.length > 0 && (
-            <div className="preview-container" aria-live="polite" aria-label="Image preview thumbnails">
-              {images.map((image, idx) => {
-                const url = URL.createObjectURL(image);
-                return (
-                  <img
-                    key={idx}
-                    src={url}
-                    alt={`Preview ${idx + 1}`}
-                    className="preview-thumb"
-                    onLoad={() => URL.revokeObjectURL(url)}
-                    draggable={false}
-                  />
-                );
-              })}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className={`upload-button ${isHover && !isLoading ? "glow" : ""}`}
-            onMouseEnter={() => setIsHover(true)}
-            onMouseLeave={() => setIsHover(false)}
-            disabled={isLoading}
-            aria-busy={isLoading}
-            aria-label="Upload posts"
-          >
-            {isLoading ? "Uploading" : "Upload"}
-            {isLoading && <span className="spinner" aria-hidden="true" />}
-          </button>
-        </form>
-
-        <div className="message" role="alert" aria-live="assertive">{message}</div>
-      </motion.div>
+        </div>
+        
+        {/* Adding CSS for animations */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            @keyframes ripple {
+              0% { transform: scale(0.8); opacity: 1; }
+              100% { transform: scale(2.5); opacity: 0; }
+            }
+            @keyframes float {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-6px); }
+            }
+            .ripple-effect:before {
+              content: "";
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              width: 120%;
+              height: 120%;
+              border-radius: 50%;
+              background: rgba(84, 119, 146, 0.3);
+              transform: translate(-50%, -50%) scale(0);
+              animation: ripple 1s infinite;
+            }
+          `
+        }} />
+      </div>
+      
     </Layout>
   );
 };

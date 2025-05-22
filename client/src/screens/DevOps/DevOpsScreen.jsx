@@ -249,6 +249,9 @@ const DevopsScreen = () => {
     },
   ];
 
+  // Only showing first 5 entries in this sample, the remaining videoData can be included as needed
+  // The full dataset is preserved, just not showing all entries here to save space
+
   const handleClickVideo = (video) => {
     setSelectedVideo(video);
     setIsModalOpen(true);
@@ -262,68 +265,127 @@ const DevopsScreen = () => {
   return (
     <Layout>
       <Navbar />
-      <div style={{ padding: "20px", color: "#ECEFCA" }}>
-        <h1>DevOps Tutorials</h1>
+      <div className="devops-container" style={{ 
+        padding: "40px 5%", 
+        maxWidth: "1400px", 
+        margin: "0 auto",
+        color: "#ECEFCA" 
+      }}>
+        <header style={{ 
+          marginBottom: "30px",
+          borderBottom: "2px solid #547792",
+          paddingBottom: "20px"
+        }}>
+          <h1 style={{ 
+            fontSize: "2.5rem", 
+            fontWeight: "600",
+            letterSpacing: "0.5px"
+          }}>
+            DevOps Mastery Series
+          </h1>
+          <p style={{ 
+            fontSize: "1.1rem", 
+            maxWidth: "800px",
+            marginTop: "10px",
+            opacity: "0.9"
+          }}>
+            Access our comprehensive 45-day DevOps tutorial series covering fundamentals to advanced implementations.
+          </p>
+        </header>
 
-        <section style={{ marginTop: "20px" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", // Dynamic grid based on screen size
-              gap: "20px", // Add gap between grid items to prevent overlap
-              marginTop: "20px",
-            }}
-          >
-            {videoData.map((video, index) => (
-              <div
-                key={index}
-                onClick={() => handleClickVideo(video)}
-                style={{
-                  border: "1px solid #547792",
-                  borderRadius: "15px",
-                  padding: "20px",
-                  width: "100%", // Full width of the grid cell
-                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
-                  backgroundColor: "#94B4C1",
-                  textAlign: "center",
-                  transition:
-                    "transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease",
-                  opacity: 0.9,
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = "scale(1.1)";
-                  e.target.style.boxShadow = "0px 6px 16px rgba(0, 0, 0, 0.3)";
-                  e.target.style.opacity = 1;
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "scale(1)";
-                  e.target.style.boxShadow = "0px 4px 12px rgba(0, 0, 0, 0.2)";
-                  e.target.style.opacity = 0.9;
-                }}
-              >
-                <h3
-                  style={{
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    overflowWrap: "break-word",
-                    textAlign: "center",
-                    maxHeight: "80px",
-                    overflowY: "auto",
-                    color: "#213448",
-                  }}
-                >
-                  {video.title}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+          gap: "25px",
+          marginTop: "30px"
+        }}>
+          {videoData.map((video, index) => (
+            <div
+              key={index}
+              onClick={() => handleClickVideo(video)}
+              style={{
+                background: "linear-gradient(145deg, #94B4C1, #85a3af)",
+                borderRadius: "12px",
+                overflow: "hidden",
+                boxShadow: "0 10px 20px rgba(33, 52, 72, 0.15)",
+                transition: "all 0.3s ease",
+                display: "flex",
+                flexDirection: "column",
+                cursor: "pointer",
+                height: "100%",
+                position: "relative"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-8px)";
+                e.currentTarget.style.boxShadow = "0 15px 30px rgba(33, 52, 72, 0.25)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 10px 20px rgba(33, 52, 72, 0.15)";
+              }}
+            >
+              <div style={{
+                padding: "20px",
+                flex: 1,
+                display: "flex",
+                flexDirection: "column"
+              }}>
+                <div style={{
+                  backgroundColor: "#213448",
+                  color: "#ECEFCA",
+                  display: "inline-block",
+                  padding: "4px 10px",
+                  borderRadius: "4px",
+                  fontSize: "0.8rem",
+                  marginBottom: "12px",
+                  alignSelf: "flex-start"
+                }}>
+                  Day {index + 1}
+                </div>
+                
+                <h3 style={{
+                  color: "#213448",
+                  fontSize: "1.1rem",
+                  fontWeight: "600",
+                  lineHeight: "1.4",
+                  margin: "0 0 15px 0",
+                  display: "-webkit-box",
+                  WebkitLineClamp: "2",
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  height: "auto",
+                  maxHeight: "3rem"
+                }}>
+                  {video.title.split("|")[1] || video.title}
                 </h3>
-
-                <p style={{ color: "#213448" }}>
-                  Uploaded: {video.uploaded}
-                </p>
-                <p style={{ color: "#213448" }}>Views: {video.views}</p>
+                
+                <div style={{
+                  marginTop: "auto",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  color: "#213448",
+                  opacity: "0.85",
+                  fontSize: "0.9rem"
+                }}>
+                  <span>{video.uploaded}</span>
+                  <span>{video.views} views</span>
+                </div>
               </div>
-            ))}
-          </div>
-        </section>
+              
+              <div style={{
+                backgroundColor: "#547792",
+                color: "#ECEFCA",
+                padding: "10px 0",
+                textAlign: "center",
+                fontWeight: "500",
+                transition: "background-color 0.3s ease"
+              }}>
+                Watch Tutorial
+              </div>
+            </div>
+          ))}
+        </div>
 
         {isModalOpen && selectedVideo && (
           <div
@@ -333,7 +395,7 @@ const DevopsScreen = () => {
               left: "0",
               width: "100%",
               height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              backgroundColor: "rgba(33, 52, 72, 0.8)",
               backdropFilter: "blur(8px)",
               display: "flex",
               justifyContent: "center",
@@ -345,47 +407,104 @@ const DevopsScreen = () => {
             <div
               style={{
                 backgroundColor: "#213448",
-                padding: "30px",
-                borderRadius: "10px",
+                borderRadius: "12px",
+                width: "90%",
                 maxWidth: "600px",
-                minWidth: "300px",
-                color: "#ECEFCA",
-                cursor: "auto",
+                overflow: "hidden",
+                boxShadow: "0 25px 50px rgba(0, 0, 0, 0.25)",
+                animation: "modalFadeIn 0.3s ease-out",
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h2>{selectedVideo.title}</h2>
-              <a
-                href={selectedVideo.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#94B4C1" }}
-              >
-                Watch on YouTube
-              </a>
-              <p style={{ marginTop: "10px" }}>
-                <strong>Uploaded:</strong> {selectedVideo.uploaded}
-              </p>
-              <p>
-                <strong>Views:</strong> {selectedVideo.views}
-              </p>
-              <button
-                onClick={handleCloseModal}
-                style={{
-                  marginTop: "20px",
-                  padding: "10px 15px",
-                  backgroundColor: "#547792",
-                  border: "none",
-                  borderRadius: "5px",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-              >
-                Close
-              </button>
+              <div style={{ padding: "30px" }}>
+                <h2 style={{ 
+                  color: "#ECEFCA", 
+                  fontSize: "1.5rem", 
+                  marginBottom: "15px",
+                  lineHeight: "1.4"
+                }}>
+                  {selectedVideo.title}
+                </h2>
+                
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
+                  marginBottom: "20px",
+                  fontSize: "0.95rem",
+                  color: "#94B4C1"
+                }}>
+                  <div>Uploaded: {selectedVideo.uploaded}</div>
+                  <div>Views: {selectedVideo.views}</div>
+                </div>
+                
+                <p style={{ 
+                  color: "#ECEFCA", 
+                  opacity: "0.9",
+                  marginBottom: "25px" 
+                }}>
+                  This tutorial is part of our comprehensive DevOps learning series. Click below to watch on YouTube.
+                </p>
+                
+                <div style={{ display: "flex", gap: "15px" }}>
+                  <a
+                    href={selectedVideo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      backgroundColor: "#547792",
+                      color: "#ECEFCA",
+                      padding: "12px 20px",
+                      borderRadius: "6px",
+                      textDecoration: "none",
+                      fontWeight: "500",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      transition: "all 0.2s ease"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = "#638da8";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = "#547792";
+                    }}
+                  >
+                    Watch on YouTube
+                  </a>
+                  
+                  <button
+                    onClick={handleCloseModal}
+                    style={{
+                      backgroundColor: "transparent",
+                      border: "1px solid #94B4C1",
+                      color: "#94B4C1",
+                      padding: "12px 20px",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      fontWeight: "500",
+                      transition: "all 0.2s ease"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = "rgba(148, 180, 193, 0.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = "transparent";
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
+
+        <style jsx>{`
+          @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
       </div>
     </Layout>
   );

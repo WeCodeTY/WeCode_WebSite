@@ -5,6 +5,7 @@ import UpdateQuestion from './UpdateQuestion';
 import Users from './Users';
 import DeleteQuestion from './DeleteQuestion';
 import AllQuestions from './AllQuestions';
+import AddHandlers from './AddHandlers';
 
 const AdminDashboard = () => {
   const [action, setAction] = useState('add');
@@ -38,6 +39,7 @@ const AdminDashboard = () => {
         <button style={styles.button} onClick={() => setAction('update')}>Update Question</button>
         <button style={styles.button} onClick={() => setAction('users')}>Users</button>
         <button style={styles.button} onClick={() => setAction('allQuestions')}>View All Questions</button>
+        {/* <button style={styles.button} onClick={() => setAction('addHandlers')}>Add Handlers</button> */}
       </div>
 
       {/* Main Content Section */}
@@ -47,6 +49,7 @@ const AdminDashboard = () => {
         {action === 'update' && <UpdateQuestion />}
         {action === 'users' && <Users />}
         {action === 'allQuestions' && <AllQuestions questionsList={questionsList} />}
+        {/* {action === 'addHandlers' && <AddHandlers />} */}
       </div>
     </div>
   );

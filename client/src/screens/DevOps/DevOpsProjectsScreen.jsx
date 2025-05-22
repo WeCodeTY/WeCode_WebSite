@@ -158,107 +158,430 @@ const DevopsProjectsScreen = () => {
   };
 
   return (
-    <Layout>
-      <Navbar />
-      <div style={{ padding: "20px", color: "#ECEFCA" }}>
-        <h1>DevOps Project Ideas</h1>
-
-        <section style={{ marginTop: "20px" }}>
+  <Layout>
+    <Navbar />
+    <div
+      style={{
+        backgroundColor: "#213448",
+        minHeight: "100vh",
+        padding: "40px 60px",
+        color: "#ECEFCA"
+      }}
+    >
+      {/* Hero Section */}
+      <div
+        style={{
+          textAlign: "center",
+          marginBottom: "50px",
+          paddingTop: "30px",
+          paddingBottom: "40px",
+          background: "linear-gradient(135deg, #213448 0%, #547792 100%)",
+          borderRadius: "15px",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "3rem",
+            fontWeight: "700",
+            marginBottom: "15px",
+            color: "#ECEFCA",
+            position: "relative",
+            display: "inline-block"
+          }}
+        >
+          <span style={{ position: "relative", zIndex: "1" }}>DevOps Project Ideas</span>
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "20px",
+              position: "absolute",
+              height: "12px",
+              width: "70%",
+              backgroundColor: "#94B4C1",
+              bottom: "8px",
+              left: "15%",
+              zIndex: "0",
+              opacity: "0.3"
             }}
-          >
-            {projectData.map((project, index) => (
+          ></div>
+        </h1>
+        <p
+          style={{
+            fontSize: "1.2rem",
+            maxWidth: "650px",
+            margin: "0 auto",
+            color: "#94B4C1"
+          }}
+        >
+          Explore innovative DevOps projects to enhance your skills and build your portfolio
+        </p>
+      </div>
+
+      {/* Projects Grid */}
+      <section>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+            gap: "25px",
+            marginTop: "30px"
+          }}
+        >
+          {projectData.map((project, index) => (
+            <div
+              key={index}
+              onClick={() => handleClickProject(project)}
+              style={{
+                backgroundColor: "rgba(84, 119, 146, 0.1)",
+                padding: "25px",
+                borderRadius: "12px",
+                boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.15)",
+                transition: "transform 0.3s, box-shadow 0.3s",
+                cursor: "pointer",
+                border: "1px solid rgba(148, 180, 193, 0.15)",
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflow: "hidden"
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = "translateY(-6px)";
+                e.currentTarget.style.boxShadow = "0px 12px 30px rgba(0, 0, 0, 0.25)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0px 6px 20px rgba(0, 0, 0, 0.15)";
+              }}
+            >
+              {/* Decorative accent */}
               <div
-                key={index}
-                onClick={() => handleClickProject(project)}
                 style={{
-                  backgroundColor: "#213448",
-                  padding: "20px",
-                  borderRadius: "10px",
-                  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-                  transition: "transform 0.3s, box-shadow 0.3s",
-                  cursor: "pointer",
+                  position: "absolute",
+                  top: "0",
+                  left: "0",
+                  height: "5px",
+                  width: "100%",
+                  background: "linear-gradient(90deg, #547792, #94B4C1)"
+                }}
+              ></div>
+              
+              <h3
+                style={{
+                  color: "#ECEFCA",
+                  fontSize: "1.4rem",
+                  marginBottom: "15px",
+                  marginTop: "10px",
+                  fontWeight: "600"
                 }}
               >
-                <h3 style={{ color: "#ECEFCA" }}>{project.title}</h3>
-                <p style={{ color: "#94B4C1" }}>
-                  <strong>Hint:</strong> {project.hint}
-                </p>
+                {project.title}
+              </h3>
+              
+              <p
+                style={{
+                  color: "#94B4C1",
+                  lineHeight: "1.6",
+                  fontSize: "1rem"
+                }}
+              >
+                <span style={{ 
+                  display: "inline-block", 
+                  backgroundColor: "rgba(236, 239, 202, 0.15)",
+                  padding: "3px 8px",
+                  borderRadius: "4px",
+                  fontSize: "0.85rem",
+                  marginRight: "6px"
+                }}>
+                  HINT
+                </span> 
+                {project.hint}
+              </p>
+              
+              <div
+                style={{
+                  marginTop: "auto",
+                  paddingTop: "15px",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center"
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "0.9rem",
+                    color: "#ECEFCA",
+                    display: "flex",
+                    alignItems: "center",
+                    opacity: "0.7"
+                  }}
+                >
+                  View Details
+                  <span style={{ marginLeft: "5px" }}>→</span>
+                </span>
               </div>
-            ))}
-          </div>
-        </section>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        {isModalOpen && selectedProject && (
+      {/* Modal */}
+      {isModalOpen && selectedProject && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.65)",
+            backdropFilter: "blur(8px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+          onClick={handleCloseModal}
+        >
           <div
             style={{
-              position: "fixed",
-              top: "0",
-              left: "0",
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              backdropFilter: "blur(8px)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 1000,
+              background: "linear-gradient(145deg, #213448 0%, #2c4660 100%)",
+              padding: "40px",
+              borderRadius: "15px",
+              maxWidth: "800px",
+              width: "80%",
+              maxHeight: "85vh",
+              overflowY: "auto",
+              color: "#ECEFCA",
+              cursor: "auto",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.4)",
+              border: "1px solid rgba(148, 180, 193, 0.15)",
+              position: "relative"
             }}
-            onClick={handleCloseModal}
+            onClick={(e) => e.stopPropagation()}
           >
+            {/* Close button */}
+            <button
+              onClick={handleCloseModal}
+              style={{
+                position: "absolute",
+                top: "15px",
+                right: "15px",
+                backgroundColor: "transparent",
+                border: "none",
+                fontSize: "1.5rem",
+                color: "#94B4C1",
+                cursor: "pointer",
+                width: "30px",
+                height: "30px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                transition: "background-color 0.2s"
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = "rgba(148, 180, 193, 0.1)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+              }}
+            >
+              ×
+            </button>
+
+            <h2
+              style={{
+                fontSize: "2rem",
+                marginBottom: "20px",
+                paddingBottom: "15px",
+                borderBottom: "1px solid rgba(148, 180, 193, 0.3)",
+                color: "#ECEFCA"
+              }}
+            >
+              {selectedProject.title}
+            </h2>
+
             <div
               style={{
-                backgroundColor: "#213448",
-                padding: "30px",
-                borderRadius: "10px",
-                maxWidth: "80%",
-                minWidth: "300px",
-                color: "#ECEFCA",
-                cursor: "auto",
+                display: "grid",
+                gridTemplateColumns: "1fr",
+                gap: "25px",
               }}
-              onClick={(e) => e.stopPropagation()}
             >
-              <h3>{selectedProject.title}</h3>
-              <p>
-                <strong>Hint:</strong> {selectedProject.hint}
-              </p>
-              <p>
-                <strong>Requirements:</strong> {selectedProject.requirements}
-              </p>
-              <p>
-                <strong>Use Case:</strong> {selectedProject.useCase}
-              </p>
-              <p>
-                <strong>Target Users:</strong> {selectedProject.targetUsers}
-              </p>
-              <p>
-                <strong>Target Audience:</strong>{" "}
-                {selectedProject.targetAudience}
-              </p>
+              <div>
+                <h4
+                  style={{
+                    color: "#94B4C1",
+                    marginBottom: "10px",
+                    fontSize: "1.1rem",
+                    fontWeight: "600"
+                  }}
+                >
+                  Project Overview
+                </h4>
+                <p
+                  style={{
+                    padding: "15px",
+                    backgroundColor: "rgba(84, 119, 146, 0.15)",
+                    borderRadius: "8px",
+                    lineHeight: "1.6"
+                  }}
+                >
+                  <span
+                    style={{
+                      display: "inline-block",
+                      fontWeight: "600",
+                      marginRight: "8px",
+                      color: "#ECEFCA"
+                    }}
+                  >
+                    Hint:
+                  </span>
+                  {selectedProject.hint}
+                </p>
+              </div>
+
+              <div>
+                <h4
+                  style={{
+                    color: "#94B4C1",
+                    marginBottom: "10px",
+                    fontSize: "1.1rem",
+                    fontWeight: "600"
+                  }}
+                >
+                  Requirements
+                </h4>
+                <p
+                  style={{
+                    padding: "15px",
+                    backgroundColor: "rgba(84, 119, 146, 0.15)",
+                    borderRadius: "8px",
+                    lineHeight: "1.6"
+                  }}
+                >
+                  {selectedProject.requirements}
+                </p>
+              </div>
+
+              <div>
+                <h4
+                  style={{
+                    color: "#94B4C1",
+                    marginBottom: "10px",
+                    fontSize: "1.1rem",
+                    fontWeight: "600"
+                  }}
+                >
+                  Use Case
+                </h4>
+                <p
+                  style={{
+                    padding: "15px",
+                    backgroundColor: "rgba(84, 119, 146, 0.15)",
+                    borderRadius: "8px",
+                    lineHeight: "1.6"
+                  }}
+                >
+                  {selectedProject.useCase}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "20px"
+                }}
+              >
+                <div>
+                  <h4
+                    style={{
+                      color: "#94B4C1",
+                      marginBottom: "10px",
+                      fontSize: "1.1rem",
+                      fontWeight: "600"
+                    }}
+                  >
+                    Target Users
+                  </h4>
+                  <p
+                    style={{
+                      padding: "15px",
+                      backgroundColor: "rgba(84, 119, 146, 0.15)",
+                      borderRadius: "8px",
+                      lineHeight: "1.6",
+                      height: "100%"
+                    }}
+                  >
+                    {selectedProject.targetUsers}
+                  </p>
+                </div>
+
+                <div>
+                  <h4
+                    style={{
+                      color: "#94B4C1",
+                      marginBottom: "10px",
+                      fontSize: "1.1rem",
+                      fontWeight: "600"
+                    }}
+                  >
+                    Target Audience
+                  </h4>
+                  <p
+                    style={{
+                      padding: "15px",
+                      backgroundColor: "rgba(84, 119, 146, 0.15)",
+                      borderRadius: "8px",
+                      lineHeight: "1.6",
+                      height: "100%"
+                    }}
+                  >
+                    {selectedProject.targetAudience}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                marginTop: "30px",
+                display: "flex",
+                justifyContent: "flex-end"
+              }}
+            >
               <button
                 onClick={handleCloseModal}
                 style={{
-                  marginTop: "20px",
-                  padding: "10px 15px",
+                  padding: "12px 25px",
                   backgroundColor: "#547792",
                   border: "none",
-                  borderRadius: "5px",
+                  borderRadius: "8px",
                   color: "white",
                   cursor: "pointer",
+                  fontWeight: "600",
+                  fontSize: "1rem",
+                  transition: "background-color 0.3s, transform 0.2s",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = "#4a6b85";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = "#547792";
+                  e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
-                Close
+                Close Details
               </button>
             </div>
           </div>
-        )}
-      </div>
-    </Layout>
-  );
+        </div>
+      )}
+    </div>
+  </Layout>
+);
 };
 
 export default DevopsProjectsScreen;

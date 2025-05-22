@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../Layout1/Layout";
 import Navbar from "../../Layout1/Navbar";
 
 const DsaCoursesScreen = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [filter, setFilter] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const videoData = [
     {
@@ -483,6 +485,17 @@ const DsaCoursesScreen = () => {
     },
   ];
 
+
+  // Extracting unique categories
+  const categories = ["All", ...new Set(videoData.map(video => video.category))];
+
+  // Filter videos based on search and category
+  const filteredVideos = videoData.filter(video => {
+    const matchesSearch = video.title.toLowerCase().includes(filter.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || video.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   const handleClickVideo = (video) => {
     setSelectedVideo(video);
     setIsModalOpen(true);
@@ -493,72 +506,228 @@ const DsaCoursesScreen = () => {
     setSelectedVideo(null);
   };
 
+  // Function to format view count
+  const formatViews = (viewsStr) => {
+    return viewsStr;
+  };
+
   return (
     <Layout>
       <Navbar />
-      <div style={{ padding: "20px", color: "#ECEFCA" }}>
-        <h1>Striver's A2Z DSA Course Videos</h1>
+      <div className="dsa-course-container" style={{ 
+        padding: "30px", 
+        color: "#ECEFCA",
+        backgroundColor: "#213448",
+        minHeight: "100vh"
+      }}>
+        <div style={{ 
+          maxWidth: "1200px", 
+          margin: "0 auto",
+          padding: "20px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"
+        }}>
+          <header style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "30px",
+            flexWrap: "wrap",
+            gap: "15px"
+          }}>
+            <h1 style={{ 
+              margin: 0, 
+              fontSize: "28px", 
+              fontWeight: "700", 
+              color: "#94B4C1",
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+              position: "relative",
+              paddingBottom: "10px"
+            }}>
+              Striver's A2Z DSA Course
+              <span style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "60px",
+                height: "3px",
+                backgroundColor: "#547792",
+                borderRadius: "2px"
+              }}></span>
+            </h1>
 
-        <section style={{ marginTop: "20px" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", // Dynamic grid based on screen size
-              gap: "20px", // Add gap between grid items to prevent overlap
-              marginTop: "20px",
-            }}
-          >
-            {videoData.map((video, index) => (
-              <div
-                key={index}
-                onClick={() => handleClickVideo(video)}
+            <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
+              {/* Search input */}
+              <div style={{ position: "relative" }}>
+                <input
+                  type="text"
+                  placeholder="Search videos..."
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  style={{
+                    padding: "10px 15px",
+                    paddingLeft: "35px",
+                    borderRadius: "5px",
+                    border: "1px solid #547792",
+                    backgroundColor: "rgba(148, 180, 193, 0.1)",
+                    color: "#ECEFCA",
+                    width: "220px",
+                    fontSize: "14px"
+                  }}
+                />
+                <span style={{
+                  position: "absolute",
+                  left: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "#94B4C1",
+                  pointerEvents: "none"
+                }}>
+                  🔍
+                </span>
+              </div>
+
+              {/* Category filter */}
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
                 style={{
+                  padding: "10px 15px",
+                  borderRadius: "5px",
                   border: "1px solid #547792",
-                  borderRadius: "15px",
-                  padding: "20px",
-                  width: "100%", // Full width of the grid cell
-                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
-                  backgroundColor: "#94B4C1",
-                  textAlign: "center",
-                  transition:
-                    "transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease",
-                  opacity: 0.9,
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = "scale(1.1)";
-                  e.target.style.boxShadow = "0px 6px 16px rgba(0, 0, 0, 0.3)";
-                  e.target.style.opacity = 1;
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "scale(1)";
-                  e.target.style.boxShadow = "0px 4px 12px rgba(0, 0, 0, 0.2)";
-                  e.target.style.opacity = 0.9;
+                  backgroundColor: "rgba(148, 180, 193, 0.1)",
+                  color: "#ECEFCA",
+                  fontSize: "14px"
                 }}
               >
-                <h3
+                {categories.map((category, index) => (
+                  <option key={index} value={category} style={{ backgroundColor: "#213448", color: "#ECEFCA" }}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </header>
+
+          {filteredVideos.length === 0 ? (
+            <div style={{ 
+              textAlign: "center", 
+              padding: "40px", 
+              color: "#94B4C1" 
+            }}>
+              <h3>No videos found matching your search.</h3>
+              <p>Try adjusting your search criteria or category selection.</p>
+            </div>
+          ) : (
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: "25px",
+              marginTop: "30px"
+            }}>
+              {filteredVideos.map((video, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleClickVideo(video)}
                   style={{
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    overflowWrap: "break-word",
-                    textAlign: "center",
-                    maxHeight: "80px",
-                    overflowY: "auto",
-                    color: "#213448",
+                    borderRadius: "8px",
+                    overflow: "hidden",
+                    backgroundColor: "#547792",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-5px)";
+                    e.currentTarget.style.boxShadow = "0 12px 20px rgba(0, 0, 0, 0.3)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
                   }}
                 >
-                  {video.title}
-                </h3>
+                  {/* Thumbnail placeholder */}
+                  <div style={{
+                    backgroundColor: "#213448",
+                    height: "160px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "relative"
+                  }}>
+                    <div style={{
+                      width: "60px",
+                      height: "60px",
+                      borderRadius: "50%",
+                      backgroundColor: "rgba(148, 180, 193, 0.2)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                      <span style={{ fontSize: "24px" }}>▶</span>
+                    </div>
 
-                <p style={{ color: "#213448" }}>
-                  Uploaded: {video.uploaded}
-                </p>
-                <p style={{ color: "#213448" }}>Views: {video.views}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+                    {/* Category badge */}
+                    <div style={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "10px",
+                      padding: "5px 10px",
+                      backgroundColor: "rgba(148, 180, 193, 0.8)",
+                      borderRadius: "15px",
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                      color: "#213448"
+                    }}>
+                      {video.category}
+                    </div>
+                  </div>
 
+                  <div style={{ padding: "15px" }}>
+                    <h3 style={{
+                      fontSize: "16px",
+                      margin: "0 0 10px 0",
+                      color: "#ECEFCA",
+                      fontWeight: "600",
+                      lineHeight: "1.4",
+                      height: "44px",
+                      overflow: "hidden",
+                      display: "-webkit-box",
+                      WebkitLineClamp: "2",
+                      WebkitBoxOrient: "vertical",
+                      textOverflow: "ellipsis"
+                    }}>
+                      {video.title}
+                    </h3>
+
+                    <div style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      fontSize: "14px",
+                      color: "#ECEFCA",
+                      opacity: "0.8",
+                      marginTop: "auto",
+                      paddingTop: "10px",
+                      borderTop: "1px solid rgba(236, 239, 202, 0.1)"
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <span style={{ marginRight: "5px" }}>👁️</span>
+                        {formatViews(video.views)}
+                      </div>
+                      <div>{video.uploaded}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Modal */}
         {isModalOpen && selectedVideo && (
           <div
             style={{
@@ -567,7 +736,7 @@ const DsaCoursesScreen = () => {
               left: "0",
               width: "100%",
               height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
               backdropFilter: "blur(8px)",
               display: "flex",
               justifyContent: "center",
@@ -581,42 +750,169 @@ const DsaCoursesScreen = () => {
                 backgroundColor: "#213448",
                 padding: "30px",
                 borderRadius: "10px",
-                maxWidth: "600px",
-                minWidth: "300px",
+                maxWidth: "800px",
+                width: "90%",
                 color: "#ECEFCA",
                 cursor: "auto",
+                boxShadow: "0 25px 50px rgba(0, 0, 0, 0.5)",
+                border: "1px solid #547792"
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h2>{selectedVideo.title}</h2>
-              <a
-                href={selectedVideo.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#94B4C1" }}
-              >
-                Watch on YouTube
-              </a>
-              <p style={{ marginTop: "10px" }}>
-                <strong>Uploaded:</strong> {selectedVideo.uploaded}
-              </p>
-              <p>
-                <strong>Views:</strong> {selectedVideo.views}
-              </p>
-              <button
-                onClick={handleCloseModal}
-                style={{
-                  marginTop: "20px",
-                  padding: "10px 15px",
-                  backgroundColor: "#547792",
-                  border: "none",
+              <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "20px"
+              }}>
+                <h2 style={{ 
+                  margin: 0, 
+                  color: "#94B4C1",
+                  fontSize: "24px",
+                  fontWeight: "600"
+                }}>
+                  {selectedVideo.title}
+                </h2>
+                <button
+                  onClick={handleCloseModal}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    fontSize: "24px",
+                    color: "#ECEFCA",
+                    cursor: "pointer",
+                    padding: "5px",
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div style={{
+                backgroundColor: "#94B4C1",
+                padding: "20px",
+                borderRadius: "5px",
+                marginBottom: "20px"
+              }}>
+                <div style={{
+                  height: "300px", 
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid #547792",
                   borderRadius: "5px",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-              >
-                Close
-              </button>
+                  backgroundColor: "#213448",
+                  position: "relative"
+                }}>
+                  <div style={{
+                    fontSize: "36px",
+                    color: "#ECEFCA",
+                    opacity: "0.6"
+                  }}>
+                    ▶
+                  </div>
+                  <span style={{
+                    position: "absolute",
+                    bottom: "15px",
+                    right: "15px",
+                    padding: "5px 10px",
+                    backgroundColor: "rgba(84, 119, 146, 0.8)",
+                    borderRadius: "5px",
+                    color: "#ECEFCA"
+                  }}>
+                    Preview
+                  </span>
+                </div>
+              </div>
+
+              <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: "10px",
+                marginBottom: "20px"
+              }}>
+                <div>
+                  <span style={{ 
+                    fontWeight: "bold", 
+                    color: "#94B4C1", 
+                    marginRight: "10px" 
+                  }}>
+                    Category:
+                  </span>
+                  <span style={{ 
+                    backgroundColor: "#547792", 
+                    padding: "5px 10px", 
+                    borderRadius: "15px", 
+                    fontSize: "14px" 
+                  }}>
+                    {selectedVideo.category}
+                  </span>
+                </div>
+                <div>
+                  <span style={{ 
+                    fontWeight: "bold", 
+                    color: "#94B4C1", 
+                    marginRight: "10px" 
+                  }}>
+                    Uploaded:
+                  </span>
+                  {selectedVideo.uploaded}
+                </div>
+                <div>
+                  <span style={{ 
+                    fontWeight: "bold", 
+                    color: "#94B4C1", 
+                    marginRight: "10px" 
+                  }}>
+                    Views:
+                  </span>
+                  {selectedVideo.views}
+                </div>
+              </div>
+
+              <div style={{ 
+                display: "flex", 
+                justifyContent: "space-between",
+                gap: "15px" 
+              }}>
+                <a
+                  href={selectedVideo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: "12px 20px",
+                    backgroundColor: "#94B4C1",
+                    border: "none",
+                    borderRadius: "5px",
+                    color: "#213448",
+                    fontWeight: "bold",
+                    textDecoration: "none",
+                    textAlign: "center",
+                    flex: "1",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px"
+                  }}
+                >
+                  <span>Watch on YouTube</span>
+                </a>
+                <button
+                  onClick={handleCloseModal}
+                  style={{
+                    padding: "12px 20px",
+                    backgroundColor: "transparent",
+                    border: "1px solid #547792",
+                    borderRadius: "5px",
+                    color: "#ECEFCA",
+                    cursor: "pointer",
+                    flex: "1"
+                  }}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         )}

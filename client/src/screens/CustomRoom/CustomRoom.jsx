@@ -4,15 +4,15 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import CodeEditor from "../../Rooms/CodeEditor";
 import VideoConferencing from "../../Rooms/VideoConferencing";
 import Layout from "../../Layout1/Layout";
-import { Box, Text, Button, Code, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from "@chakra-ui/react";
+import { Box, Text, Button, Code, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, VStack, HStack, Divider, Badge, Container, Flex, Card, CardBody, CardHeader, Heading } from "@chakra-ui/react";
 import axios from "axios";
 
 const CustomRoom = () => {
-  const { publicRoomId, privateRoomId } = useParams();
-  const { roomId } = useParams();
+  const { publicRoomId, privateRoomId, roomId } = useParams();
   const location = useLocation();
   const { question = {} } = location.state || {};
-
+  const navigate = useNavigate();
+  
   console.log("CustomRoom rendered with room IDs:", { publicRoomId, privateRoomId, roomId });
 
   const isReadOnly = location.state?.isReadOnly || false;
@@ -21,104 +21,51 @@ const CustomRoom = () => {
   const hideVideoTitle = location.state?.hideVideoTitle || false;
 
   const [output, setOutput] = useState("");
-  const [languageId, setLanguageId] = useState(63); // Default to JavaScript
+  const [languageId, setLanguageId] = useState(63);
   const [initialCode, setInitialCode] = useState(`console.log("Hello, World!");`);
-  const [isMobile, setIsMobile] = useState(false);  // Mobile check state
-  const [isEditorOpen, setIsEditorOpen] = useState(false); // Track if editor modal is open
+  const [isMobile, setIsMobile] = useState(false);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   const editorRef = useRef(null);
-  const navigate = useNavigate();
   const videoRoomRef = useRef(null);
 
-  // Debounced resize event handler to prevent rapid layout recalculations
   useEffect(() => {
-    const handleResize = debounce(() => {
-      if (window.innerWidth <= 768) {
-        setIsMobile(true); // Mobile
-      } else {
-        setIsMobile(false); // Desktop or tablet
-      }
-    }, 200); // Debounce delay of 200ms
-
-    handleResize(); // Initial check
-    window.addEventListener("resize", handleResize); // Add event listener
-    return () => {
-      window.removeEventListener("resize", handleResize); // Cleanup on unmount
-    };
+    const handleResize = debounce(() => setIsMobile(window.innerWidth <= 768), 200);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Debounce function to limit resize event calls
   function debounce(func, wait) {
     let timeout;
-    return function () {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, arguments), wait);
-    };
+    return function () { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, arguments), wait); };
   }
 
   useEffect(() => {
     const fetchDefaultCode = async () => {
       const title = question?.title || publicRoomId?.replace(/-/g, " ");
       if (!title) return;
-
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_TESTCASE_API}/default/${title}`
-        );
+        const res = await axios.get(`${process.env.REACT_APP_TESTCASE_API}/default/${title}`);
         const defaultCode = res.data.defaultCode;
-
-        window.defaultQuestionCode = {
-          ...window.defaultQuestionCode,
-          [title.toLowerCase()]: {
-            javascript: defaultCode,
-          },
-        };
-
-        setInitialCode(defaultCode); // set the code locally too
-      } catch (err) {
-        console.error("Failed to fetch default code:", err);
-      }
+        window.defaultQuestionCode = { ...window.defaultQuestionCode, [title.toLowerCase()]: { javascript: defaultCode } };
+        setInitialCode(defaultCode);
+      } catch (err) { console.error("Failed to fetch default code:", err); }
     };
-
     fetchDefaultCode();
   }, [question?.title, publicRoomId]);
 
   const handleRunCode = async () => {
     let code = editorRef.current?.getValue();
     const title = question?.title || publicRoomId?.replace(/-/g, " ");
-
-    if (!code || !title) {
-      setOutput("Editor is empty or no question loaded.");
-      return;
-    }
-
+    if (!code || !title) { setOutput("Editor is empty or no question loaded."); return; }
     try {
-      const res = await axios.post(`${process.env.REACT_APP_CODE_SUBMIT}`, {
-        code,
-        language: languageId,
-        title,
-      },{
-        withCredentials: true,
-      });
-
-      // Format test results output
+      const res = await axios.post(`${process.env.REACT_APP_CODE_SUBMIT}`, { code, language: languageId, title }, { withCredentials: true });
       const results = res.data.testResults;
-
       if (results && Array.isArray(results)) {
-        const formattedOutput = results.map((result, idx) => {
-          return (
-            `Test Case ${idx + 1}:\n` +
-            `Input: ${result.input}\n` +
-            `Expected: ${result.expectedOutput}\n` +
-            `Actual: ${result.actualOutput}\n` 
-            
-          );
-        }).join("\n-------------------\n");
-
+        const formattedOutput = results.map((result, idx) => `Test Case ${idx + 1}:\nInput: ${result.input}\nExpected: ${result.expectedOutput}\nActual: ${result.actualOutput}\n`).join("\n-------------------\n");
         setOutput(formattedOutput);
-      } else {
-        setOutput("No test results received.");
-      }
+      } else { setOutput("No test results received."); }
     } catch (err) {
       console.error("Error submitting code:", err);
       setOutput("Error submitting code to backend.");
@@ -129,21 +76,19 @@ const CustomRoom = () => {
     console.log("handleEndCall called");
     const currentRoomId = publicRoomId || roomId;
     const identity = localStorage.getItem("userId") || "guest";
-
     if (videoRoomRef.current && videoRoomRef.current.disconnectRoom) {
       console.log("Disconnecting local video room");
       videoRoomRef.current.disconnectRoom();
     }
-
     console.log("Emitting roomEnded event for room:", currentRoomId, "identity:", identity);
     socket.emit("roomEnded", { roomId: currentRoomId, identity });
-
     console.log("Calling backend API to end room");
     try {
       console.log("Posting to backend to end room with ID:", currentRoomId);
       await axios.post(`${process.env.REACT_APP_CALL_ENDPOINT}`, { roomId: currentRoomId }, { withCredentials: true });
-      navigate("/dsaDashboard"); // Redirect to home or another page after ending call
+      navigate("/dsaDashboard");
     } catch (error) {
+      navigate("/dsaDashboard");
       console.error("Failed to end room:", error.message || error);
     }
   };
@@ -160,178 +105,169 @@ const CustomRoom = () => {
       navigate("/dsaDashboard");
     });
     console.log("Setup complete for roomEnded listener");
-
     return () => {
       console.log("Cleaning up roomEnded listener");
       socket.off("roomEnded");
     };
   }, []);
 
+  const difficultyColor = question.difficulty === "Easy" ? "#94B4C1" : question.difficulty === "Medium" ? "#547792" : "#213448";
+
   return (
     <Layout>
-      <Box position="relative">
-        <Box width="100%" display="flex" alignItems="center" justifyContent="space-between" mt={6} px={4}>
-          <Box flex="1" />
-          <Box flex="1" textAlign="center">
-            <Text fontSize="lg" fontWeight="semibold" color="white">
-              Room ID: {publicRoomId || privateRoomId || roomId || "N/A"}
-            </Text>
-          </Box>
-          <Box flex="1" textAlign="right">
-            {(privateRoomId || roomId) &&!hideVideoTitle && (
-              <Button
-                onClick={handleEndCall}
-                size="lg"
-                fontSize="1rem"
-                bg="red"
-                color="white"
-                _hover={{ bg: "red.700" }}
-                leftIcon={<span role="img" aria-label="call">📞</span>}
-              >
-                End Call
+      <Box bg="#213448" minH="100vh" color="#ECEFCA">
+        <Container maxW="100%" p={0}>
+          {/* Header */}
+          <Box bg="#213448" borderBottom="2px solid #547792" px={6} py={4}>
+            <Flex justify="space-between" align="center">
+              <Box />
+              <VStack spacing={1}>
+                <Text fontSize="xl" fontWeight="bold" color="#ECEFCA">
+                  {(!publicRoomId && !privateRoomId) && roomId && `Room: ${roomId}`}
+                </Text>
+                <Text fontSize="sm" color="#94B4C1">Active Coding Session</Text>
+              </VStack>
+              <Button onClick={handleEndCall} size="lg" bg="#547792" color="#ECEFCA" _hover={{ bg: "#94B4C1", color: "#213448" }} leftIcon={<span>📞</span>} borderRadius="lg" fontWeight="bold">
+                End Room
               </Button>
-            )}
+            </Flex>
           </Box>
-        </Box>
-        {!isReadOnly && !fromNavbar && (
-          <>
-            {/* Modal for Code Editor */}
-            <Modal isOpen={isEditorOpen} onClose={() => setIsEditorOpen(false)}>
-              <ModalOverlay />
-              <ModalContent marginTop="50px">
-                <ModalHeader>Code Editor</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Box maxHeight="400px" overflowY="auto">
-                    <CodeEditor
-                      editorRef={editorRef}
-                      languageId={languageId}
-                      setLanguageId={setLanguageId}
-                      initialCode={initialCode}
-                      height="100%"  // Keep default height
-                    />
-                  </Box>
-                  <Button
-                    colorScheme="red"
-                    mt={4}
-                    onClick={() => setIsEditorOpen(false)}
-                    width="100%"
-                  >
-                    Close Editor
-                  </Button>
-                </ModalBody>
-              </ModalContent>
-            </Modal>
-            <Box
-              marginTop={{ base: "50px", md: "10px" }}
-              width="100%"
-              display="flex"
-              flexDirection={{ base: "column", md: "row" }}
-              gap={4}
-            >
-              {/* Left side - Question Details */}
-              <Box
-                width="40%"
-                pr={4}
-                overflowY="auto"
-                maxHeight={{ base: "auto", md: "90vh" }}
-                order={{ base: 2, md: 1 }}
-              >
-                {/* Question details */}
-                <Text fontSize={{ base: "md", md: "2xl" }} fontWeight="bold" mb={{ base: 2, md: 4 }}>
-                  {question.title || "Custom Room"} - {publicRoomId}
-                </Text>
-                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                  <strong>Difficulty:</strong> {question.difficulty}
-                </Text>
-                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                  <strong>Statement:</strong> {question.statement}
-                </Text>
-                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                  <strong>Sample Input:</strong> {question.sampleInput}
-                </Text>
-                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                  <strong>Sample Output:</strong> {question.sampleOutput}
-                </Text>
-                <Text fontSize={{ base: "sm", md: "md" }} mb={{ base: 1, md: 2 }}>
-                  <strong>Constraints:</strong> {question.constraints}
-                </Text>
-                {  (
-                  <Box mt={6}>
-                    <VideoConferencing
-                      ref={videoRoomRef}
-                      roomId={publicRoomId || privateRoomId || roomId}
-                      identity={localStorage.getItem("userId") || "guest"}
-                    />
-                  </Box>
-                )}
 
-            
-              </Box>
+          {!isReadOnly && !fromNavbar && (
+            <>
+              {/* Mobile Editor Modal */}
+              <Modal isOpen={isEditorOpen} onClose={() => setIsEditorOpen(false)} size="full">
+                <ModalOverlay bg="rgba(33, 52, 72, 0.8)" />
+                <ModalContent bg="#213448" color="#ECEFCA" m={2} borderRadius="xl">
+                  <ModalHeader bg="#547792" borderTopRadius="xl" color="#ECEFCA">Code Editor</ModalHeader>
+                  <ModalCloseButton color="#ECEFCA" />
+                  <ModalBody p={4}>
+                    <Box maxHeight="70vh" overflowY="auto">
+                      <CodeEditor editorRef={editorRef} languageId={languageId} setLanguageId={setLanguageId} initialCode={initialCode} height="100%" />
+                    </Box>
+                    <Button colorScheme="red" mt={4} onClick={() => setIsEditorOpen(false)} width="100%" bg="#547792" _hover={{ bg: "#94B4C1", color: "#213448" }}>Close Editor</Button>
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
 
-              {/* Buttons and Output */}
-              {!isMobile && (
-                <Box
-                  flex={{ base: "none", md: "0.5" }}
-                  display="flex"
-                  flexDirection="column"
-                  alignItems={{ base: "center", md: "flex-start" }}
-                  order={{ base: 3, md: 2 }}
-                  mb={{ base: 4, md: 0 }}
-                >
-                  <Box mt={4}>
-                    <Text fontWeight="bold">Select Language:</Text>
-                    <select value={languageId} onChange={(e) => setLanguageId(Number(e.target.value))}>
-                      <option value={63}>JavaScript</option>
-                      <option value={62}>Java</option>
-                      <option value={52}>C++</option>
-                      <option value={71}>Python</option>
-                    </select>
-                  </Box>
-                  <Button mt={4} colorScheme="blue" onClick={handleRunCode}>
-                    Run Code
-                  </Button>
-                  <Box mt={4} width="100%">
-                      <Text fontWeight="bold">Output:</Text>
-                      <Box overflowX="auto" maxHeight="150px">
-                          <Code whiteSpace="pre-wrap">{output}</Code>
-                      </Box>
-                  </Box>
+              {/* Main Content */}
+              <Flex direction={{ base: "column", lg: "row" }} gap={6} p={6}>
+                {/* Left Panel - Question Details */}
+                <Box flex="0 0 40%" order={{ base: 2, lg: 1 }}>
+                  <Card bg="#547792" borderRadius="xl" shadow="xl" border="1px solid #94B4C1">
+                    <CardHeader bg="#213448" borderTopRadius="xl" py={4}>
+                      <HStack justify="space-between" align="center">
+                        <Heading size="lg" color="#ECEFCA">{question.title || "Custom Room"}</Heading>
+                        <Badge bg={difficultyColor} color="#ECEFCA" px={3} py={1} borderRadius="full" fontSize="sm" fontWeight="bold">{question.difficulty}</Badge>
+                      </HStack>
+                      <Text fontSize="sm" color="#94B4C1" mt={1}>Room ID: {publicRoomId}</Text>
+                    </CardHeader>
+                    <CardBody color="#ECEFCA" p={6}>
+                      <VStack align="stretch" spacing={4}>
+                        <Box>
+                          <Text fontWeight="bold" color="#ECEFCA" mb={2}>Problem Statement</Text>
+                          <Text fontSize="sm" color="#94B4C1" lineHeight="1.6">{question.statement}</Text>
+                        </Box>
+                        <Divider borderColor="#94B4C1" />
+                        <HStack spacing={6}>
+                          <Box flex="1">
+                            <Text fontWeight="bold" color="#ECEFCA" mb={2}>Sample Input</Text>
+                            <Code bg="#213448" color="#94B4C1" p={2} borderRadius="md" fontSize="sm" width="100%" whiteSpace="pre-wrap">{question.sampleInput}</Code>
+                          </Box>
+                          <Box flex="1">
+                            <Text fontWeight="bold" color="#ECEFCA" mb={2}>Sample Output</Text>
+                            <Code bg="#213448" color="#94B4C1" p={2} borderRadius="md" fontSize="sm" width="100%" whiteSpace="pre-wrap">{question.sampleOutput}</Code>
+                          </Box>
+                        </HStack>
+                        <Box>
+                          <Text fontWeight="bold" color="#ECEFCA" mb={2}>Constraints</Text>
+                          <Text fontSize="sm" color="#94B4C1">{question.constraints}</Text>
+                        </Box>
+                      </VStack>
+                    </CardBody>
+                  </Card>
+
+                  {!hideVideoTitle && (
+                    <Card bg="#547792" borderRadius="xl" shadow="xl" border="1px solid #94B4C1" mt={6}>
+                      <CardHeader bg="#213448" borderTopRadius="xl" py={3}>
+                        <Heading size="md" color="#ECEFCA">Video Conference</Heading>
+                      </CardHeader>
+                      <CardBody p={4}>
+                        <VideoConferencing ref={videoRoomRef} roomId={publicRoomId || privateRoomId || roomId} identity={localStorage.getItem("userId") || "guest"} />
+                      </CardBody>
+                    </Card>
+                  )}
                 </Box>
-              )}
 
-              {/* CodeEditor on larger screens */}
-              {!isMobile && (
-                <Box
-                  width="60%"
-                  marginLeft="150px"
-                  display="flex"
-                  flexDirection="column"
-                  gap={5}
-                  order={{ base: 3, md: 3 }}
-                >
-                  <div style={{ width: "100%", minWidth: "300px" }}>
-                    <CodeEditor
-                      editorRef={editorRef}
-                      languageId={languageId}
-                      setLanguageId={setLanguageId}
-                      initialCode={initialCode}
-                    />
-                  </div>
+                {/* Right Panel - Code Editor & Controls */}
+                <Box flex="1" order={{ base: 1, lg: 2 }}>
+                  <VStack spacing={6} align="stretch">
+                    {/* Controls Panel */}
+                    <Card bg="#547792" borderRadius="xl" shadow="xl" border="1px solid #94B4C1">
+                      <CardBody p={4}>
+                        <HStack justify="space-between" wrap="wrap" spacing={4}>
+                          <HStack spacing={3}>
+                            <Text fontWeight="bold" color="#ECEFCA">Language:</Text>
+                            <select value={languageId} onChange={(e) => setLanguageId(Number(e.target.value))} style={{ background: "#213448", color: "#ECEFCA", padding: "8px 12px", borderRadius: "8px", border: "1px solid #94B4C1" }}>
+                              <option value={63}>JavaScript</option>
+                              
+                              <option value={71}>Python</option>
+                            </select>
+                          </HStack>
+                          <HStack spacing={3}>
+                            {isMobile && <Button onClick={() => setIsEditorOpen(true)} bg="#94B4C1" color="#213448" _hover={{ bg: "#ECEFCA" }} borderRadius="lg" fontWeight="bold">Open Editor</Button>}
+                            <Button onClick={handleRunCode} bg="#94B4C1" color="#213448" _hover={{ bg: "#ECEFCA" }} borderRadius="lg" fontWeight="bold" leftIcon={<span>▶️</span>}>Run Code</Button>
+                          </HStack>
+                        </HStack>
+                      </CardBody>
+                    </Card>
+
+                    {/* Code Editor - Desktop */}
+                    {!isMobile && (
+                      <Card bg="#213448" borderRadius="xl" shadow="xl" border="1px solid #94B4C1" minH="500px">
+                        <CardHeader bg="#547792" borderTopRadius="xl" py={3}>
+                          <Heading size="md" color="#ECEFCA">Code Editor</Heading>
+                        </CardHeader>
+                        <CardBody p={0}>
+                          <Box borderBottomRadius="xl" overflow="hidden">
+                            <CodeEditor editorRef={editorRef} languageId={languageId} setLanguageId={setLanguageId} initialCode={initialCode} />
+                          </Box>
+                        </CardBody>
+                      </Card>
+                    )}
+
+                    {/* Output Panel */}
+                    <Card bg="#547792" borderRadius="xl" shadow="xl" border="1px solid #94B4C1">
+                      <CardHeader bg="#213448" borderTopRadius="xl" py={3}>
+                        <Heading size="md" color="#ECEFCA">Test Results</Heading>
+                      </CardHeader>
+                      <CardBody p={4}>
+                        <Box bg="#213448" borderRadius="lg" p={4} minH="120px" maxH="300px" overflowY="auto">
+                          <Code whiteSpace="pre-wrap" bg="transparent" color="#94B4C1" fontSize="sm" width="100%">
+                            {output || "Click 'Run Code' to see test results..."}
+                          </Code>
+                        </Box>
+                      </CardBody>
+                    </Card>
+                  </VStack>
                 </Box>
-              )}
+              </Flex>
+            </>
+          )}
+
+          {fromNavbar && (
+            <Box p={6}>
+              <Card bg="#547792" borderRadius="xl" shadow="xl" border="1px solid #94B4C1">
+                <CardHeader bg="#213448" borderTopRadius="xl" py={4}>
+                  <Heading size="lg" color="#ECEFCA">Video Conference</Heading>
+                </CardHeader>
+                <CardBody p={6}>
+                  <VideoConferencing ref={videoRoomRef} roomId={publicRoomId || privateRoomId || roomId} identity={localStorage.getItem("userId") || "guest"} />
+                </CardBody>
+              </Card>
             </Box>
-          </>
-        )}
-            { fromNavbar && (
-                  <Box mt={6}>
-                    <VideoConferencing
-                      ref={videoRoomRef}
-                      roomId={publicRoomId || privateRoomId || roomId}
-                      identity={localStorage.getItem("userId") || "guest"}
-                    />
-                  </Box>
-                )}
+          )}
+        </Container>
       </Box>
     </Layout>
   );
