@@ -381,11 +381,20 @@ const allactivitylogs = async (req, res) => {
 };
 
 const forgotPassword = async (req, res) => {
-  const { email } = req.body;
+  const { email, type = "otp" } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required." });
+  }
 
   try {
-    if (!email) {
-      return res.status(400).json({ message: "Email is required." });
+    if (type === "contact") {
+      await sendEmail(
+        "wecodecustomercare@gmail.com",
+        "New Contact Request",
+        `A user submitted their email: ${email}`
+      );
+      return res.status(200).json({ message: "Thanks! We'll be in touch soon." });
     }
 
     const user = await User.findOne({ email });
@@ -393,21 +402,17 @@ const forgotPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Generate a reset token or OTP (can be a random token for reset link)
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();  // Example OTP generation
-
-    // Send OTP to the user's email (use your email service like Gmail, Mailgun, etc.)
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     await sendEmail(email, "Password Reset OTP", `Your OTP is: ${otp}`);
 
-    // Store OTP and expiration time in the database
     user.otp = Number(otp);
-    user.otpExpiration = Date.now() + 10 * 60 * 1000;  // 10 minutes expiration
+    user.otpExpiration = Date.now() + 10 * 60 * 1000;
     await user.save();
 
-    res.status(200).json({ message: "OTP sent to your email." });
+    return res.status(200).json({ message: "OTP sent to your email." });
   } catch (error) {
-    console.error("Error sending OTP:", error);
-    res.status(500).json({ message: "Failed to send OTP." });
+    console.error("Error handling forgot password:", error);
+    return res.status(500).json({ message: "Something went wrong." });
   }
 };
 
