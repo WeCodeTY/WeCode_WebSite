@@ -24,7 +24,12 @@ const LoginScreen = () => {
       const { role, id } = response.data;
       localStorage.setItem("userId", id);
       socket.emit("registerUser", id);
-      navigate(role === "admin" ? "/admin-dashboard" : "/Feed");
+      if (role === "admin") {
+        const goToAdmin = window.confirm("You are an admin. Do you want to go to the Admin Dashboard?");
+        navigate(goToAdmin ? "/admin-dashboard" : "/Feed");
+      } else {
+        navigate("/Feed");
+      }
     } catch (error) {
       console.error(error);
       setMessage(error.response?.data?.message || "Login failed.");
@@ -92,7 +97,12 @@ const LoginScreen = () => {
                 const { role, id } = response.data;
                 localStorage.setItem("userId", id);
                 socket.emit("registerUser", id);
-                navigate(role === "admin" ? "/admin-dashboard" : "/Feed");
+                if (role === "admin") {
+                  const goToAdmin = window.confirm("You are an admin. Do you want to go to the Admin Dashboard?");
+                  navigate(goToAdmin ? "/admin-dashboard" : "/Feed");
+                } else {
+                  navigate("/Feed");
+                }
               } catch (error) {
                 console.error("Firebase Google login error:", error);
                 setMessage("Google Login Failed");
