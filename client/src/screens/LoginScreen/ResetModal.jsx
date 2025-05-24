@@ -10,7 +10,7 @@ const ResetModal = ({ show, onClose }) => {
 
   const handleForgotPassword = async () => {
     try {
-      const response = await axios.post("http://localhost:2000/forgotpass", { email: emailForReset });
+      const response = await axios.post(process.env.REACT_APP_FORGOT_PASSWORD_SEND_URI, { email: emailForReset });
       setMessage(response.data.message); setShowOtpInput(true);
     } catch (error) {
       console.error(error);
@@ -34,7 +34,7 @@ const ResetModal = ({ show, onClose }) => {
     try {
       await axios.post(process.env.REACT_APP_UPDATE_PASSWORD_URI, { email: emailForReset, password: newPassword });
       setMessage("Password updated successfully");
-      setTimeout(() => { onClose(); navigate("/Feed"); }, 1500);
+      navigate("/login");
     } catch (error) {
       console.error("Password update error:", error);
       setMessage(error.response?.data?.message || "An error occurred while updating password.");
